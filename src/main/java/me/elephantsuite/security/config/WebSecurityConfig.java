@@ -1,6 +1,6 @@
-package io.github.elephantlearning.security.config;
+package me.elephantsuite.security.config;
 
-import io.github.elephantlearning.user.ElephantUserService;
+import me.elephantsuite.user.ElephantUserService;
 import lombok.AllArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;

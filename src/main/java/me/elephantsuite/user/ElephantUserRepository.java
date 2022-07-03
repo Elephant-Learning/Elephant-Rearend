@@ -1,0 +1,22 @@
+package me.elephantsuite.user;
+
+import java.util.Optional;
+
+import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Modifying;
+import org.springframework.data.jpa.repository.Query;
+import org.springframework.stereotype.Repository;
+import org.springframework.transaction.annotation.Transactional;
+
+//find users by email
+@Transactional(readOnly = true)
+@Repository
+public interface ElephantUserRepository extends JpaRepository<ElephantUser, Long> {
+
+	Optional<ElephantUser> findByEmail(String email);
+
+	@Transactional
+	@Modifying
+	@Query("UPDATE ElephantUser e SET e.enabled = TRUE WHERE e.email = ?1")
+	int enableAppUser(String email);
+}

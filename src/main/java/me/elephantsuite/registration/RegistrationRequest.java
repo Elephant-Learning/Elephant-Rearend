@@ -1,5 +1,6 @@
-package io.github.elephantlearning.registration;
+package me.elephantsuite.registration;
 
+import me.elephantsuite.user.ElephantUserType;
 import lombok.AllArgsConstructor;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
@@ -9,6 +10,7 @@ import lombok.ToString;
 @AllArgsConstructor
 @EqualsAndHashCode
 @ToString
+//format for a rq
 public class RegistrationRequest {
 
 	private final String firstName;
@@ -18,4 +20,6 @@ public class RegistrationRequest {
 	private final String password;
 
 	private final String email;
+
+	private final ElephantUserType type;
 }

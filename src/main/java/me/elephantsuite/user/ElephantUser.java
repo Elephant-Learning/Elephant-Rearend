@@ -1,4 +1,4 @@
-package io.github.elephantlearning.user;
+package me.elephantsuite.user;
 
 import java.util.Collection;
 import java.util.Collections;
@@ -23,16 +23,17 @@ import org.springframework.security.core.userdetails.UserDetails;
 @EqualsAndHashCode
 @NoArgsConstructor
 @Entity
+//eventually what we want to create based on a registration request
 public class ElephantUser implements UserDetails {
 
 	@Id
 	@SequenceGenerator(name = "student_sequence", sequenceName = "student_sequence", allocationSize = 1)
 	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "student_sequence")
-	private long id;
+	private Long id;
 
-	private String name;
+	private String firstName;
 
-	private String username;
+	private String lastName;
 
 	private String email;
 
@@ -41,15 +42,25 @@ public class ElephantUser implements UserDetails {
 	@Enumerated(EnumType.STRING)
 	private ElephantUserType type;
 
-	private boolean locked;
+	private boolean locked = false;
+
+	private boolean enabled = false;
 
 
-	public ElephantUser(String name, String username, String email, String password, ElephantUserType type, boolean locked) {
-		this.name = name;
-		this.username = username;
+	public ElephantUser(String firstName, String lastName, String email, String password, ElephantUserType type) {
+		this.firstName = firstName;
+		this.email = email;
+		this.lastName = lastName;
 		this.password = password;
 		this.type = type;
-		this.locked = locked;
+	}
+
+	public String getFirstName() {
+		return firstName;
+	}
+
+	public String getLastName() {
+		return lastName;
 	}
 
 	/**
@@ -82,7 +93,7 @@ public class ElephantUser implements UserDetails {
 	 */
 	@Override
 	public String getUsername() {
-		return this.username;
+		return this.email;
 	}
 
 	/**
@@ -128,6 +139,6 @@ public class ElephantUser implements UserDetails {
 	 */
 	@Override
 	public boolean isEnabled() {
-		return !this.locked;
+		return this.enabled;
 	}
 }

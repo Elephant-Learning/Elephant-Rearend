@@ -1,4 +1,4 @@
-package io.github.elephantlearning;
+package me.elephantsuite;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
