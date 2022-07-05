@@ -22,4 +22,6 @@ public class RegistrationRequest {
 	private final String email;
 
 	private final ElephantUserType type;
+
+	private final Integer pfpId;
 }

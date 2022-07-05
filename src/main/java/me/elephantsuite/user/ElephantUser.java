@@ -2,6 +2,7 @@ package me.elephantsuite.user;
 
 import java.util.Collection;
 import java.util.Collections;
+import java.util.Random;
 
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
@@ -46,13 +47,17 @@ public class ElephantUser implements UserDetails {
 
 	private boolean enabled = false;
 
+	private int pfpId;
 
-	public ElephantUser(String firstName, String lastName, String email, String password, ElephantUserType type) {
+
+	public ElephantUser(String firstName, String lastName, String email, String password, ElephantUserType type, Integer pfpId) {
 		this.firstName = firstName;
 		this.email = email;
 		this.lastName = lastName;
 		this.password = password;
 		this.type = type;
+		//for whatever reason if pfpId is null just set it to something random
+		this.pfpId = pfpId == null ? new Random().nextInt(48) : pfpId;
 	}
 
 	public String getFirstName() {
