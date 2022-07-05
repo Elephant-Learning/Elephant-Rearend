@@ -32,11 +32,28 @@ public class RegistrationService {
 				request.getType()
 			);
 
+			if (elephantUserService.isUserAlreadyRegistered(elephantUser)) {
+				ConfirmationToken token = confirmationTokenService.getTokenByUser(elephantUserService.getUserId(elephantUser));
+				if (token != null) {
+					// resend email if after 15 mins
+					if (LocalDateTime.now().isAfter(token.getExpiresAt())) {
+						String link = "http://localhost:8080/api/v1/registration/confirm?token=" + token.getToken();
+
+						emailSender.send(elephantUser.getEmail(), "<h1> ey " + elephantUser.getFirstName() + " click dis <a href=\"" + link + "\">link</a> fo free fall guyz coins </h1>", true);
+						return "Resent confirmation email. Check again.";
+					}
+					return "Check email to register";
+				}
+
+				//if null then token already used and email is confirmed already registered
+				throw new IllegalStateException("Email already registered");
+			}
+
 			String token = elephantUserService.signUpUser(elephantUser);
 
 			String link = "http://localhost:8080/api/v1/registration/confirm?token=" + token;
 
-			emailSender.send(elephantUser.getEmail(), "<h1> ey " + request.getFirstName() + " click dis <a href=\"" + link + "\">link</a> fo free fall guyz coins </h1>" );
+			emailSender.send(elephantUser.getEmail(), "<h1> ey " + request.getFirstName() + " click dis <a href=\"" + link + "\">link</a> fo free fall guyz coins </h1>", true);
 
 			//TODO return status to be used on client
 			return token;
@@ -62,6 +79,8 @@ public class RegistrationService {
 		confirmationTokenService.setConfirmedAt(token);
 
 		elephantUserService.enableAppUser(confirmationToken.getElephantUser().getEmail());
+
+		confirmationTokenService.deleteToken(confirmationToken);
 
 		return "confirmed";
 	}

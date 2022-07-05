@@ -3,6 +3,7 @@ package me.elephantsuite.user;
 import java.time.LocalDateTime;
 import java.util.UUID;
 
+import me.elephantsuite.email.EmailSender;
 import me.elephantsuite.registration.token.ConfirmationToken;
 import me.elephantsuite.registration.token.ConfirmationTokenService;
 import lombok.AllArgsConstructor;
@@ -24,6 +25,8 @@ public class ElephantUserService implements UserDetailsService {
 
 	private final ConfirmationTokenService confirmationTokenService;
 
+	private final EmailSender emailSender;
+
 	/**
 	 * Locates the user based on the username. In the actual implementation, the search
 	 * may possibly be case sensitive, or case insensitive depending on how the
@@ -44,15 +47,6 @@ public class ElephantUserService implements UserDetailsService {
 	}
 
 	public String signUpUser(ElephantUser user) {
-		boolean exists = elephantUserRepository.findByEmail(user.getEmail())
-			.isPresent();
-
-		if (exists) {
-			//TODO if email not confirmed, send confirmation email
-			throw new IllegalStateException("Email already registered");
-		}
-
-
 
 		String encodedPassword = bCryptPasswordEncoder.encode(user.getPassword());
 
@@ -66,12 +60,18 @@ public class ElephantUserService implements UserDetailsService {
 
 		confirmationTokenService.saveConfirmationToken(confirmationToken);
 
-		//TODO: Send Email
-
 		return token;
+	}
+
+	public boolean isUserAlreadyRegistered(ElephantUser user) {
+		return elephantUserRepository.findByEmail(user.getEmail()).isPresent();
 	}
 
 	public int enableAppUser(String email) {
 		return elephantUserRepository.enableAppUser(email);
+	}
+
+	public long getUserId(ElephantUser user) {
+		return elephantUserRepository.getId(user.getEmail());
 	}
 }

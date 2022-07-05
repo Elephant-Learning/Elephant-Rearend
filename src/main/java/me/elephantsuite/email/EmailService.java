@@ -1,5 +1,9 @@
 package me.elephantsuite.email;
 
+import java.io.IOException;
+import java.net.ConnectException;
+import java.net.SocketException;
+
 import jakarta.mail.MessagingException;
 import jakarta.mail.internet.MimeMessage;
 import lombok.AllArgsConstructor;
@@ -20,19 +24,20 @@ public class EmailService implements EmailSender {
 
 	@Override
 	@Async
-	public void send(String to, String email) {
+	public void send(String to, String email, boolean html) {
 		try {
 			MimeMessage mimeMessage = mailSender.createMimeMessage();
 
 			MimeMessageHelper helper = new MimeMessageHelper(mimeMessage, "UTF-8");
 
-			helper.setText(email, true);
+			helper.setText(email, html);
 			helper.setTo(to);
 			helper.setSubject("Verify your email");
 			helper.setFrom("no-reply@elephantsuite.me");
 			mailSender.send(mimeMessage);
-		} catch (MessagingException e) {
+		} catch (RuntimeException | MessagingException e) {
 			LOGGER.error("Failed to send email", e);
+			// for testing comment out
 			throw new IllegalStateException("failed to send email");
 		}
 	}
