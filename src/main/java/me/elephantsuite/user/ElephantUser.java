@@ -60,13 +60,7 @@ public class ElephantUser implements UserDetails {
 		this.pfpId = pfpId == null ? new Random().nextInt(48) : pfpId;
 	}
 
-	public String getFirstName() {
-		return firstName;
-	}
 
-	public String getLastName() {
-		return lastName;
-	}
 
 	/**
 	 * Returns the authorities granted to the user. Cannot return <code>null</code>.

@@ -25,6 +25,10 @@ public class ConfirmationTokenService {
 		return confirmationTokenRepository.updateConfirmedAt(token, LocalDateTime.now());
 	}
 
+	public int addExpiredLimit(ConfirmationToken token, int minAfter) {
+		return confirmationTokenRepository.updateExpiredAt(token.getToken(), token.getExpiresAt().plusMinutes(minAfter));
+	}
+
 	public @Nullable ConfirmationToken getTokenByUser(long userId) {
 		return confirmationTokenRepository.getReferenceById(userId);
 	}

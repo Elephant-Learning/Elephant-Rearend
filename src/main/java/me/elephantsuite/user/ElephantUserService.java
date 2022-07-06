@@ -1,6 +1,7 @@
 package me.elephantsuite.user;
 
 import java.time.LocalDateTime;
+import java.util.Optional;
 import java.util.UUID;
 
 import me.elephantsuite.email.EmailSender;
@@ -25,8 +26,6 @@ public class ElephantUserService implements UserDetailsService {
 
 	private final ConfirmationTokenService confirmationTokenService;
 
-	private final EmailSender emailSender;
-
 	/**
 	 * Locates the user based on the username. In the actual implementation, the search
 	 * may possibly be case sensitive, or case insensitive depending on how the
@@ -46,7 +45,7 @@ public class ElephantUserService implements UserDetailsService {
 			.orElseThrow(() -> new UsernameNotFoundException("Could not find user with email " + username +  " !"));
 	}
 
-	public String signUpUser(ElephantUser user) {
+	public ConfirmationToken signUpUser(ElephantUser user) {
 
 		String encodedPassword = bCryptPasswordEncoder.encode(user.getPassword());
 
@@ -60,11 +59,15 @@ public class ElephantUserService implements UserDetailsService {
 
 		confirmationTokenService.saveConfirmationToken(confirmationToken);
 
-		return token;
+		return confirmationToken;
 	}
 
 	public boolean isUserAlreadyRegistered(ElephantUser user) {
 		return elephantUserRepository.findByEmail(user.getEmail()).isPresent();
+	}
+
+	public Optional<ElephantUser> getUserByEmail(String email) {
+		return elephantUserRepository.findByEmail(email);
 	}
 
 	public int enableAppUser(String email) {
