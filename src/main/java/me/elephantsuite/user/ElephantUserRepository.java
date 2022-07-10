@@ -23,4 +23,7 @@ public interface ElephantUserRepository extends JpaRepository<ElephantUser, Long
 	// get id of user from database. There is prob an easier way to do this without SQL but do this for now
 	@Query("SELECT id FROM ElephantUser e WHERE e.email = ?1")
 	long getId(String email);
+
+	@Query("SELECT email FROM ElephantUser e WHERE e.id = ?1")
+	String getEmailById(long id);
 }

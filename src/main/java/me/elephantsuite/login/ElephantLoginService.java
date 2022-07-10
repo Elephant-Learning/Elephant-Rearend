@@ -56,4 +56,22 @@ public class ElephantLoginService {
 			.addObject("user", user)
 			.build();
 	}
+
+	public String getUserById(long id) {
+		ElephantUser user = elephantUserService.getUserById(id);
+
+		if (user == null) {
+			return ResponseBuilder
+				.create()
+				.addResponse(ResponseStatus.FAILURE, "ID does not match any user!")
+				.addValue(jsonObject -> jsonObject.addProperty("id", id))
+				.build();
+		}
+
+		return ResponseBuilder
+			.create()
+			.addResponse(ResponseStatus.SUCCESS, "Retrieved User Info!")
+			.addObject("user", user)
+			.build();
+	}
 }

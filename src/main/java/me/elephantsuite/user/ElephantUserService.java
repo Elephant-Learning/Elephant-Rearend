@@ -8,6 +8,7 @@ import me.elephantsuite.email.EmailSender;
 import me.elephantsuite.registration.token.ConfirmationToken;
 import me.elephantsuite.registration.token.ConfirmationTokenService;
 import lombok.AllArgsConstructor;
+import org.springframework.lang.Nullable;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -76,5 +77,9 @@ public class ElephantUserService implements UserDetailsService {
 
 	public long getUserId(ElephantUser user) {
 		return elephantUserRepository.getId(user.getEmail());
+	}
+
+	public @Nullable ElephantUser getUserById(long id) {
+		return elephantUserRepository.findByEmail(elephantUserRepository.getEmailById(id)).orElse(null);
 	}
 }
