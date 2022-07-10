@@ -1,8 +1,10 @@
 package me.elephantsuite.registration;
 
 import java.time.LocalDateTime;
+import java.util.function.Function;
 
 import com.google.common.base.Throwables;
+import me.elephantsuite.ElephantBackendApplication;
 import me.elephantsuite.email.EmailSender;
 import me.elephantsuite.registration.token.ConfirmationToken;
 import me.elephantsuite.registration.token.ConfirmationTokenService;
@@ -44,20 +46,22 @@ public class RegistrationService {
 					LocalDateTime expiresAt = token.getExpiresAt();
 					if (LocalDateTime.now().isAfter(expiresAt)) {
 
-						// reset expiration to be due in another 15 minutes
-						confirmationTokenService.addExpiredLimit(token, 15);
+						if (!ElephantBackendApplication.ELEPHANT_CONFIG.getConfigOption("isDevelopment", Boolean::parseBoolean)) {
+							// reset expiration to be due in another 15 minutes
+							confirmationTokenService.addExpiredLimit(token, 15);
 
-						String link = "http://localhost:8080/api/v1/registration/confirm?token=" + token.getToken();
+							String link = ElephantBackendApplication.ELEPHANT_CONFIG.getConfigOption("elephantDomain", Function.identity()) + "/api/v1/registration/confirm?token=" + token.getToken();
 
-						try {
-							emailSender.send(elephantUser.getEmail(), "<h1> ey " + elephantUser.getFirstName() + " click dis <a href=\"" + link + "\">link</a> fo free fall guyz coins </h1>", true);
-						} catch (IllegalStateException e) {
-							return ResponseBuilder
-								.create()
-								.addResponse(ResponseStatus.FAILURE, "Exception while emailing link to user!")
-								.addValue(object -> object.addProperty("exception", Throwables.getRootCause(e).getMessage()))
-								.addToken(token)
-								.build();
+							try {
+								emailSender.send(elephantUser.getEmail(), "<h1> ey " + elephantUser.getFirstName() + " click dis <a href=\"" + link + "\">link</a> fo free fall guyz coins </h1>", true);
+							} catch (IllegalStateException e) {
+								return ResponseBuilder
+									.create()
+									.addResponse(ResponseStatus.FAILURE, "Exception while emailing link to user!")
+									.addValue(object -> object.addProperty("exception", Throwables.getRootCause(e).getMessage()))
+									.addToken(token)
+									.build();
+							}
 						}
 
 						return ResponseBuilder
@@ -85,22 +89,25 @@ public class RegistrationService {
 
 			ConfirmationToken token = elephantUserService.signUpUser(elephantUser);
 
-			String link = "http://localhost:8080/api/v1/registration/confirm?token=" + token.getToken();
+			String link = ElephantBackendApplication.ELEPHANT_CONFIG.getConfigOption("elephantDomain", Function.identity()) + "/api/v1/registration/confirm?token=" + token.getToken();
 
-			try {
-				emailSender.send(elephantUser.getEmail(), "<h1> ey " + request.getFirstName() + " click dis <a href=\"" + link + "\">link</a> fo free fall guyz coins </h1>", true);
-			} catch (IllegalStateException e) {
-				return ResponseBuilder
-					.create()
-					.addResponse(ResponseStatus.FAILURE, "Exception while emailing link to user!")
-					.addValue(object -> object.addProperty("exception", Throwables.getRootCause(e).getMessage()))
-					.addToken(token)
-					.build();
+			if (!ElephantBackendApplication.ELEPHANT_CONFIG.getConfigOption("isDevelopment", Boolean::parseBoolean)) {
+				try {
+					emailSender.send(elephantUser.getEmail(), "<h1> ey " + request.getFirstName() + " click dis <a href=\"" + link + "\">link</a> fo free fall guyz coins </h1>", true);
+				} catch (IllegalStateException e) {
+					return ResponseBuilder
+						.create()
+						.addResponse(ResponseStatus.FAILURE, "Exception while emailing link to user!")
+						.addValue(object -> object.addProperty("exception", Throwables.getRootCause(e).getMessage()))
+						.addToken(token)
+						.build();
+				}
 			}
 			return ResponseBuilder
 				.create()
 				.addResponse(ResponseStatus.SUCCESS, "token confirmed, email sent")
 				.addToken(token)
+				.addValue(jsonObject -> jsonObject.addProperty("link", link))
 				.build();
 		}
 

@@ -3,10 +3,12 @@ package me.elephantsuite.email;
 import java.io.IOException;
 import java.net.ConnectException;
 import java.net.SocketException;
+import java.util.function.Function;
 
 import jakarta.mail.MessagingException;
 import jakarta.mail.internet.MimeMessage;
 import lombok.AllArgsConstructor;
+import me.elephantsuite.ElephantBackendApplication;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.mail.javamail.JavaMailSender;
@@ -33,7 +35,7 @@ public class EmailService implements EmailSender {
 			helper.setText(email, html);
 			helper.setTo(to);
 			helper.setSubject("Verify your email");
-			helper.setFrom("no-reply@elephantsuite.me");
+			helper.setFrom(ElephantBackendApplication.ELEPHANT_CONFIG.getConfigOption("senderEmailAddress", Function.identity()));
 			mailSender.send(mimeMessage);
 		} catch (RuntimeException | MessagingException e) {
 			LOGGER.error("Failed to send email", e);
