@@ -20,7 +20,7 @@ public class ElephantLoginService {
 	public String login(LoginRequest request) {
 
 		String email = request.getEmail();
-		String encryptedPassword = bCryptPasswordEncoder.encode(request.getPassword());
+		String password = request.getPassword();
 
 		if (!emailValidator.test(email)) {
 			return ResponseBuilder
@@ -40,11 +40,12 @@ public class ElephantLoginService {
 				.build();
 		}
 
-		if (!user.getPassword().equals(encryptedPassword)) {
+		if (!bCryptPasswordEncoder.matches(password, user.getPassword())) {
 			return ResponseBuilder
 				.create()
 				.addResponse(ResponseStatus.FAILURE, "Invalid password!")
 				.addObject("loginInfo", request)
+				.addValue(jsonObject -> jsonObject.addProperty("encryptedPassword", user.getPassword()))
 				.addObject("user", user)
 				.build();
 		}
