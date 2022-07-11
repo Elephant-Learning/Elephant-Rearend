@@ -1,5 +1,7 @@
 package me.elephantsuite.registration;
 
+import java.util.List;
+
 import me.elephantsuite.user.ElephantUserType;
 import lombok.AllArgsConstructor;
 import lombok.EqualsAndHashCode;
@@ -24,4 +26,6 @@ public class RegistrationRequest {
 	private final ElephantUserType type;
 
 	private final Integer pfpId;
+
+	private final List<Long> friendIds;
 }

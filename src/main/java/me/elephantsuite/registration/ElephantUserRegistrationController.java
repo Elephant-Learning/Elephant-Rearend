@@ -9,7 +9,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-@RequestMapping(path = "registration")
+@RequestMapping(path = "user/registration")
 @AllArgsConstructor
 public class ElephantUserRegistrationController {
 
@@ -21,7 +21,7 @@ public class ElephantUserRegistrationController {
 		return registrationService.register(request);
 	}
 
-	@GetMapping(path = "confirm")
+	@PostMapping(path = "confirm")
 	public String confirm(@RequestParam("token") String token) {
 		return registrationService.confirmToken(token);
 	}

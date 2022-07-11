@@ -39,7 +39,7 @@ public class ConfirmationToken {
 	private LocalDateTime confirmedAt;
 
 	@ManyToOne
-	@JoinColumn(nullable = false, name = "elephant_app_user_id")
+	@JoinColumn(nullable = false, name = "elephant_user_id")
 	private ElephantUser elephantUser;
 
 	public ConfirmationToken(String token, LocalDateTime createdAt, LocalDateTime expiresAt, ElephantUser elephantUser) {

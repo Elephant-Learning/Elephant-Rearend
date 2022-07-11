@@ -1,15 +1,20 @@
 package me.elephantsuite.user;
 
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.List;
 import java.util.Random;
 
+import jakarta.persistence.ElementCollection;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.OneToMany;
 import jakarta.persistence.SequenceGenerator;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
@@ -49,8 +54,11 @@ public class ElephantUser implements UserDetails {
 
 	private int pfpId;
 
+	@ElementCollection
+	@JoinColumn(nullable = false, name = "elephant_user_id")
+	private List<Long> friendIds;
 
-	public ElephantUser(String firstName, String lastName, String email, String password, ElephantUserType type, Integer pfpId) {
+	public ElephantUser(String firstName, String lastName, String email, String password, ElephantUserType type, Integer pfpId, List<Long> friendIds) {
 		this.firstName = firstName;
 		this.email = email;
 		this.lastName = lastName;
@@ -58,6 +66,7 @@ public class ElephantUser implements UserDetails {
 		this.type = type;
 		//for whatever reason if pfpId is null just set it to something random
 		this.pfpId = pfpId == null ? new Random().nextInt(48) : pfpId;
+		this.friendIds = friendIds == null ? new ArrayList<>() : friendIds;
 	}
 
 
