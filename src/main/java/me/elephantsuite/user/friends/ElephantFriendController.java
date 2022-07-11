@@ -9,9 +9,7 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @RequestMapping(path = "user/friends")
 @AllArgsConstructor
-public class ElephantFriendController {
-
-	private final ElephantFriendService service;
+public record ElephantFriendController(ElephantFriendService service) {
 
 	@PostMapping
 	public String addFriend(@RequestBody FriendRequest friendRequest) {

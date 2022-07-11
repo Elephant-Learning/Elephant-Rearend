@@ -4,7 +4,6 @@ import java.time.LocalDateTime;
 import java.util.Optional;
 import java.util.UUID;
 
-import me.elephantsuite.email.EmailSender;
 import me.elephantsuite.registration.token.ConfirmationToken;
 import me.elephantsuite.registration.token.ConfirmationTokenService;
 import lombok.AllArgsConstructor;
@@ -18,14 +17,10 @@ import org.springframework.stereotype.Service;
 @Service
 @AllArgsConstructor
 //loads data from user repository
-public class ElephantUserService implements UserDetailsService {
+public record ElephantUserService(ElephantUserRepository elephantUserRepository,
+								  BCryptPasswordEncoder bCryptPasswordEncoder,
+								  ConfirmationTokenService confirmationTokenService) implements UserDetailsService {
 
-
-	private final ElephantUserRepository elephantUserRepository;
-
-	private final BCryptPasswordEncoder bCryptPasswordEncoder;
-
-	private final ConfirmationTokenService confirmationTokenService;
 
 	/**
 	 * Locates the user based on the username. In the actual implementation, the search
@@ -43,7 +38,7 @@ public class ElephantUserService implements UserDetailsService {
 	public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
 		return this.elephantUserRepository
 			.findByEmail(username)
-			.orElseThrow(() -> new UsernameNotFoundException("Could not find user with email " + username +  " !"));
+			.orElseThrow(() -> new UsernameNotFoundException("Could not find user with email " + username + " !"));
 	}
 
 	public ConfirmationToken signUpUser(ElephantUser user) {
@@ -79,7 +74,8 @@ public class ElephantUserService implements UserDetailsService {
 		return elephantUserRepository.getId(user.getEmail());
 	}
 
-	public @Nullable ElephantUser getUserById(long id) {
+	public @Nullable
+	ElephantUser getUserById(long id) {
 		return elephantUserRepository.findByEmail(elephantUserRepository.getEmailById(id)).orElse(null);
 	}
 }

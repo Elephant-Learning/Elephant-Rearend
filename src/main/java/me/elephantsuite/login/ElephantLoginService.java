@@ -11,11 +11,9 @@ import org.springframework.stereotype.Service;
 
 @Service
 @AllArgsConstructor
-public class ElephantLoginService {
-
-	private final ElephantUserService elephantUserService;
-	private final EmailValidator emailValidator;
-	private final BCryptPasswordEncoder bCryptPasswordEncoder;
+public record ElephantLoginService(ElephantUserService elephantUserService,
+								   EmailValidator emailValidator,
+								   BCryptPasswordEncoder bCryptPasswordEncoder) {
 
 	public String login(LoginRequest request) {
 

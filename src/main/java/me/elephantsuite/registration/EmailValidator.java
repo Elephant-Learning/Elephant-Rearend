@@ -8,7 +8,7 @@ import org.springframework.stereotype.Service;
 @Service
 public class EmailValidator implements Predicate<String> {
 
-	private static Pattern emailPattern = Pattern.compile("^[\\w!#$%&'*+/=?`{|}~^-]+(?:\\.[\\w!#$%&'*+/=?`{|}~^-]+)*@(?:[a-zA-Z0-9-]+\\.)+[a-zA-Z]{2,6}$");
+	private static final Pattern EMAIL_PATTERN = Pattern.compile("^[\\w!#$%&'*+/=?`{|}~^-]+(?:\\.[\\w!#$%&'*+/=?`{|}~^-]+)*@(?:[a-zA-Z0-9-]+\\.)+[a-zA-Z]{2,6}$");
 
 	/**
 	 * Evaluates this predicate on the given argument.
@@ -19,6 +19,6 @@ public class EmailValidator implements Predicate<String> {
 	 */
 	@Override
 	public boolean test(String s) {
-		return emailPattern.matcher(s).matches();
+		return EMAIL_PATTERN.matcher(s).matches();
 	}
 }

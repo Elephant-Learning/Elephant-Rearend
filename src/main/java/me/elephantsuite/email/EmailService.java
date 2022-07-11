@@ -1,8 +1,5 @@
 package me.elephantsuite.email;
 
-import java.io.IOException;
-import java.net.ConnectException;
-import java.net.SocketException;
 import java.util.function.Function;
 
 import jakarta.mail.MessagingException;
@@ -18,11 +15,9 @@ import org.springframework.stereotype.Service;
 
 @Service
 @AllArgsConstructor
-public class EmailService implements EmailSender {
+public record EmailService(JavaMailSender mailSender) implements EmailSender {
 
 	private final static Logger LOGGER = LogManager.getLogger(EmailService.class);
-
-	private final JavaMailSender mailSender;
 
 	@Override
 	@Async

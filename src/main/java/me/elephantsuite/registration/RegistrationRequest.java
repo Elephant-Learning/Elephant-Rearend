@@ -10,22 +10,11 @@ import lombok.ToString;
 
 @Getter
 @AllArgsConstructor
-@EqualsAndHashCode
+@EqualsAndHashCode(callSuper = false)
 @ToString
 //format for a rq
-public class RegistrationRequest {
+public record RegistrationRequest(String firstName, String lastName, String password,
+								  String email, ElephantUserType type,
+								  Integer pfpId, List<Long> friendIds) {
 
-	private final String firstName;
-
-	private final String lastName;
-
-	private final String password;
-
-	private final String email;
-
-	private final ElephantUserType type;
-
-	private final Integer pfpId;
-
-	private final List<Long> friendIds;
 }

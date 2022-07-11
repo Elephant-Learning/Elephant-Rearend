@@ -7,11 +7,8 @@ import lombok.ToString;
 
 @Getter
 @AllArgsConstructor
-@EqualsAndHashCode
+@EqualsAndHashCode(callSuper = false)
 @ToString
-public class LoginRequest {
+public record LoginRequest(String email, String password) {
 
-	private String email;
-
-	private String password;
 }

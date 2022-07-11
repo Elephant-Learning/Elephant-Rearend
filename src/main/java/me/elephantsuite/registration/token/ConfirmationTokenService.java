@@ -9,9 +9,8 @@ import org.springframework.stereotype.Service;
 
 @Service
 @AllArgsConstructor
-public class ConfirmationTokenService {
-
-	private final ConfirmationTokenRepository confirmationTokenRepository;
+public record ConfirmationTokenService(
+	ConfirmationTokenRepository confirmationTokenRepository) {
 
 	public void saveConfirmationToken(ConfirmationToken token) {
 		confirmationTokenRepository.save(token);
@@ -29,7 +28,7 @@ public class ConfirmationTokenService {
 		return confirmationTokenRepository.updateExpiredAt(token.getToken(), token.getExpiresAt().plusMinutes(minAfter));
 	}
 
-	public @Nullable ConfirmationToken getTokenByUser(long userId) {
+	public ConfirmationToken getTokenByUser(long userId) {
 		return confirmationTokenRepository.getReferenceById(userId);
 	}
 

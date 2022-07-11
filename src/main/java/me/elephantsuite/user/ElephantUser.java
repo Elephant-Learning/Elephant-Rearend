@@ -20,6 +20,7 @@ import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import me.elephantsuite.user.notification.Notification;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -58,6 +59,9 @@ public class ElephantUser implements UserDetails {
 	@JoinColumn(nullable = false, name = "elephant_user_id")
 	private List<Long> friendIds;
 
+	@OneToMany(mappedBy = "elephant_user")
+	private List<Notification> notifications;
+
 	public ElephantUser(String firstName, String lastName, String email, String password, ElephantUserType type, Integer pfpId, List<Long> friendIds) {
 		this.firstName = firstName;
 		this.email = email;
@@ -68,7 +72,6 @@ public class ElephantUser implements UserDetails {
 		this.pfpId = pfpId == null ? new Random().nextInt(48) : pfpId;
 		this.friendIds = friendIds == null ? new ArrayList<>() : friendIds;
 	}
-
 
 
 	/**

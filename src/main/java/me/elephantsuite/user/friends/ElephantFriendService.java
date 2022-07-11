@@ -9,9 +9,7 @@ import org.springframework.stereotype.Service;
 
 @Service
 @AllArgsConstructor
-public class ElephantFriendService {
-
-	private ElephantUserService userService;
+public record ElephantFriendService(ElephantUserService userService) {
 
 	public String addFriend(FriendRequest request) {
 

@@ -18,13 +18,11 @@ import org.springframework.transaction.annotation.Transactional;
 
 @Service
 @AllArgsConstructor
-public class RegistrationService {
+public record RegistrationService(ElephantUserService elephantUserService,
+								  EmailValidator emailValidator,
+								  ConfirmationTokenService confirmationTokenService,
+								  EmailSender emailSender) {
 
-
-	private final ElephantUserService elephantUserService;
-	private final EmailValidator emailValidator;
-	private final ConfirmationTokenService confirmationTokenService;
-	private final EmailSender emailSender;
 
 	// when given a request process it
 	public String register(RegistrationRequest request) {
