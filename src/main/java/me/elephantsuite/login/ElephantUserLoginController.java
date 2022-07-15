@@ -11,7 +11,8 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @RequestMapping(path = "user/login")
 @AllArgsConstructor
-public record ElephantUserLoginController(ElephantLoginService elephantLoginService) {
+public final class ElephantUserLoginController {
+	private final ElephantLoginService elephantLoginService;
 
 	@PostMapping
 	public String login(@RequestBody LoginRequest request) {

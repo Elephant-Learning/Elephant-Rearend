@@ -1,8 +1,10 @@
 package me.elephantsuite.user.notification;
 
+import java.util.List;
 import java.util.Optional;
 
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -10,4 +12,6 @@ import org.springframework.transaction.annotation.Transactional;
 @Repository
 public interface NotificationRepository extends JpaRepository<Notification, Long> {
 
+	@Query("SELECT notifications FROM Notification n WHERE n.elephant_user_id = ?1")
+	List<Notification> getByUserId(Long id);
 }

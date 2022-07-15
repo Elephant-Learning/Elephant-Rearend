@@ -13,8 +13,20 @@ import lombok.ToString;
 @EqualsAndHashCode(callSuper = false)
 @ToString
 //format for a rq
-public record RegistrationRequest(String firstName, String lastName, String password,
-								  String email, ElephantUserType type,
-								  Integer pfpId, List<Long> friendIds) {
+public final class RegistrationRequest {
+
+	private final String firstName;
+
+	private final String lastName;
+
+	private final String password;
+
+	private final String email;
+
+	private final ElephantUserType type;
+
+	private final Integer pfpId;
+
+	private final List<Long> friendIds;
 
 }

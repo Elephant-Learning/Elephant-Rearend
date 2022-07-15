@@ -9,6 +9,10 @@ import lombok.ToString;
 @AllArgsConstructor
 @EqualsAndHashCode(callSuper = false)
 @ToString
-public record FriendRequest(long userId, long friendId) {
+public final class FriendRequest {
+
+	private final long userId;
+
+	private final long friendId;
 
 }

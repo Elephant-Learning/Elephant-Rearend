@@ -1,5 +1,6 @@
 package me.elephantsuite.email;
 
+import java.util.Objects;
 import java.util.function.Function;
 
 import jakarta.mail.MessagingException;
@@ -15,9 +16,10 @@ import org.springframework.stereotype.Service;
 
 @Service
 @AllArgsConstructor
-public record EmailService(JavaMailSender mailSender) implements EmailSender {
+public final class EmailService implements EmailSender {
 
 	private final static Logger LOGGER = LogManager.getLogger(EmailService.class);
+	private final JavaMailSender mailSender;
 
 	@Override
 	@Async
@@ -38,4 +40,5 @@ public record EmailService(JavaMailSender mailSender) implements EmailSender {
 			throw new IllegalStateException("failed to send email");
 		}
 	}
+
 }

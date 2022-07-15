@@ -1,5 +1,7 @@
 package me.elephantsuite.login;
 
+import java.util.Objects;
+
 import lombok.AllArgsConstructor;
 import me.elephantsuite.registration.EmailValidator;
 import me.elephantsuite.response.ResponseBuilder;
@@ -11,9 +13,10 @@ import org.springframework.stereotype.Service;
 
 @Service
 @AllArgsConstructor
-public record ElephantLoginService(ElephantUserService elephantUserService,
-								   EmailValidator emailValidator,
-								   BCryptPasswordEncoder bCryptPasswordEncoder) {
+public final class ElephantLoginService {
+	private final ElephantUserService elephantUserService;
+	private final EmailValidator emailValidator;
+	private final BCryptPasswordEncoder bCryptPasswordEncoder;
 
 	public String login(LoginRequest request) {
 

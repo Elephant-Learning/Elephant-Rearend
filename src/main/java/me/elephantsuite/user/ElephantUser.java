@@ -6,6 +6,7 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Random;
 
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.ElementCollection;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
@@ -20,6 +21,7 @@ import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import lombok.ToString;
 import me.elephantsuite.user.notification.Notification;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -30,6 +32,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 @EqualsAndHashCode
 @NoArgsConstructor
 @Entity
+@ToString
 //eventually what we want to create based on a registration request
 public class ElephantUser implements UserDetails {
 
@@ -59,7 +62,7 @@ public class ElephantUser implements UserDetails {
 	@JoinColumn(nullable = false, name = "elephant_user_id")
 	private List<Long> friendIds;
 
-	@OneToMany(mappedBy = "elephant_user")
+	@OneToMany(mappedBy = "recipient", cascade = CascadeType.ALL, orphanRemoval = true)
 	private List<Notification> notifications;
 
 	public ElephantUser(String firstName, String lastName, String email, String password, ElephantUserType type, Integer pfpId, List<Long> friendIds) {

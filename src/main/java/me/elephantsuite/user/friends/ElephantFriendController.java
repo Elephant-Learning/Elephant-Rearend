@@ -1,5 +1,7 @@
 package me.elephantsuite.user.friends;
 
+import java.util.Objects;
+
 import lombok.AllArgsConstructor;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -9,7 +11,10 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @RequestMapping(path = "user/friends")
 @AllArgsConstructor
-public record ElephantFriendController(ElephantFriendService service) {
+public final class ElephantFriendController {
+
+	private final ElephantFriendService service;
+
 
 	@PostMapping
 	public String addFriend(@RequestBody FriendRequest friendRequest) {

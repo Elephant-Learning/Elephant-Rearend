@@ -1,5 +1,7 @@
 package me.elephantsuite.registration;
 
+import java.util.Objects;
+
 import lombok.AllArgsConstructor;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -10,8 +12,10 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @RequestMapping(path = "user/registration")
 @AllArgsConstructor
-public record ElephantUserRegistrationController(
-	RegistrationService registrationService) {
+public final class ElephantUserRegistrationController {
+
+	private final RegistrationService registrationService;
+
 
 	// called on post rq
 	@PostMapping

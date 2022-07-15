@@ -1,6 +1,7 @@
 package me.elephantsuite.user;
 
 import java.time.LocalDateTime;
+import java.util.Objects;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -17,10 +18,13 @@ import org.springframework.stereotype.Service;
 @Service
 @AllArgsConstructor
 //loads data from user repository
-public record ElephantUserService(ElephantUserRepository elephantUserRepository,
-								  BCryptPasswordEncoder bCryptPasswordEncoder,
-								  ConfirmationTokenService confirmationTokenService) implements UserDetailsService {
+public final class ElephantUserService implements UserDetailsService {
 
+	private final ElephantUserRepository elephantUserRepository;
+
+	private final BCryptPasswordEncoder bCryptPasswordEncoder;
+
+	private final ConfirmationTokenService confirmationTokenService;
 
 	/**
 	 * Locates the user based on the username. In the actual implementation, the search

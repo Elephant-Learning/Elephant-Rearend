@@ -1,5 +1,7 @@
 package me.elephantsuite.user.friends;
 
+import java.util.Objects;
+
 import lombok.AllArgsConstructor;
 import me.elephantsuite.response.ResponseBuilder;
 import me.elephantsuite.response.ResponseStatus;
@@ -9,7 +11,11 @@ import org.springframework.stereotype.Service;
 
 @Service
 @AllArgsConstructor
-public record ElephantFriendService(ElephantUserService userService) {
+public final class ElephantFriendService {
+
+	private final ElephantUserService userService;
+
+
 
 	public String addFriend(FriendRequest request) {
 

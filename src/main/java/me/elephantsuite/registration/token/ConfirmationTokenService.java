@@ -1,16 +1,18 @@
 package me.elephantsuite.registration.token;
 
 import java.time.LocalDateTime;
+import java.util.Objects;
 import java.util.Optional;
 
+import jakarta.persistence.EntityNotFoundException;
 import lombok.AllArgsConstructor;
 import org.springframework.lang.Nullable;
 import org.springframework.stereotype.Service;
 
 @Service
 @AllArgsConstructor
-public record ConfirmationTokenService(
-	ConfirmationTokenRepository confirmationTokenRepository) {
+public final class ConfirmationTokenService {
+	private final ConfirmationTokenRepository confirmationTokenRepository;
 
 	public void saveConfirmationToken(ConfirmationToken token) {
 		confirmationTokenRepository.save(token);
@@ -29,7 +31,11 @@ public record ConfirmationTokenService(
 	}
 
 	public ConfirmationToken getTokenByUser(long userId) {
-		return confirmationTokenRepository.getReferenceById(userId);
+		try {
+			return confirmationTokenRepository.getReferenceById(userId);
+		} catch (Exception e) {
+			return null;
+		}
 	}
 
 	public void deleteToken(ConfirmationToken token) {
@@ -39,4 +45,6 @@ public record ConfirmationTokenService(
 	public long getTokenId(ConfirmationToken token) {
 		return confirmationTokenRepository.getId(token.getToken());
 	}
+
+
 }

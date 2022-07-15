@@ -1,6 +1,7 @@
 package me.elephantsuite.registration;
 
 import java.time.LocalDateTime;
+import java.util.Objects;
 import java.util.function.Function;
 
 import com.google.common.base.Throwables;
@@ -18,11 +19,15 @@ import org.springframework.transaction.annotation.Transactional;
 
 @Service
 @AllArgsConstructor
-public record RegistrationService(ElephantUserService elephantUserService,
-								  EmailValidator emailValidator,
-								  ConfirmationTokenService confirmationTokenService,
-								  EmailSender emailSender) {
+public final class RegistrationService {
 
+	private final ElephantUserService elephantUserService;
+
+	private final EmailValidator emailValidator;
+
+	private final ConfirmationTokenService confirmationTokenService;
+
+	private final EmailSender emailSender;
 
 	// when given a request process it
 	public String register(RegistrationRequest request) {
