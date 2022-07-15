@@ -65,7 +65,7 @@ public class ElephantUser implements UserDetails {
 	@OneToMany(mappedBy = "recipient", cascade = CascadeType.ALL, orphanRemoval = true)
 	private List<Notification> notifications;
 
-	public ElephantUser(String firstName, String lastName, String email, String password, ElephantUserType type, Integer pfpId, List<Long> friendIds) {
+	public ElephantUser(String firstName, String lastName, String email, String password, ElephantUserType type, Integer pfpId, List<Long> friendIds, List<Notification> notifications) {
 		this.firstName = firstName;
 		this.email = email;
 		this.lastName = lastName;
@@ -74,6 +74,7 @@ public class ElephantUser implements UserDetails {
 		//for whatever reason if pfpId is null just set it to something random
 		this.pfpId = pfpId == null ? new Random().nextInt(48) : pfpId;
 		this.friendIds = friendIds == null ? new ArrayList<>() : friendIds;
+		this.notifications = notifications == null ? new ArrayList<>() : notifications;
 	}
 
 

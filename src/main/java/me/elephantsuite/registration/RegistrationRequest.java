@@ -7,13 +7,14 @@ import lombok.AllArgsConstructor;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.ToString;
+import me.elephantsuite.user.notification.Notification;
 
 @Getter
 @AllArgsConstructor
 @EqualsAndHashCode(callSuper = false)
 @ToString
 //format for a rq
-public final class RegistrationRequest {
+public class RegistrationRequest {
 
 	private final String firstName;
 
@@ -29,4 +30,5 @@ public final class RegistrationRequest {
 
 	private final List<Long> friendIds;
 
+	private final List<Notification> notifications;
 }

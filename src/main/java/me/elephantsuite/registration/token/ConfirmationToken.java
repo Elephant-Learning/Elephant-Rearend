@@ -36,8 +36,6 @@ public class ConfirmationToken {
 	@Column(nullable = false)
 	private LocalDateTime expiresAt;
 
-	private LocalDateTime confirmedAt;
-
 	@ManyToOne
 	@JoinColumn(nullable = false, name = "elephant_user_id")
 	private ElephantUser elephantUser;

@@ -33,7 +33,7 @@ public class NotificationService {
 		return notificationRepository.save(notification);
 	}
 
-	public List<Notification> getNotificationsFromUser(ElephantUser user) {
+	public List<Notification> getNotificationsByUser(ElephantUser user) {
 		return notificationRepository.getByUserId(user.getId());
 	}
 

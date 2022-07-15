@@ -9,8 +9,9 @@ import lombok.ToString;
 @AllArgsConstructor
 @EqualsAndHashCode(callSuper = false)
 @ToString
-public final class LoginRequest {
-	private final String email;
-	private final String password;
+public class LoginRequest {
 
+	private final String email;
+
+	private final String password;
 }

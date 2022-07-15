@@ -11,7 +11,7 @@ import org.springframework.stereotype.Service;
 
 @Service
 @AllArgsConstructor
-public final class ConfirmationTokenService {
+public class ConfirmationTokenService {
 	private final ConfirmationTokenRepository confirmationTokenRepository;
 
 	public void saveConfirmationToken(ConfirmationToken token) {
@@ -20,10 +20,6 @@ public final class ConfirmationTokenService {
 
 	public Optional<ConfirmationToken> getToken(String token) {
 		return confirmationTokenRepository.findByToken(token);
-	}
-
-	public int setConfirmedAt(String token) {
-		return confirmationTokenRepository.updateConfirmedAt(token, LocalDateTime.now());
 	}
 
 	public int addExpiredLimit(ConfirmationToken token, int minAfter) {

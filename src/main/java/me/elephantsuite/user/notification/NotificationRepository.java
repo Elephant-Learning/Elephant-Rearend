@@ -12,6 +12,6 @@ import org.springframework.transaction.annotation.Transactional;
 @Repository
 public interface NotificationRepository extends JpaRepository<Notification, Long> {
 
-	@Query("SELECT notifications FROM Notification n WHERE n.elephant_user_id = ?1")
+	@Query("SELECT notifications FROM ElephantUser e WHERE e.id = ?1")
 	List<Notification> getByUserId(Long id);
 }

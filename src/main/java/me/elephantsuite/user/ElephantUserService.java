@@ -18,7 +18,7 @@ import org.springframework.stereotype.Service;
 @Service
 @AllArgsConstructor
 //loads data from user repository
-public final class ElephantUserService implements UserDetailsService {
+public class ElephantUserService implements UserDetailsService {
 
 	private final ElephantUserRepository elephantUserRepository;
 
@@ -81,5 +81,9 @@ public final class ElephantUserService implements UserDetailsService {
 	public @Nullable
 	ElephantUser getUserById(long id) {
 		return elephantUserRepository.findByEmail(elephantUserRepository.getEmailById(id)).orElse(null);
+	}
+
+	public ElephantUser saveUser(ElephantUser user) {
+		return elephantUserRepository.save(user);
 	}
 }

@@ -12,7 +12,7 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @RequestMapping(path = "user/registration")
 @AllArgsConstructor
-public final class ElephantUserRegistrationController {
+public class ElephantUserRegistrationController {
 
 	private final RegistrationService registrationService;
 

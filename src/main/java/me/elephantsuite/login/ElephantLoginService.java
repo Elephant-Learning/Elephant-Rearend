@@ -13,7 +13,7 @@ import org.springframework.stereotype.Service;
 
 @Service
 @AllArgsConstructor
-public final class ElephantLoginService {
+public class ElephantLoginService {
 	private final ElephantUserService elephantUserService;
 	private final EmailValidator emailValidator;
 	private final BCryptPasswordEncoder bCryptPasswordEncoder;

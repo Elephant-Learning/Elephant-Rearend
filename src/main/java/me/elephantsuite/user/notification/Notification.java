@@ -24,7 +24,7 @@ import me.elephantsuite.user.ElephantUser;
 @EqualsAndHashCode(callSuper = false)
 @AllArgsConstructor
 @ToString
-public final class Notification {
+public class Notification {
 	@Id
 	@SequenceGenerator(name = "notification", sequenceName = "notification_sequence", allocationSize = 1)
 	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "notification_sequence")

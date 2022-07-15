@@ -5,6 +5,7 @@ import java.util.Optional;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -26,6 +27,5 @@ public interface ElephantUserRepository extends JpaRepository<ElephantUser, Long
 
 	@Query("SELECT email FROM ElephantUser e WHERE e.id = ?1")
 	String getEmailById(long id);
-
 
 }

@@ -11,7 +11,7 @@ import org.springframework.stereotype.Service;
 
 @Service
 @AllArgsConstructor
-public final class ElephantFriendService {
+public class ElephantFriendService {
 
 	private final ElephantUserService userService;
 
@@ -44,7 +44,14 @@ public final class ElephantFriendService {
 				.build();
 		}
 
+		//TODO add notification and actual "request"s
 		user.getFriendIds().add(friendId);
+
+		friend.getFriendIds().add(userId);
+
+		user = this.userService.saveUser(user);
+
+		friend = this.userService.saveUser(friend);
 
 		return ResponseBuilder
 			.create()
@@ -83,9 +90,15 @@ public final class ElephantFriendService {
 
 		user.getFriendIds().remove(friendId);
 
+		friend.getFriendIds().remove(userId);
+
+		this.userService.saveUser(user);
+
+		this.userService.saveUser(friend);
+
 		return ResponseBuilder
 			.create()
-			.addResponse(ResponseStatus.SUCCESS, "Friend added to User!")
+			.addResponse(ResponseStatus.SUCCESS, "Friend removed from User!")
 			.addObject("user", user)
 			.addObject("friend", friend)
 			.build();

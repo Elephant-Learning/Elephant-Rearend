@@ -19,7 +19,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 @Service
 @AllArgsConstructor
-public final class RegistrationService {
+public class RegistrationService {
 
 	private final ElephantUserService elephantUserService;
 
@@ -39,7 +39,9 @@ public final class RegistrationService {
 				request.getPassword(),
 				request.getType(),
 				request.getPfpId(),
-				request.getFriendIds()
+				request.getFriendIds(),
+				request.getNotifications()
+
 			);
 
 			if (elephantUserService.isUserAlreadyRegistered(elephantUser)) {
@@ -151,8 +153,6 @@ public final class RegistrationService {
 				.addToken(confirmationToken)
 				.build();
 		}
-
-		confirmationTokenService.setConfirmedAt(token);
 
 		elephantUserService.enableAppUser(confirmationToken.getElephantUser().getEmail());
 
