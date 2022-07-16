@@ -54,7 +54,6 @@ public class ResponseBuilder {
 		object.addProperty("token", src.getToken());
 		object.addProperty("createdAt", src.getCreatedAt().toString());
 		object.addProperty("expiresAt", src.getExpiresAt().toString());
-		object.addProperty("confirmedAt", src.getConfirmedAt() == null ? null : src.getConfirmedAt().toString());
 		object.add("user", GSON.toJsonTree(src.getElephantUser()));
 
 		this.object.add("token", object);

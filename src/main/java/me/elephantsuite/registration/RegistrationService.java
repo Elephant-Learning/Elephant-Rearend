@@ -136,14 +136,6 @@ public class RegistrationService {
 				.build();
 		}
 
-		if (confirmationToken.getConfirmedAt() != null) {
-			return ResponseBuilder
-				.create()
-				.addResponse(ResponseStatus.FAILURE, "Account already confirmed!")
-				.addToken(confirmationToken)
-				.build();
-		}
-
 		LocalDateTime expiredAt = confirmationToken.getExpiresAt();
 
 		if (expiredAt.isBefore(LocalDateTime.now())) {

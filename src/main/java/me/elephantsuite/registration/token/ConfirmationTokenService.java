@@ -6,12 +6,14 @@ import java.util.Optional;
 
 import jakarta.persistence.EntityNotFoundException;
 import lombok.AllArgsConstructor;
+import me.elephantsuite.ElephantBackendApplication;
 import org.springframework.lang.Nullable;
 import org.springframework.stereotype.Service;
 
 @Service
 @AllArgsConstructor
 public class ConfirmationTokenService {
+
 	private final ConfirmationTokenRepository confirmationTokenRepository;
 
 	public void saveConfirmationToken(ConfirmationToken token) {
@@ -29,7 +31,11 @@ public class ConfirmationTokenService {
 	public ConfirmationToken getTokenByUser(long userId) {
 		try {
 			return confirmationTokenRepository.getReferenceById(userId);
+		} catch (EntityNotFoundException e) {
+			return null;
 		} catch (Exception e) {
+			ElephantBackendApplication.LOGGER.error("Error while getting Confirmation Token by user!", e);
+			e.printStackTrace();
 			return null;
 		}
 	}

@@ -185,7 +185,7 @@ public class PropertiesHandler {
 		public PropertiesHandler build() {
 			PropertiesHandler propertiesHandler = new PropertiesHandler(filename, configValues);
 			propertiesHandler.initialize();
-			System.out.println("Properties Handler with file name \"" + filename + "\" created on path \"" + propertiesHandler.propertiesPath + "\"");
+			ElephantBackendApplication.LOGGER.info("Properties Handler with file name \"" + filename + "\" created on path \"" + propertiesHandler.propertiesPath + "\"");
 			return propertiesHandler;
 		}
 	}

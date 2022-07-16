@@ -1,5 +1,7 @@
 package me.elephantsuite.user.notification;
 
+import java.time.LocalDateTime;
+
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
@@ -21,7 +23,7 @@ import me.elephantsuite.user.ElephantUser;
 @Entity
 @Getter
 @Setter
-@EqualsAndHashCode(callSuper = false)
+@EqualsAndHashCode
 @AllArgsConstructor
 @ToString
 public class Notification {
@@ -34,6 +36,8 @@ public class Notification {
 	private final NotificationType type;
 
 	private final String message;
+
+	private final LocalDateTime time;
 
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "elephant_user_id", foreignKey = @ForeignKey(name = "elephant_user_id"))
