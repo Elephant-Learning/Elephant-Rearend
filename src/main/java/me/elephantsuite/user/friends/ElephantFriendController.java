@@ -17,7 +17,7 @@ public class ElephantFriendController {
 	private final ElephantFriendService service;
 
 
-	@PutMapping
+	@PutMapping(path = "add")
 	public String addFriend(@RequestBody FriendRequest friendRequest) {
 		return this.service.addFriend(friendRequest);
 	}

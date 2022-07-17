@@ -2,12 +2,14 @@ package me.elephantsuite.response;
 
 import java.lang.reflect.Type;
 import java.time.LocalDateTime;
+import java.util.List;
 import java.util.function.Consumer;
 
 import com.google.gson.ExclusionStrategy;
 import com.google.gson.FieldAttributes;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonPrimitive;
@@ -57,6 +59,18 @@ public class ResponseBuilder {
 		object.add("user", GSON.toJsonTree(src.getElephantUser()));
 
 		this.object.add("token", object);
+
+		return this;
+	}
+
+	public <T> ResponseBuilder addList(String name, List<T> list) {
+		JsonArray array = new JsonArray();
+
+		list.forEach(obj -> {
+			array.add(GSON.toJsonTree(obj));
+		});
+
+		this.object.add(name, array);
 
 		return this;
 	}

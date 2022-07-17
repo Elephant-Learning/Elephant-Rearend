@@ -4,7 +4,9 @@ import java.util.List;
 
 import javax.annotation.Nullable;
 
+import jakarta.persistence.EntityNotFoundException;
 import lombok.AllArgsConstructor;
+import me.elephantsuite.ElephantBackendApplication;
 import me.elephantsuite.user.ElephantUser;
 import me.elephantsuite.user.ElephantUserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,11 +14,13 @@ import org.springframework.stereotype.Service;
 
 @Service
 @AllArgsConstructor
-public class NotificationService {
+public class NotificationRepositoryService {
 
 	private final NotificationRepository notificationRepository;
 
 	private final ElephantUserRepository elephantUserRepository;
+
+
 
 	public List<Notification> getAllNotifications() {
 		return notificationRepository.findAll();
@@ -37,16 +41,25 @@ public class NotificationService {
 		return notificationRepository.getByUserId(user.getId());
 	}
 
+
 	public void deleteNotification(Notification notification) {
 		notificationRepository.delete(notification);
 	}
 
 
-	private Notification getById(long id) {
-		return notificationRepository.getReferenceById(id);
+	public Notification getById(long id) {
+		try {
+			return notificationRepository.getReferenceById(id);
+		} catch (EntityNotFoundException e) {
+			return null;
+		} catch (Exception e) {
+			ElephantBackendApplication.LOGGER.error("Error while getting notification by ID!", e);
+			e.printStackTrace();
+			return null;
+		}
 	}
 
-	private Notification save(Notification notification) {
+	public Notification save(Notification notification) {
 		return notificationRepository.save(notification);
 	}
 }

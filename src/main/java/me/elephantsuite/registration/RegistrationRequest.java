@@ -11,7 +11,7 @@ import me.elephantsuite.user.notification.Notification;
 
 @Getter
 @AllArgsConstructor
-@EqualsAndHashCode(callSuper = false)
+@EqualsAndHashCode
 @ToString
 //format for a rq
 public class RegistrationRequest {

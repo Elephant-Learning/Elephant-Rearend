@@ -5,6 +5,8 @@ import java.util.Objects;
 import java.util.Optional;
 import java.util.UUID;
 
+import jakarta.persistence.EntityNotFoundException;
+import me.elephantsuite.ElephantBackendApplication;
 import me.elephantsuite.registration.token.ConfirmationToken;
 import me.elephantsuite.registration.token.ConfirmationTokenService;
 import lombok.AllArgsConstructor;
@@ -78,9 +80,16 @@ public class ElephantUserService implements UserDetailsService {
 		return elephantUserRepository.getId(user.getEmail());
 	}
 
-	public @Nullable
-	ElephantUser getUserById(long id) {
-		return elephantUserRepository.findByEmail(elephantUserRepository.getEmailById(id)).orElse(null);
+	public @Nullable ElephantUser getUserById(long id) {
+		try {
+			return elephantUserRepository.getReferenceById(id);
+		} catch (EntityNotFoundException e) {
+			return null;
+		} catch (Exception e) {
+			ElephantBackendApplication.LOGGER.error("Error while getting User by ID!", e);
+			e.printStackTrace();
+			return null;
+		}
 	}
 
 	public ElephantUser saveUser(ElephantUser user) {
