@@ -65,7 +65,7 @@ public class DeckService {
 				.build();
 		}
 
-		deck.favoriteDeck();
+		deck.likeDeck();
 
 		deck = service.saveDeck(deck);
 
@@ -124,7 +124,7 @@ public class DeckService {
 				.build();
 		}
 
-		addTerms.getNewTerms().forEach(deck.getTerms()::put);
+		addTerms.getNewTerms().forEach(deck::putTerms);
 
 		deck = service.saveDeck(deck);
 

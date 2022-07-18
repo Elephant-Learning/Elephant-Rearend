@@ -12,6 +12,7 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
+import jakarta.persistence.OneToMany;
 import jakarta.persistence.SequenceGenerator;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
@@ -41,12 +42,14 @@ public class Notification {
 
 	private final LocalDateTime time = LocalDateTime.now();
 
-	@ManyToOne(fetch = FetchType.LAZY)
+	@ManyToOne(fetch = FetchType.EAGER)
 	@JoinColumn(name = "elephant_user_id", foreignKey = @ForeignKey(name = "elephant_user_id"))
 	private ElephantUser recipient;
 
 	private ElephantUser sender;
 
+	@ManyToOne(fetch = FetchType.EAGER)
+	@JoinColumn(name = "deck_id", foreignKey = @ForeignKey(name = "deck_id"))
 	private Deck deck;
 
 	public Notification(NotificationType type, String message, ElephantUser recipient, ElephantUser sender, Deck deck) {
