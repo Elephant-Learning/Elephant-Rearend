@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
+import java.util.Objects;
 import java.util.Random;
 
 import jakarta.persistence.CascadeType;
@@ -22,6 +23,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
+import me.elephantsuite.deck.Deck;
 import me.elephantsuite.user.notification.Notification;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -65,16 +67,24 @@ public class ElephantUser implements UserDetails {
 	@OneToMany(mappedBy = "recipient", cascade = CascadeType.ALL, orphanRemoval = true)
 	private List<Notification> notifications;
 
-	public ElephantUser(String firstName, String lastName, String email, String password, ElephantUserType type, Integer pfpId, List<Long> friendIds, List<Notification> notifications) {
-		this.firstName = firstName;
-		this.email = email;
-		this.lastName = lastName;
-		this.password = password;
-		this.type = type;
+	@OneToMany(mappedBy = "author", cascade = CascadeType.ALL, orphanRemoval = true)
+	private List<Deck> decks;
+
+	@ElementCollection
+	@JoinColumn(nullable = false, name = "elephant_user_id")
+	private List<Long> favoriteDeckIds = new ArrayList<>();
+
+	public ElephantUser(String firstName, String lastName, String email, String password, ElephantUserType type, Integer pfpId, List<Long> friendIds, List<Notification> notifications, List<Deck> decks) {
+		this.firstName = Objects.requireNonNull(firstName);
+		this.email = Objects.requireNonNull(email);
+		this.lastName = Objects.requireNonNull(lastName);
+		this.password = Objects.requireNonNull(password);
+		this.type = Objects.requireNonNull(type);
 		//for whatever reason if pfpId is null just set it to something random
 		this.pfpId = pfpId == null ? new Random().nextInt(48) : pfpId;
 		this.friendIds = friendIds == null ? new ArrayList<>() : friendIds;
 		this.notifications = notifications == null ? new ArrayList<>() : notifications;
+		this.decks = decks == null ? new ArrayList<>() : decks;
 	}
 
 

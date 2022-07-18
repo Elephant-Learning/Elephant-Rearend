@@ -2,6 +2,7 @@ package me.elephantsuite.registration;
 
 import java.util.List;
 
+import me.elephantsuite.deck.Deck;
 import me.elephantsuite.user.ElephantUserType;
 import lombok.AllArgsConstructor;
 import lombok.EqualsAndHashCode;
@@ -31,4 +32,6 @@ public class RegistrationRequest {
 	private final List<Long> friendIds;
 
 	private final List<Notification> notifications;
+
+	private final List<Deck> decks;
 }
