@@ -51,17 +51,17 @@ public class DeckService {
 			.build();
 	}
 
-	public String favoriteDeck(DeckRequest.FavoriteDeck favoriteDeck) {
-		Deck deck = service.getDeckById(favoriteDeck.getDeckId());
+	public String likeDeck(DeckRequest.LikeDeck likeDeck) {
+		Deck deck = service.getDeckById(likeDeck.getDeckId());
 
-		ElephantUser user = userService.getUserById(favoriteDeck.getUserId());
+		ElephantUser user = userService.getUserById(likeDeck.getUserId());
 
 		if (deck == null || user == null) {
 			return ResponseBuilder
 				.create()
 				.addResponse(ResponseStatus.FAILURE, "Invalid Deck Or User ID!")
-				.addValue(jsonObject -> jsonObject.addProperty("deckId", favoriteDeck.getDeckId()))
-				.addValue(jsonObject -> jsonObject.addProperty("userId", favoriteDeck.getUserId()))
+				.addValue(jsonObject -> jsonObject.addProperty("deckId", likeDeck.getDeckId()))
+				.addValue(jsonObject -> jsonObject.addProperty("userId", likeDeck.getUserId()))
 				.build();
 		}
 
@@ -69,7 +69,7 @@ public class DeckService {
 
 		deck = service.saveDeck(deck);
 
-		user.getFavoriteDeckIds().add(favoriteDeck.getDeckId());
+		user.getLikedDecksIds().add(likeDeck.getDeckId());
 
 		user = userService.saveUser(user);
 

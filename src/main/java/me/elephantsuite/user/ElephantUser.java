@@ -62,19 +62,19 @@ public class ElephantUser implements UserDetails {
 
 	@ElementCollection
 	@JoinColumn(nullable = false, name = "elephant_user_id")
-	private List<Long> friendIds;
+	private List<Long> friendIds = new ArrayList<>();
 
 	@OneToMany(mappedBy = "recipient", cascade = CascadeType.ALL, orphanRemoval = true)
-	private List<Notification> notifications;
+	private List<Notification> notifications = new ArrayList<>();
 
 	@OneToMany(mappedBy = "author", cascade = CascadeType.ALL, orphanRemoval = true)
-	private List<Deck> decks;
+	private List<Deck> decks = new ArrayList<>();
 
 	@ElementCollection
 	@JoinColumn(nullable = false, name = "elephant_user_id")
-	private List<Long> favoriteDeckIds = new ArrayList<>();
+	private List<Long> likedDecksIds = new ArrayList<>();
 
-	public ElephantUser(String firstName, String lastName, String email, String password, ElephantUserType type, Integer pfpId, List<Long> friendIds, List<Notification> notifications, List<Deck> decks) {
+	public ElephantUser(String firstName, String lastName, String email, String password, ElephantUserType type, Integer pfpId) {
 		this.firstName = Objects.requireNonNull(firstName);
 		this.email = Objects.requireNonNull(email);
 		this.lastName = Objects.requireNonNull(lastName);
@@ -82,9 +82,6 @@ public class ElephantUser implements UserDetails {
 		this.type = Objects.requireNonNull(type);
 		//for whatever reason if pfpId is null just set it to something random
 		this.pfpId = pfpId == null ? new Random().nextInt(48) : pfpId;
-		this.friendIds = friendIds == null ? new ArrayList<>() : friendIds;
-		this.notifications = notifications == null ? new ArrayList<>() : notifications;
-		this.decks = decks == null ? new ArrayList<>() : decks;
 	}
 
 

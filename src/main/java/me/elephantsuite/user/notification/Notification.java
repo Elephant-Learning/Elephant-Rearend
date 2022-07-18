@@ -19,6 +19,7 @@ import lombok.NoArgsConstructor;
 import lombok.RequiredArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
+import me.elephantsuite.deck.Deck;
 import me.elephantsuite.user.ElephantUser;
 
 @Entity
@@ -46,11 +47,14 @@ public class Notification {
 
 	private ElephantUser sender;
 
-	public Notification(NotificationType type, String message, ElephantUser recipient, ElephantUser sender) {
+	private Deck deck;
+
+	public Notification(NotificationType type, String message, ElephantUser recipient, ElephantUser sender, Deck deck) {
 		this.type = type;
 		this.message = message;
 		this.recipient = recipient;
 		this.sender = sender;
+		this.deck = deck;
 	}
 
 

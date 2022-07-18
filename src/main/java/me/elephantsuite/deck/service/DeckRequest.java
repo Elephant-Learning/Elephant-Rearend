@@ -49,7 +49,7 @@ public class DeckRequest {
 	@AllArgsConstructor
 	@EqualsAndHashCode
 	@ToString
-	public static class FavoriteDeck {
+	public static class LikeDeck {
 
 		private final long userId;
 

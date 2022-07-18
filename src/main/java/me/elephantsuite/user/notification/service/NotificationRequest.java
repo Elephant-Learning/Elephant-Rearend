@@ -23,4 +23,34 @@ public class NotificationRequest {
 
 		private final long recipientId;
 	}
+
+	@Getter
+	@AllArgsConstructor
+	@EqualsAndHashCode
+	@ToString
+	public static class LikedDeckRequest {
+		private final NotificationType type;
+
+		private final String message;
+
+		private final long recipientId;
+
+		private final long deckId;
+	}
+
+	@Getter
+	@AllArgsConstructor
+	@EqualsAndHashCode
+	@ToString
+	public static class ShareDeckRequest {
+		private final NotificationType type;
+
+		private final String message;
+
+		private final long recipientId;
+
+		private final long deckId;
+
+		private final long senderId;
+	}
 }

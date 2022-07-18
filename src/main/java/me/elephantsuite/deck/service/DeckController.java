@@ -1,8 +1,5 @@
 package me.elephantsuite.deck.service;
 
-import java.util.List;
-import java.util.Map;
-
 import lombok.AllArgsConstructor;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -25,9 +22,9 @@ public class DeckController {
 		return deckService.createDeck(request);
 	}
 
-	@PostMapping(path = "favorited")
-	public String favoriteDeck(@RequestBody DeckRequest.FavoriteDeck favoriteDeck) {
-		return deckService.favoriteDeck(favoriteDeck);
+	@PostMapping(path = "like")
+	public String likeDeck(@RequestBody DeckRequest.LikeDeck likeDeck) {
+		return deckService.likeDeck(likeDeck);
 	}
 
 	@GetMapping(path = "getAll")

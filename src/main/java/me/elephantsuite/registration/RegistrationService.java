@@ -38,10 +38,7 @@ public class RegistrationService {
 				request.getEmail(),
 				request.getPassword(),
 				request.getType(),
-				request.getPfpId(),
-				request.getFriendIds(),
-				request.getNotifications(),
-				request.getDecks()
+				request.getPfpId()
 			);
 
 			if (elephantUserService.isUserAlreadyRegistered(elephantUser)) {

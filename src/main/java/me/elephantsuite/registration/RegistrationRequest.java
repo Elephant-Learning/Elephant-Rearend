@@ -28,10 +28,4 @@ public class RegistrationRequest {
 	private final ElephantUserType type;
 
 	private final Integer pfpId;
-
-	private final List<Long> friendIds;
-
-	private final List<Notification> notifications;
-
-	private final List<Deck> decks;
 }
