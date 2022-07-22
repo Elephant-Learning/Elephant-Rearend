@@ -9,6 +9,7 @@ import me.elephantsuite.ElephantBackendApplication;
 import me.elephantsuite.email.EmailSender;
 import me.elephantsuite.registration.token.ConfirmationToken;
 import me.elephantsuite.registration.token.ConfirmationTokenService;
+import me.elephantsuite.response.Response;
 import me.elephantsuite.response.ResponseBuilder;
 import me.elephantsuite.response.ResponseStatus;
 import me.elephantsuite.user.ElephantUser;
@@ -31,7 +32,7 @@ public class RegistrationService {
 	private final EmailSender emailSender;
 
 	// when given a request process it
-	public String register(RegistrationRequest request) {
+	public Response register(RegistrationRequest request) {
 		if (emailValidator.test(request.getEmail())) {
 			ElephantUser elephantUser = new ElephantUser(
 				request.getFirstName(),
@@ -62,8 +63,8 @@ public class RegistrationService {
 								return ResponseBuilder
 									.create()
 									.addResponse(ResponseStatus.FAILURE, "Exception while emailing link to user!")
-									.addValue(object -> object.addProperty("exception", Throwables.getRootCause(e).getMessage()))
-									.addToken(token)
+									.addException(e)
+									.addObject("token", token)
 									.build();
 							}
 						}
@@ -71,7 +72,7 @@ public class RegistrationService {
 						return ResponseBuilder
 							.create()
 							.addResponse(ResponseStatus.DEFER, "Token expired, resent email and token renewed")
-							.addToken(token)
+							.addObject("token", token)
 							.build();
 					}
 
@@ -79,7 +80,7 @@ public class RegistrationService {
 						.create()
 						.addResponse(ResponseStatus.DEFER, "Check Email to activate token")
 						// client should build link off this token
-						.addToken(token)
+						.addObject("token", token)
 						.build();
 				}
 
@@ -102,16 +103,16 @@ public class RegistrationService {
 					return ResponseBuilder
 						.create()
 						.addResponse(ResponseStatus.FAILURE, "Exception while emailing link to user!")
-						.addValue(object -> object.addProperty("exception", Throwables.getRootCause(e).getMessage()))
-						.addToken(token)
+						.addException(e)
+						.addObject("token", token)
 						.build();
 				}
 			}
 			return ResponseBuilder
 				.create()
 				.addResponse(ResponseStatus.SUCCESS, "token confirmed, email sent")
-				.addToken(token)
-				.addValue(jsonObject -> jsonObject.addProperty("link", link))
+				.addObject("token", token)
+				.addObject("link", link)
 				.build();
 		}
 
@@ -123,14 +124,14 @@ public class RegistrationService {
 	}
 
 	@Transactional
-	public String confirmToken(String token) {
+	public Response confirmToken(String token) {
 		ConfirmationToken confirmationToken = confirmationTokenService.getToken(token).orElse(null);
 
 		if (confirmationToken == null) {
 			return ResponseBuilder
 				.create()
 				.addResponse(ResponseStatus.FAILURE, "Insert a valid token!")
-				.addValue(object -> object.addProperty("token", token))
+				.addObject("token", token)
 				.build();
 		}
 
@@ -140,7 +141,7 @@ public class RegistrationService {
 			return ResponseBuilder
 				.create()
 				.addResponse(ResponseStatus.FAILURE, "Token Expired")
-				.addToken(confirmationToken)
+				.addObject("token", confirmationToken)
 				.build();
 		}
 
@@ -151,7 +152,7 @@ public class RegistrationService {
 		return ResponseBuilder
 			.create()
 			.addResponse(ResponseStatus.SUCCESS, "Account Enabled")
-			.addToken(confirmationToken)
+			.addObject("token", confirmationToken)
 			.build();
 	}
 

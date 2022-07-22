@@ -3,6 +3,7 @@ package me.elephantsuite.registration;
 import java.util.Objects;
 
 import lombok.AllArgsConstructor;
+import me.elephantsuite.response.Response;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -19,12 +20,12 @@ public class ElephantUserRegistrationController {
 
 	// called on post rq
 	@PostMapping
-	public String register(@RequestBody RegistrationRequest request) {
+	public Response register(@RequestBody RegistrationRequest request) {
 		return registrationService.register(request);
 	}
 
 	@PostMapping(path = "confirm")
-	public String confirm(@RequestParam("token") String token) {
+	public Response confirm(@RequestParam("token") String token) {
 		return registrationService.confirmToken(token);
 	}
 

@@ -4,6 +4,7 @@ import java.util.List;
 
 import lombok.AllArgsConstructor;
 import me.elephantsuite.deck.Deck;
+import me.elephantsuite.response.Response;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -21,37 +22,37 @@ public class DeckController {
 	private final DeckService deckService;
 
 	@PostMapping(path = "create")
-	public String createDeck(@RequestBody DeckRequest.CreateDeck request) {
+	public Response createDeck(@RequestBody DeckRequest.CreateDeck request) {
 		return deckService.createDeck(request);
 	}
 
 	@PostMapping(path = "like")
-	public String likeDeck(@RequestBody DeckRequest.LikeDeck likeDeck) {
+	public Response likeDeck(@RequestBody DeckRequest.LikeDeck likeDeck) {
 		return deckService.likeDeck(likeDeck);
 	}
 
 	@GetMapping(path = "getAll")
-	public List<Deck> getAllDecks() {
+	public Response getAllDecks() {
 		return deckService.getAllDecks();
 	}
 
 	@PostMapping(path = "rename")
-	public String renameDeck(@RequestBody DeckRequest.RenameDeck renameDeck) {
+	public Response renameDeck(@RequestBody DeckRequest.RenameDeck renameDeck) {
 		return deckService.renameDeck(renameDeck);
 	}
 
 	@PutMapping(path = "addTerms")
-	public String addTerms(@RequestBody DeckRequest.AddTerms addTerms) {
+	public Response addTerms(@RequestBody DeckRequest.AddTerms addTerms) {
 		return deckService.addTerms(addTerms);
 	}
 
 	@DeleteMapping(path = "deleteTerms")
-	public String deleteTerms(@RequestBody DeckRequest.DeleteTerms deleteTerms) {
+	public Response deleteTerms(@RequestBody DeckRequest.DeleteTerms deleteTerms) {
 		return deckService.deleteTerms(deleteTerms);
 	}
 
 	@DeleteMapping(path = "delete")
-	public String deleteDeck(@RequestParam("id") long id) {
+	public Response deleteDeck(@RequestParam("id") long id) {
 		return deckService.deleteDeck(id);
 	}
 }

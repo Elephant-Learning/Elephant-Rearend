@@ -1,6 +1,7 @@
 package me.elephantsuite.login;
 
 import lombok.AllArgsConstructor;
+import me.elephantsuite.response.Response;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -15,12 +16,12 @@ public class ElephantUserLoginController {
 	private final ElephantLoginService elephantLoginService;
 
 	@PostMapping
-	public String login(@RequestBody LoginRequest request) {
+	public Response login(@RequestBody LoginRequest request) {
 		return elephantLoginService.login(request);
 	}
 
 	@GetMapping(path = "user")
-	public String getUserById(@RequestParam("id") long id) {
+	public Response getUserById(@RequestParam("id") long id) {
 		return elephantLoginService.getUserById(id);
 	}
 }

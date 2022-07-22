@@ -7,6 +7,7 @@ import java.util.List;
 import java.util.Objects;
 import java.util.Random;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.ElementCollection;
 import jakarta.persistence.Entity;
@@ -32,6 +33,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 @Getter
 @Setter
 @EqualsAndHashCode
+@JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
 @NoArgsConstructor
 @Entity
 @ToString

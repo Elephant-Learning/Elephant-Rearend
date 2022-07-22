@@ -4,6 +4,7 @@ import java.util.Objects;
 
 import lombok.AllArgsConstructor;
 import me.elephantsuite.registration.EmailValidator;
+import me.elephantsuite.response.Response;
 import me.elephantsuite.response.ResponseBuilder;
 import me.elephantsuite.response.ResponseStatus;
 import me.elephantsuite.user.ElephantUser;
@@ -20,7 +21,7 @@ public class ElephantLoginService {
 	private final EmailValidator emailValidator;
 	private final BCryptPasswordEncoder bCryptPasswordEncoder;
 
-	public String login(LoginRequest request) {
+	public Response login(LoginRequest request) {
 
 		String email = request.getEmail();
 		String password = request.getPassword();
@@ -48,7 +49,7 @@ public class ElephantLoginService {
 				.create()
 				.addResponse(ResponseStatus.FAILURE, "Invalid password!")
 				.addObject("loginInfo", request)
-				.addValue(jsonObject -> jsonObject.addProperty("encryptedPassword", user.getPassword()))
+				.addObject("encryptedPassword", user.getPassword())
 				.addObject("user", user)
 				.build();
 		}
@@ -60,14 +61,14 @@ public class ElephantLoginService {
 			.build();
 	}
 
-	public String getUserById(long id) {
+	public Response getUserById(long id) {
 		ElephantUser user = elephantUserService.getUserById(id);
 
 		if (user == null) {
 			return ResponseBuilder
 				.create()
 				.addResponse(ResponseStatus.FAILURE, "ID does not match any user!")
-				.addValue(jsonObject -> jsonObject.addProperty("id", id))
+				.addObject("id", id)
 				.build();
 		}
 

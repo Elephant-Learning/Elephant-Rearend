@@ -2,6 +2,7 @@ package me.elephantsuite.user.notification;
 
 import java.time.LocalDateTime;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
@@ -27,6 +28,7 @@ import me.elephantsuite.user.ElephantUser;
 @Getter
 @Setter
 @EqualsAndHashCode
+@JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
 @ToString
 @NoArgsConstructor
 public class Notification {
@@ -46,17 +48,17 @@ public class Notification {
 	@JoinColumn(name = "elephant_user_id", foreignKey = @ForeignKey(name = "elephant_user_id"))
 	private ElephantUser recipient;
 
-	private ElephantUser sender;
+	private Long senderId;
 
 	@ManyToOne(fetch = FetchType.EAGER)
 	@JoinColumn(name = "deck_id", foreignKey = @ForeignKey(name = "deck_id"))
 	private Deck deck;
 
-	public Notification(NotificationType type, String message, ElephantUser recipient, ElephantUser sender, Deck deck) {
+	public Notification(NotificationType type, String message, ElephantUser recipient, Long senderId, Deck deck) {
 		this.type = type;
 		this.message = message;
 		this.recipient = recipient;
-		this.sender = sender;
+		this.senderId = senderId;
 		this.deck = deck;
 	}
 

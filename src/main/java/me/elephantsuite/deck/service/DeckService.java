@@ -6,6 +6,7 @@ import java.util.Map;
 import lombok.AllArgsConstructor;
 import me.elephantsuite.deck.Deck;
 import me.elephantsuite.deck.DeckRepositoryService;
+import me.elephantsuite.response.Response;
 import me.elephantsuite.response.ResponseBuilder;
 import me.elephantsuite.response.ResponseStatus;
 import me.elephantsuite.user.ElephantUser;
@@ -22,7 +23,7 @@ public class DeckService {
 
 	private final DeckRepositoryService service;
 
-	public String createDeck(DeckRequest.CreateDeck request) {
+	public Response createDeck(DeckRequest.CreateDeck request) {
 		Map<String, List<String>> terms = request.getTerms();
 		long authorId = request.getAuthorId();
 		String name = request.getName();
@@ -53,7 +54,7 @@ public class DeckService {
 			.build();
 	}
 
-	public String likeDeck(DeckRequest.LikeDeck likeDeck) {
+	public Response likeDeck(DeckRequest.LikeDeck likeDeck) {
 		Deck deck = service.getDeckById(likeDeck.getDeckId());
 
 		ElephantUser user = userService.getUserById(likeDeck.getUserId());
@@ -62,8 +63,8 @@ public class DeckService {
 			return ResponseBuilder
 				.create()
 				.addResponse(ResponseStatus.FAILURE, "Invalid Deck Or User ID!")
-				.addValue(jsonObject -> jsonObject.addProperty("deckId", likeDeck.getDeckId()))
-				.addValue(jsonObject -> jsonObject.addProperty("userId", likeDeck.getUserId()))
+				.addObject("deckId", likeDeck.getDeckId())
+				.addObject("userId", likeDeck.getUserId())
 				.build();
 		}
 
@@ -83,26 +84,24 @@ public class DeckService {
 			.build();
 	}
 
-	public List<Deck> getAllDecks() {
-		return service.getAllDecks();
-/*
+	public Response getAllDecks() {
 		return ResponseBuilder
 			.create()
 			.addResponse(ResponseStatus.SUCCESS, "Retrieved All Decks!")
-			.addList("decks", decks)
+			.addObject("decks", this.service.getAllDecks())
 			.build();
 
- */
+
 	}
 
-	public String renameDeck(DeckRequest.RenameDeck renameDeck) {
+	public Response renameDeck(DeckRequest.RenameDeck renameDeck) {
 		Deck deck = service.getDeckById(renameDeck.getDeckId());
 
 		if (deck == null) {
 			return ResponseBuilder
 				.create()
 				.addResponse(ResponseStatus.FAILURE, "Invalid Deck ID!")
-				.addValue(jsonObject -> jsonObject.addProperty("deckId", renameDeck.getDeckId()))
+				.addObject("deckId", renameDeck.getDeckId())
 				.build();
 		}
 
@@ -118,14 +117,14 @@ public class DeckService {
 	}
 
 
-	public String addTerms(DeckRequest.AddTerms addTerms) {
+	public Response addTerms(DeckRequest.AddTerms addTerms) {
 		Deck deck = service.getDeckById(addTerms.getDeckId());
 
 		if (deck == null) {
 			return ResponseBuilder
 				.create()
 				.addResponse(ResponseStatus.FAILURE, "Invalid Deck ID!")
-				.addValue(jsonObject -> jsonObject.addProperty("deckId", addTerms.getDeckId()))
+				.addObject("deckId", addTerms.getDeckId())
 				.build();
 		}
 
@@ -140,14 +139,14 @@ public class DeckService {
 			.build();
 	}
 
-	public String deleteDeck(long id) {
+	public Response deleteDeck(long id) {
 		Deck deck = service.getDeckById(id);
 
 		if (deck == null) {
 			return ResponseBuilder
 				.create()
 				.addResponse(ResponseStatus.FAILURE, "Invalid Deck ID!")
-				.addValue(jsonObject -> jsonObject.addProperty("deckId", id))
+				.addObject("deckId", id)
 				.build();
 		}
 
@@ -160,14 +159,14 @@ public class DeckService {
 			.build();
 	}
 
-	public String deleteTerms(DeckRequest.DeleteTerms deleteTerms) {
+	public Response deleteTerms(DeckRequest.DeleteTerms deleteTerms) {
 		Deck deck = service.getDeckById(deleteTerms.getDeckId());
 
 		if (deck == null) {
 			return ResponseBuilder
 				.create()
 				.addResponse(ResponseStatus.FAILURE, "Invalid Deck ID!")
-				.addValue(jsonObject -> jsonObject.addProperty("deckId", deleteTerms.getDeckId()))
+				.addObject("deckId", deleteTerms.getDeckId())
 				.build();
 		}
 

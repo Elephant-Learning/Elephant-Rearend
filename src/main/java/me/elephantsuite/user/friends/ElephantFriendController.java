@@ -3,6 +3,7 @@ package me.elephantsuite.user.friends;
 import java.util.Objects;
 
 import lombok.AllArgsConstructor;
+import me.elephantsuite.response.Response;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -18,12 +19,12 @@ public class ElephantFriendController {
 
 
 	@PutMapping(path = "add")
-	public String addFriend(@RequestBody FriendRequest friendRequest) {
+	public Response addFriend(@RequestBody FriendRequest friendRequest) {
 		return this.service.addFriend(friendRequest);
 	}
 
 	@DeleteMapping(path = "remove")
-	public String removeFriend(@RequestBody FriendRequest friendRequest) {
+	public Response removeFriend(@RequestBody FriendRequest friendRequest) {
 		return this.service.removeFriend(friendRequest);
 	}
 

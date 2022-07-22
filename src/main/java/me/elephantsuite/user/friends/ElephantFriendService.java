@@ -3,6 +3,7 @@ package me.elephantsuite.user.friends;
 import java.util.Objects;
 
 import lombok.AllArgsConstructor;
+import me.elephantsuite.response.Response;
 import me.elephantsuite.response.ResponseBuilder;
 import me.elephantsuite.response.ResponseStatus;
 import me.elephantsuite.user.ElephantUser;
@@ -19,7 +20,7 @@ public class ElephantFriendService {
 
 
 
-	public String addFriend(FriendRequest request) {
+	public Response addFriend(FriendRequest request) {
 
 		long userId = request.getUserId();
 		long friendId = request.getFriendId();
@@ -32,8 +33,8 @@ public class ElephantFriendService {
 			return ResponseBuilder
 				.create()
 				.addResponse(ResponseStatus.FAILURE, "User or Friend IDs are invalid!")
-				.addValue(jsonObject -> jsonObject.addProperty("userId", userId))
-				.addValue(jsonObject -> jsonObject.addProperty("friendId", friendId))
+				.addObject("userId", userId)
+				.addObject("friendId", friendId)
 				.build();
 		}
 
@@ -63,7 +64,7 @@ public class ElephantFriendService {
 			.build();
 	}
 
-	public String removeFriend(FriendRequest request) {
+	public Response removeFriend(FriendRequest request) {
 		long userId = request.getUserId();
 		long friendId = request.getFriendId();
 
@@ -75,8 +76,8 @@ public class ElephantFriendService {
 			return ResponseBuilder
 				.create()
 				.addResponse(ResponseStatus.FAILURE, "User or Friend IDs are invalid!")
-				.addValue(jsonObject -> jsonObject.addProperty("userId", userId))
-				.addValue(jsonObject -> jsonObject.addProperty("friendId", friendId))
+				.addObject("userId", userId)
+				.addObject("friendId", friendId)
 				.build();
 		}
 

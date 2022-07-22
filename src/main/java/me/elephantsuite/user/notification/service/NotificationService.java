@@ -6,6 +6,7 @@ import lombok.AllArgsConstructor;
 import me.elephantsuite.deck.Deck;
 import me.elephantsuite.deck.DeckRepositoryService;
 import me.elephantsuite.deck.service.DeckService;
+import me.elephantsuite.response.Response;
 import me.elephantsuite.response.ResponseBuilder;
 import me.elephantsuite.response.ResponseStatus;
 import me.elephantsuite.user.ElephantUser;
@@ -27,7 +28,7 @@ public class NotificationService {
 
 	private final DeckRepositoryService deckService;
 
-	public String sendLikedDeck(NotificationRequest.LikedDeckRequest request) {
+	public Response sendLikedDeck(NotificationRequest.LikedDeckRequest request) {
 
 		NotificationType type = request.getType();
 		String message = request.getMessage();
@@ -74,7 +75,7 @@ public class NotificationService {
 			.build();
 	}
 
-	public String sendSharedDeck(NotificationRequest.ShareDeckRequest request) {
+	public Response sendSharedDeck(NotificationRequest.ShareDeckRequest request) {
 
 		NotificationType type = request.getType();
 		String message = request.getMessage();
@@ -108,7 +109,7 @@ public class NotificationService {
 				.build();
 		}
 
-		Notification notification = new Notification(type, message, recipient, sender, deck);
+		Notification notification = new Notification(type, message, recipient, request.getSenderId(), deck);
 
 		recipient.getNotifications().add(notification);
 
@@ -123,7 +124,7 @@ public class NotificationService {
 			.build();
 	}
 
-	public String sendFriendRequest(NotificationRequest.FriendRequest request) {
+	public Response sendFriendRequest(NotificationRequest.FriendRequest request) {
 
 		NotificationType type = request.getType();
 		String message = request.getMessage();
@@ -156,7 +157,7 @@ public class NotificationService {
 				.build();
 		}
 
-		Notification notification = new Notification(type, message, recipient, sender, null);
+		Notification notification = new Notification(type, message, recipient, request.getSenderId(), null);
 
 		recipient.getNotifications().add(notification);
 
@@ -173,14 +174,14 @@ public class NotificationService {
 
 	}
 
-	public String deleteNotification(long id) {
+	public Response deleteNotification(long id) {
 		Notification notification = notificationService.getById(id);
 
 		if (notification == null) {
 			return ResponseBuilder
 				.create()
 				.addResponse(ResponseStatus.FAILURE, "Invalid Notification ID!")
-				.addValue(jsonObject -> jsonObject.addProperty("notificationId", id))
+				.addObject("notificationId", id)
 				.build();
 		}
 

@@ -2,6 +2,7 @@ package me.elephantsuite.registration.token;
 
 import java.time.LocalDateTime;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import lombok.ToString;
 import me.elephantsuite.user.ElephantUser;
 import jakarta.persistence.Column;
@@ -20,6 +21,7 @@ import lombok.Setter;
 @Setter
 @NoArgsConstructor
 @Entity
+@JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
 public class ConfirmationToken {
 
 	@Id

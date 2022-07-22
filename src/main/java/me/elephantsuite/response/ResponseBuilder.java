@@ -2,10 +2,16 @@ package me.elephantsuite.response;
 
 import java.lang.reflect.Type;
 import java.time.LocalDateTime;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
+import java.util.Map;
+import java.util.Objects;
 import java.util.function.Consumer;
 
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.node.FloatNode;
+import com.google.common.base.Throwables;
 import com.google.gson.ExclusionStrategy;
 import com.google.gson.FieldAttributes;
 import com.google.gson.Gson;
@@ -22,24 +28,12 @@ import org.hibernate.proxy.HibernateProxy;
 // Builds a response that is then sent to elephant client
 public class ResponseBuilder {
 
-	private static final Gson GSON = new GsonBuilder()
-		.setPrettyPrinting()
-		.serializeNulls()
-		.registerTypeAdapter(LocalDateTime.class, (JsonSerializer<LocalDateTime>) (src, typeOfSrc, context) -> new JsonPrimitive(src.toString()))
-		.addSerializationExclusionStrategy(new ExclusionStrategy() {
-			@Override
-			public boolean shouldSkipField(FieldAttributes f) {
-				return f.getDeclaringClass().equals(HibernateProxy.class) || f.getName().toLowerCase(Locale.ROOT).contains("hibernate");
-			}
 
-			@Override
-			public boolean shouldSkipClass(Class<?> clazz) {
-				return false;
-			}
-		})
-		.create();
+	private ResponseStatus status;
 
-	private final JsonObject object = new JsonObject();
+	private String message;
+
+	private Map<String, Object> objMap = new HashMap<>();
 
 	// more of a preference, but imo builders should be initialized static, not through constructor
 	private ResponseBuilder() {}
@@ -48,53 +42,29 @@ public class ResponseBuilder {
 		return new ResponseBuilder();
 	}
 
-
 	public ResponseBuilder addResponse(ResponseStatus status, String message) {
-		this.object.addProperty("status", status.toString());
-		this.object.addProperty("message", message);
+		this.status = status;
+		this.message = message;
 		return this;
 	}
 
-	// am lazy
-	public ResponseBuilder addValue(Consumer<JsonObject> objectConsumer) {
-		objectConsumer.accept(this.object);
-		return this;
-	}
-
-	public ResponseBuilder addToken(ConfirmationToken src) {
-
-		JsonObject object = new JsonObject();
-
-		object.addProperty("id", src.getId());
-		object.addProperty("token", src.getToken());
-		object.addProperty("createdAt", src.getCreatedAt().toString());
-		object.addProperty("expiresAt", src.getExpiresAt().toString());
-		object.add("user", GSON.toJsonTree(src.getElephantUser()));
-
-		this.object.add("token", object);
-
-		return this;
-	}
-
-	public <T> ResponseBuilder addList(String name, List<T> list) {
-		JsonArray array = new JsonArray();
-
-		list.forEach(obj -> {
-			array.add(GSON.toJsonTree(obj));
-		});
-
-		this.object.add(name, array);
-
-		return this;
-	}
 
 	public ResponseBuilder addObject(String key, Object obj) {
-		JsonElement element = GSON.toJsonTree(obj);
-		this.object.add(key, element);
+		this.objMap.put(key, obj);
 		return this;
 	}
 
-	public String build() {
-		return GSON.toJson(this.object);
+	public ResponseBuilder addException(Throwable t) {
+		this.objMap.put("exception", t);
+		this.objMap.put("root", Throwables.getRootCause(t));
+		this.objMap.put("stacktrace", List.of(t.getStackTrace()));
+
+		return this;
 	}
+
+	public Response build() {
+		return new Response(Objects.requireNonNull(status), Objects.requireNonNull(message), objMap);
+	}
+
+
 }
