@@ -11,9 +11,11 @@ import me.elephantsuite.response.ResponseStatus;
 import me.elephantsuite.user.ElephantUser;
 import me.elephantsuite.user.ElephantUserService;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 @AllArgsConstructor
+@Transactional
 public class DeckService {
 
 	private final ElephantUserService userService;
@@ -81,24 +83,26 @@ public class DeckService {
 			.build();
 	}
 
-	public String getAllDecks() {
-		List<Deck> decks = service.getAllDecks();
-
+	public List<Deck> getAllDecks() {
+		return service.getAllDecks();
+/*
 		return ResponseBuilder
 			.create()
 			.addResponse(ResponseStatus.SUCCESS, "Retrieved All Decks!")
 			.addList("decks", decks)
 			.build();
+
+ */
 	}
 
 	public String renameDeck(DeckRequest.RenameDeck renameDeck) {
-		Deck deck = service.getDeckById(renameDeck.getId());
+		Deck deck = service.getDeckById(renameDeck.getDeckId());
 
 		if (deck == null) {
 			return ResponseBuilder
 				.create()
 				.addResponse(ResponseStatus.FAILURE, "Invalid Deck ID!")
-				.addValue(jsonObject -> jsonObject.addProperty("deckId", renameDeck.getId()))
+				.addValue(jsonObject -> jsonObject.addProperty("deckId", renameDeck.getDeckId()))
 				.build();
 		}
 
@@ -113,14 +117,15 @@ public class DeckService {
 			.build();
 	}
 
+
 	public String addTerms(DeckRequest.AddTerms addTerms) {
-		Deck deck = service.getDeckById(addTerms.getId());
+		Deck deck = service.getDeckById(addTerms.getDeckId());
 
 		if (deck == null) {
 			return ResponseBuilder
 				.create()
 				.addResponse(ResponseStatus.FAILURE, "Invalid Deck ID!")
-				.addValue(jsonObject -> jsonObject.addProperty("deckId", addTerms.getId()))
+				.addValue(jsonObject -> jsonObject.addProperty("deckId", addTerms.getDeckId()))
 				.build();
 		}
 
@@ -152,6 +157,28 @@ public class DeckService {
 			.create()
 			.addResponse(ResponseStatus.SUCCESS, "Deleted Deck!")
 			.addObject("deletedDeck", deck)
+			.build();
+	}
+
+	public String deleteTerms(DeckRequest.DeleteTerms deleteTerms) {
+		Deck deck = service.getDeckById(deleteTerms.getDeckId());
+
+		if (deck == null) {
+			return ResponseBuilder
+				.create()
+				.addResponse(ResponseStatus.FAILURE, "Invalid Deck ID!")
+				.addValue(jsonObject -> jsonObject.addProperty("deckId", deleteTerms.getDeckId()))
+				.build();
+		}
+
+		deleteTerms.getTermsToBeDeleted().forEach(deck::removeTerms);
+
+		deck = service.saveDeck(deck);
+
+		return ResponseBuilder
+			.create()
+			.addResponse(ResponseStatus.SUCCESS, "Deleted Terms From Deck!")
+			.addObject("deck", deck)
 			.build();
 	}
 }

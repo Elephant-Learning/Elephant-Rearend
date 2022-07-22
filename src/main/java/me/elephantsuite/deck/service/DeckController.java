@@ -1,6 +1,9 @@
 package me.elephantsuite.deck.service;
 
+import java.util.List;
+
 import lombok.AllArgsConstructor;
+import me.elephantsuite.deck.Deck;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -28,7 +31,7 @@ public class DeckController {
 	}
 
 	@GetMapping(path = "getAll")
-	public String getAllDecks() {
+	public List<Deck> getAllDecks() {
 		return deckService.getAllDecks();
 	}
 
@@ -40,6 +43,11 @@ public class DeckController {
 	@PutMapping(path = "addTerms")
 	public String addTerms(@RequestBody DeckRequest.AddTerms addTerms) {
 		return deckService.addTerms(addTerms);
+	}
+
+	@DeleteMapping(path = "deleteTerms")
+	public String deleteTerms(@RequestBody DeckRequest.DeleteTerms deleteTerms) {
+		return deckService.deleteTerms(deleteTerms);
 	}
 
 	@DeleteMapping(path = "delete")

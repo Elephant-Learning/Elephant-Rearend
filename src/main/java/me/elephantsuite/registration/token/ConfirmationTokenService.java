@@ -9,8 +9,10 @@ import lombok.AllArgsConstructor;
 import me.elephantsuite.ElephantBackendApplication;
 import org.springframework.lang.Nullable;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
+@Transactional
 @AllArgsConstructor
 public class ConfirmationTokenService {
 
@@ -29,15 +31,11 @@ public class ConfirmationTokenService {
 	}
 
 	public ConfirmationToken getTokenByUser(long userId) {
-		try {
+		if (confirmationTokenRepository.existsById(userId)) {
 			return confirmationTokenRepository.getReferenceById(userId);
-		} catch (EntityNotFoundException e) {
-			return null;
-		} catch (Exception e) {
-			ElephantBackendApplication.LOGGER.error("Error while getting Confirmation Token by user!", e);
-			e.printStackTrace();
-			return null;
 		}
+
+		return null;
 	}
 
 	public void deleteToken(ConfirmationToken token) {

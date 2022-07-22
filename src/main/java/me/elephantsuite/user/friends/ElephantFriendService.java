@@ -8,9 +8,11 @@ import me.elephantsuite.response.ResponseStatus;
 import me.elephantsuite.user.ElephantUser;
 import me.elephantsuite.user.ElephantUserService;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 @AllArgsConstructor
+@Transactional
 public class ElephantFriendService {
 
 	private final ElephantUserService userService;

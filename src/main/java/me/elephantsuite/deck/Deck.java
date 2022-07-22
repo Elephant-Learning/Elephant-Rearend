@@ -6,6 +6,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.ElementCollection;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
@@ -26,13 +28,15 @@ import lombok.RequiredArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
 import me.elephantsuite.user.ElephantUser;
+import org.hibernate.annotations.DynamicUpdate;
+import org.springframework.transaction.annotation.Transactional;
 
 @Entity
 @Getter
 @Setter
 @EqualsAndHashCode
 @ToString
-@RequiredArgsConstructor
+@NoArgsConstructor
 public class Deck {
 
 	@Id
@@ -40,14 +44,15 @@ public class Deck {
 	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "deck_sequence")
 	private Long id;
 
-	@OneToMany
-	private final Map<String, DefinitionList> terms;
+	@OneToMany(cascade = CascadeType.ALL)
+	private Map<String, DefinitionList> terms;
 
 	private int numberOfLikes = 0;
 
-	@ManyToOne(fetch = FetchType.EAGER)
+	@ManyToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
 	@JoinColumn(name = "elephant_user_id", foreignKey = @ForeignKey(name = "elephant_user_id"))
-	private final ElephantUser author;
+	@JsonBackReference
+	private ElephantUser author;
 
 	private String name;
 
@@ -75,5 +80,9 @@ public class Deck {
 
 	public void putTerms(String s, List<String> strings) {
 		this.terms.put(s, new DefinitionList(strings));
+	}
+
+	public void removeTerms(String key, List<String> values) {
+		this.terms.remove(key, new DefinitionList(values));
 	}
 }

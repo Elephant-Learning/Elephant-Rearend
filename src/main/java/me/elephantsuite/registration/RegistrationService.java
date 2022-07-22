@@ -18,6 +18,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 @Service
+@Transactional
 @AllArgsConstructor
 public class RegistrationService {
 
@@ -85,7 +86,7 @@ public class RegistrationService {
 				//if null then token already used and email is confirmed already registered
 				return ResponseBuilder
 					.create()
-					.addResponse(ResponseStatus.FAILURE, "User alreaedy registered and validated")
+					.addResponse(ResponseStatus.FAILURE, "User already registered and validated")
 					.addObject("user", elephantUserService.getUserByEmail(request.getEmail()).get()) // can ignore
 					.build();
 			}

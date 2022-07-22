@@ -31,7 +31,7 @@ public class DeckRequest {
 
 		private final String newName;
 
-		private final long id;
+		private final long deckId;
 	}
 
 	@Getter
@@ -42,7 +42,7 @@ public class DeckRequest {
 
 		private final Map<String, List<String>> newTerms;
 
-		private final long id;
+		private final long deckId;
 	}
 
 	@Getter
@@ -52,6 +52,16 @@ public class DeckRequest {
 	public static class LikeDeck {
 
 		private final long userId;
+
+		private final long deckId;
+	}
+
+	@Getter
+	@AllArgsConstructor
+	@EqualsAndHashCode
+	@ToString
+	public static class DeleteTerms {
+		private final Map<String, List<String>> termsToBeDeleted;
 
 		private final long deckId;
 	}

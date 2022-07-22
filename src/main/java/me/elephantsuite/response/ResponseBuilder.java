@@ -3,6 +3,7 @@ package me.elephantsuite.response;
 import java.lang.reflect.Type;
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Locale;
 import java.util.function.Consumer;
 
 import com.google.gson.ExclusionStrategy;
@@ -24,6 +25,18 @@ public class ResponseBuilder {
 	private static final Gson GSON = new GsonBuilder()
 		.setPrettyPrinting()
 		.serializeNulls()
+		.registerTypeAdapter(LocalDateTime.class, (JsonSerializer<LocalDateTime>) (src, typeOfSrc, context) -> new JsonPrimitive(src.toString()))
+		.addSerializationExclusionStrategy(new ExclusionStrategy() {
+			@Override
+			public boolean shouldSkipField(FieldAttributes f) {
+				return f.getDeclaringClass().equals(HibernateProxy.class) || f.getName().toLowerCase(Locale.ROOT).contains("hibernate");
+			}
+
+			@Override
+			public boolean shouldSkipClass(Class<?> clazz) {
+				return false;
+			}
+		})
 		.create();
 
 	private final JsonObject object = new JsonObject();

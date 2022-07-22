@@ -11,8 +11,10 @@ import me.elephantsuite.user.ElephantUser;
 import me.elephantsuite.user.ElephantUserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
+@Transactional
 @AllArgsConstructor
 public class NotificationRepositoryService {
 
@@ -48,15 +50,11 @@ public class NotificationRepositoryService {
 
 
 	public Notification getById(long id) {
-		try {
+		if (notificationRepository.existsById(id)) {
 			return notificationRepository.getReferenceById(id);
-		} catch (EntityNotFoundException e) {
-			return null;
-		} catch (Exception e) {
-			ElephantBackendApplication.LOGGER.error("Error while getting notification by ID!", e);
-			e.printStackTrace();
-			return null;
 		}
+
+		return null;
 	}
 
 	public Notification save(Notification notification) {

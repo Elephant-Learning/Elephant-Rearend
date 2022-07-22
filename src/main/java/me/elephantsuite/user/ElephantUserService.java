@@ -16,9 +16,11 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 @AllArgsConstructor
+@Transactional
 //loads data from user repository
 public class ElephantUserService implements UserDetailsService {
 
@@ -81,15 +83,11 @@ public class ElephantUserService implements UserDetailsService {
 	}
 
 	public @Nullable ElephantUser getUserById(long id) {
-		try {
+		if (elephantUserRepository.existsById(id)) {
 			return elephantUserRepository.getReferenceById(id);
-		} catch (EntityNotFoundException e) {
-			return null;
-		} catch (Exception e) {
-			ElephantBackendApplication.LOGGER.error("Error while getting User by ID!", e);
-			e.printStackTrace();
-			return null;
 		}
+
+		return null;
 	}
 
 	public ElephantUser saveUser(ElephantUser user) {

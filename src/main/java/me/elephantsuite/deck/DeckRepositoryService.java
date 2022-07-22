@@ -6,8 +6,10 @@ import jakarta.persistence.EntityNotFoundException;
 import lombok.AllArgsConstructor;
 import me.elephantsuite.ElephantBackendApplication;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
+@Transactional
 @AllArgsConstructor
 public class DeckRepositoryService {
 
@@ -18,15 +20,11 @@ public class DeckRepositoryService {
 	}
 
 	public Deck getDeckById(long id) {
-		try {
+		if (deckRepository.existsById(id)) {
 			return deckRepository.getReferenceById(id);
-		} catch (EntityNotFoundException e) {
-			return null;
-		} catch (Exception e) {
-			ElephantBackendApplication.LOGGER.error("Error while getting deck by id!", e);
-			e.printStackTrace();
-			return null;
 		}
+
+		return null;
 	}
 
 	public List<Deck> getAllDecks() {
