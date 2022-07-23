@@ -30,6 +30,8 @@ import lombok.Setter;
 import lombok.ToString;
 import me.elephantsuite.user.ElephantUser;
 import org.hibernate.annotations.DynamicUpdate;
+import org.hibernate.annotations.Fetch;
+import org.hibernate.annotations.FetchMode;
 import org.springframework.transaction.annotation.Transactional;
 
 @Entity
@@ -46,7 +48,8 @@ public class Deck {
 	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "deck_sequence")
 	private Long id;
 
-	@OneToMany(cascade = {CascadeType.PERSIST, CascadeType.REFRESH, CascadeType.MERGE})
+	@OneToMany(cascade = {CascadeType.PERSIST, CascadeType.REFRESH, CascadeType.MERGE}, fetch = FetchType.EAGER)
+	@Fetch(value = FetchMode.SUBSELECT)
 	private Map<String, DefinitionList> terms;
 
 	private int numberOfLikes = 0;

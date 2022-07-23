@@ -13,6 +13,7 @@ import jakarta.persistence.ElementCollection;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
+import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
@@ -26,6 +27,8 @@ import lombok.Setter;
 import lombok.ToString;
 import me.elephantsuite.deck.Deck;
 import me.elephantsuite.user.notification.Notification;
+import org.hibernate.annotations.Fetch;
+import org.hibernate.annotations.FetchMode;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -62,19 +65,28 @@ public class ElephantUser implements UserDetails {
 
 	private int pfpId;
 
-	@ElementCollection
+	@ElementCollection(fetch = FetchType.EAGER)
 	@JoinColumn(nullable = false, name = "elephant_user_id")
+	@Fetch(value = FetchMode.SUBSELECT)
 	private List<Long> friendIds = new ArrayList<>();
 
-	@OneToMany(mappedBy = "recipient",  cascade = {CascadeType.PERSIST, CascadeType.REFRESH, CascadeType.MERGE}, orphanRemoval = true)
+	@OneToMany(mappedBy = "recipient",  cascade = {CascadeType.PERSIST, CascadeType.REFRESH, CascadeType.MERGE}, orphanRemoval = true, fetch = FetchType.EAGER)
+	@Fetch(value = FetchMode.SUBSELECT)
 	private List<Notification> notifications = new ArrayList<>();
 
-	@OneToMany(mappedBy = "author",  cascade = {CascadeType.PERSIST, CascadeType.REFRESH, CascadeType.MERGE}, orphanRemoval = true)
+	@OneToMany(mappedBy = "author",  cascade = {CascadeType.PERSIST, CascadeType.REFRESH, CascadeType.MERGE}, orphanRemoval = true, fetch = FetchType.EAGER)
+	@Fetch(value = FetchMode.SUBSELECT)
 	private List<Deck> decks = new ArrayList<>();
 
-	@ElementCollection
+	@ElementCollection(fetch = FetchType.EAGER)
 	@JoinColumn(nullable = false, name = "elephant_user_id")
+	@Fetch(value = FetchMode.SUBSELECT)
 	private List<Long> likedDecksIds = new ArrayList<>();
+
+	@ElementCollection(fetch = FetchType.EAGER)
+	@JoinColumn(nullable = false, name = "elephant_user_id")
+	@Fetch(value = FetchMode.SUBSELECT)
+	private List<String> likedSongs = new ArrayList<>();
 
 	public ElephantUser(String firstName, String lastName, String email, String password, ElephantUserType type, Integer pfpId) {
 		this.firstName = Objects.requireNonNull(firstName);

@@ -3,6 +3,7 @@ package me.elephantsuite.registration.token;
 import java.time.LocalDateTime;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import jakarta.persistence.FetchType;
 import lombok.ToString;
 import me.elephantsuite.user.ElephantUser;
 import jakarta.persistence.Column;
@@ -16,6 +17,8 @@ import jakarta.persistence.SequenceGenerator;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.hibernate.annotations.Fetch;
+import org.hibernate.annotations.FetchMode;
 
 @Getter
 @Setter
@@ -38,7 +41,7 @@ public class ConfirmationToken {
 	@Column(nullable = false)
 	private LocalDateTime expiresAt;
 
-	@ManyToOne
+	@ManyToOne(fetch = FetchType.EAGER)
 	@JoinColumn(nullable = false, name = "elephant_user_id")
 	private ElephantUser elephantUser;
 
