@@ -66,10 +66,10 @@ public class ElephantUser implements UserDetails {
 	@JoinColumn(nullable = false, name = "elephant_user_id")
 	private List<Long> friendIds = new ArrayList<>();
 
-	@OneToMany(mappedBy = "recipient", cascade = CascadeType.ALL, orphanRemoval = true)
+	@OneToMany(mappedBy = "recipient",  cascade = {CascadeType.PERSIST, CascadeType.REFRESH, CascadeType.MERGE}, orphanRemoval = true)
 	private List<Notification> notifications = new ArrayList<>();
 
-	@OneToMany(mappedBy = "author", cascade = CascadeType.ALL, orphanRemoval = true)
+	@OneToMany(mappedBy = "author",  cascade = {CascadeType.PERSIST, CascadeType.REFRESH, CascadeType.MERGE}, orphanRemoval = true)
 	private List<Deck> decks = new ArrayList<>();
 
 	@ElementCollection

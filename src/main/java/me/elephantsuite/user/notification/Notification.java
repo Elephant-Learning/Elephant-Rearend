@@ -3,6 +3,7 @@ package me.elephantsuite.user.notification;
 import java.time.LocalDateTime;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
@@ -23,6 +24,7 @@ import lombok.Setter;
 import lombok.ToString;
 import me.elephantsuite.deck.Deck;
 import me.elephantsuite.user.ElephantUser;
+import org.springframework.lang.Nullable;
 
 @Entity
 @Getter
@@ -44,13 +46,13 @@ public class Notification {
 
 	private final LocalDateTime time = LocalDateTime.now();
 
-	@ManyToOne(fetch = FetchType.EAGER)
+	@ManyToOne(fetch = FetchType.EAGER,  cascade = {CascadeType.PERSIST, CascadeType.REFRESH, CascadeType.MERGE})
 	@JoinColumn(name = "elephant_user_id", foreignKey = @ForeignKey(name = "elephant_user_id"))
 	private ElephantUser recipient;
 
 	private Long senderId;
 
-	@ManyToOne(fetch = FetchType.EAGER)
+	@ManyToOne(fetch = FetchType.EAGER,  cascade = {CascadeType.PERSIST, CascadeType.REFRESH, CascadeType.MERGE})
 	@JoinColumn(name = "deck_id", foreignKey = @ForeignKey(name = "deck_id"))
 	private Deck deck;
 

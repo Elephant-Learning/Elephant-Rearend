@@ -155,7 +155,6 @@ public class DeckService {
 		return ResponseBuilder
 			.create()
 			.addResponse(ResponseStatus.SUCCESS, "Deleted Deck!")
-			.addObject("deletedDeck", deck)
 			.build();
 	}
 
