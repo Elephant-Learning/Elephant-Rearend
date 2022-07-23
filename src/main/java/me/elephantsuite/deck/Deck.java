@@ -46,7 +46,7 @@ public class Deck {
 	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "deck_sequence")
 	private Long id;
 
-	@OneToMany(cascade = CascadeType.ALL)
+	@OneToMany(cascade = {CascadeType.PERSIST, CascadeType.REFRESH, CascadeType.MERGE})
 	private Map<String, DefinitionList> terms;
 
 	private int numberOfLikes = 0;
