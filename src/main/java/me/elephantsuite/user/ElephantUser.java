@@ -19,6 +19,7 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.OneToMany;
+import jakarta.persistence.OneToOne;
 import jakarta.persistence.SequenceGenerator;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
@@ -26,6 +27,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
 import me.elephantsuite.deck.Deck;
+import me.elephantsuite.stats.ElephantUserStatistics;
 import me.elephantsuite.user.notification.Notification;
 import org.hibernate.annotations.Fetch;
 import org.hibernate.annotations.FetchMode;
@@ -88,6 +90,10 @@ public class ElephantUser implements UserDetails {
 	@Fetch(value = FetchMode.SUBSELECT)
 	private List<String> likedSongs = new ArrayList<>();
 
+	@OneToOne(cascade = {CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REFRESH}, orphanRemoval = true)
+	@JoinColumn(name = "statistics_id")
+	private ElephantUserStatistics statistics;
+
 	public ElephantUser(String firstName, String lastName, String email, String password, ElephantUserType type, Integer pfpId) {
 		this.firstName = Objects.requireNonNull(firstName);
 		this.email = Objects.requireNonNull(email);
@@ -96,6 +102,7 @@ public class ElephantUser implements UserDetails {
 		this.type = Objects.requireNonNull(type);
 		//for whatever reason if pfpId is null just set it to something random
 		this.pfpId = pfpId == null ? new Random().nextInt(48) : pfpId;
+		this.statistics = new ElephantUserStatistics(this);
 	}
 
 
