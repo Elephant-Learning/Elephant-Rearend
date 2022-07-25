@@ -117,18 +117,18 @@ public class DeckService {
 	}
 
 
-	public Response addTerms(DeckRequest.AddTerms addTerms) {
-		Deck deck = service.getDeckById(addTerms.getDeckId());
+	public Response resetTerms(DeckRequest.ResetTerms resetTerms) {
+		Deck deck = service.getDeckById(resetTerms.getDeckId());
 
 		if (deck == null) {
 			return ResponseBuilder
 				.create()
 				.addResponse(ResponseStatus.FAILURE, "Invalid Deck ID!")
-				.addObject("deckId", addTerms.getDeckId())
+				.addObject("deckId", resetTerms.getDeckId())
 				.build();
 		}
 
-		addTerms.getNewTerms().forEach(deck::putTerms);
+		deck.resetTerms(resetTerms.getNewTerms());
 
 		deck = service.saveDeck(deck);
 
@@ -158,25 +158,4 @@ public class DeckService {
 			.build();
 	}
 
-	public Response deleteTerms(DeckRequest.DeleteTerms deleteTerms) {
-		Deck deck = service.getDeckById(deleteTerms.getDeckId());
-
-		if (deck == null) {
-			return ResponseBuilder
-				.create()
-				.addResponse(ResponseStatus.FAILURE, "Invalid Deck ID!")
-				.addObject("deckId", deleteTerms.getDeckId())
-				.build();
-		}
-
-		deleteTerms.getTermsToBeDeleted().forEach(deck::removeTerms);
-
-		deck = service.saveDeck(deck);
-
-		return ResponseBuilder
-			.create()
-			.addResponse(ResponseStatus.SUCCESS, "Deleted Terms From Deck!")
-			.addObject("deck", deck)
-			.build();
-	}
 }

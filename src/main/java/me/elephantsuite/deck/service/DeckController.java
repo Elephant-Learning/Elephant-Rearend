@@ -41,15 +41,11 @@ public class DeckController {
 		return deckService.renameDeck(renameDeck);
 	}
 
-	@PutMapping(path = "addTerms")
-	public Response addTerms(@RequestBody DeckRequest.AddTerms addTerms) {
-		return deckService.addTerms(addTerms);
+	@PostMapping(path = "resetTerms")
+	public Response addTerms(@RequestBody DeckRequest.ResetTerms resetTerms) {
+		return deckService.resetTerms(resetTerms);
 	}
 
-	@DeleteMapping(path = "deleteTerms")
-	public Response deleteTerms(@RequestBody DeckRequest.DeleteTerms deleteTerms) {
-		return deckService.deleteTerms(deleteTerms);
-	}
 
 	@DeleteMapping(path = "delete")
 	public Response deleteDeck(@RequestParam("id") long id) {

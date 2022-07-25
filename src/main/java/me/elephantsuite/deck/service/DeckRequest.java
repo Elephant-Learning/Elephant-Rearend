@@ -38,7 +38,7 @@ public class DeckRequest {
 	@AllArgsConstructor
 	@EqualsAndHashCode
 	@ToString
-	public static class AddTerms {
+	public static class ResetTerms {
 
 		private final Map<String, List<String>> newTerms;
 
@@ -52,16 +52,6 @@ public class DeckRequest {
 	public static class LikeDeck {
 
 		private final long userId;
-
-		private final long deckId;
-	}
-
-	@Getter
-	@AllArgsConstructor
-	@EqualsAndHashCode
-	@ToString
-	public static class DeleteTerms {
-		private final Map<String, List<String>> termsToBeDeleted;
 
 		private final long deckId;
 	}

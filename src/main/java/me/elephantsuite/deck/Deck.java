@@ -83,11 +83,7 @@ public class Deck {
 		return definitionListMap;
 	}
 
-	public void putTerms(String s, List<String> strings) {
-		this.terms.put(s, new DefinitionList(strings));
-	}
-
-	public void removeTerms(String key, List<String> values) {
-		this.terms.remove(key, new DefinitionList(values));
+	public void resetTerms(Map<String, List<String>> map) {
+		this.terms = convertToDefinitionList(map);
 	}
 }
