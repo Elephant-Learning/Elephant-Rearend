@@ -44,8 +44,8 @@ public class RegistrationService {
 			);
 
 			if (elephantUserService.isUserAlreadyRegistered(elephantUser)) {
-				long userId = elephantUserService.getUserId(elephantUser);
-				ConfirmationToken token = confirmationTokenService.getTokenByUser(userId);
+				elephantUser = elephantUserService.getUserById(elephantUserService.getUserId(elephantUser));
+				ConfirmationToken token = elephantUser.getToken(); // can ignore nullable warning
 				if (token != null) {
 					// resend email if after 15 mins
 					LocalDateTime expiresAt = token.getExpiresAt();
@@ -55,7 +55,7 @@ public class RegistrationService {
 							// reset expiration to be due in another 15 minutes
 							confirmationTokenService.addExpiredLimit(token, 15);
 
-							String link = ElephantBackendApplication.ELEPHANT_CONFIG.getConfigOption("elephantDomain", Function.identity()) + "/api/v1/registration/confirm?token=" + token.getToken();
+							String link = ElephantBackendApplication.ELEPHANT_CONFIG.getConfigOption("elephantDomain", Function.identity()) + "/user/registration/confirm?token=" + token.getToken();
 
 							try {
 								emailSender.send(elephantUser.getEmail(), "<h1> ey " + elephantUser.getFirstName() + " click dis <a href=\"" + link + "\">link</a> fo free fall guyz coins </h1>", true);
@@ -64,7 +64,7 @@ public class RegistrationService {
 									.create()
 									.addResponse(ResponseStatus.FAILURE, "Exception while emailing link to user!")
 									.addException(e)
-									.addObject("token", token)
+									.addObject("user", elephantUser)
 									.build();
 							}
 						}
@@ -72,7 +72,7 @@ public class RegistrationService {
 						return ResponseBuilder
 							.create()
 							.addResponse(ResponseStatus.DEFER, "Token expired, resent email and token renewed")
-							.addObject("token", token)
+							.addObject("user", elephantUser)
 							.build();
 					}
 
@@ -80,7 +80,7 @@ public class RegistrationService {
 						.create()
 						.addResponse(ResponseStatus.DEFER, "Check Email to activate token")
 						// client should build link off this token
-						.addObject("token", token)
+						.addObject("user", elephantUser)
 						.build();
 				}
 
@@ -88,13 +88,13 @@ public class RegistrationService {
 				return ResponseBuilder
 					.create()
 					.addResponse(ResponseStatus.FAILURE, "User already registered and validated")
-					.addObject("user", elephantUserService.getUserByEmail(request.getEmail()).get()) // can ignore
+					.addObject("user", elephantUser) // can ignore
 					.build();
 			}
 
 			ConfirmationToken token = elephantUserService.signUpUser(elephantUser);
 
-			String link = ElephantBackendApplication.ELEPHANT_CONFIG.getConfigOption("elephantDomain", Function.identity()) + "/api/v1/registration/confirm?token=" + token.getToken();
+			String link = ElephantBackendApplication.ELEPHANT_CONFIG.getConfigOption("elephantDomain", Function.identity()) + "/user/registration/confirm?token=" + token.getToken();
 
 			if (!ElephantBackendApplication.ELEPHANT_CONFIG.getConfigOption("isDevelopment", Boolean::parseBoolean)) {
 				try {
@@ -104,14 +104,14 @@ public class RegistrationService {
 						.create()
 						.addResponse(ResponseStatus.FAILURE, "Exception while emailing link to user!")
 						.addException(e)
-						.addObject("token", token)
+						.addObject("user", elephantUser)
 						.build();
 				}
 			}
 			return ResponseBuilder
 				.create()
 				.addResponse(ResponseStatus.SUCCESS, "token confirmed, email sent")
-				.addObject("token", token)
+				.addObject("user", elephantUser)
 				.addObject("link", link)
 				.build();
 		}
@@ -145,14 +145,18 @@ public class RegistrationService {
 				.build();
 		}
 
-		elephantUserService.enableAppUser(confirmationToken.getElephantUser().getEmail());
+		confirmationToken.getElephantUser().setToken(null);
+
+		confirmationToken.getElephantUser().setEnabled(true);
+
+		elephantUserService.saveUser(confirmationToken.getElephantUser());
 
 		confirmationTokenService.deleteToken(confirmationToken);
 
 		return ResponseBuilder
 			.create()
 			.addResponse(ResponseStatus.SUCCESS, "Account Enabled")
-			.addObject("token", confirmationToken)
+			.addObject("user", confirmationToken.getElephantUser())
 			.build();
 	}
 

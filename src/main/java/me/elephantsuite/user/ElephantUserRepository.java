@@ -16,16 +16,8 @@ public interface ElephantUserRepository extends JpaRepository<ElephantUser, Long
 
 	Optional<ElephantUser> findByEmail(String email);
 
-	@Transactional
-	@Modifying
-	@Query("UPDATE ElephantUser e SET e.enabled = TRUE WHERE e.email = ?1")
-	int enableAppUser(String email);
-
 	// get id of user from database. There is prob an easier way to do this without SQL but do this for now
 	@Query("SELECT id FROM ElephantUser e WHERE e.email = ?1")
 	long getId(String email);
-
-	@Query("SELECT email FROM ElephantUser e WHERE e.id = ?1")
-	String getEmailById(long id);
 
 }

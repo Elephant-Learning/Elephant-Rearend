@@ -27,6 +27,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
 import me.elephantsuite.deck.Deck;
+import me.elephantsuite.registration.token.ConfirmationToken;
 import me.elephantsuite.stats.ElephantUserStatistics;
 import me.elephantsuite.user.notification.Notification;
 import org.hibernate.annotations.Fetch;
@@ -93,6 +94,9 @@ public class ElephantUser implements UserDetails {
 	@OneToOne(cascade = {CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REFRESH}, orphanRemoval = true)
 	@JoinColumn(name = "statistics_id")
 	private ElephantUserStatistics statistics;
+
+	@OneToOne(cascade = {CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REFRESH}, orphanRemoval = true)
+	private ConfirmationToken token;
 
 	public ElephantUser(String firstName, String lastName, String email, String password, ElephantUserType type, Integer pfpId) {
 		this.firstName = Objects.requireNonNull(firstName);

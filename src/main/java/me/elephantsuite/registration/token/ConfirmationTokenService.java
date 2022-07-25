@@ -39,7 +39,7 @@ public class ConfirmationTokenService {
 	}
 
 	public void deleteToken(ConfirmationToken token) {
-		confirmationTokenRepository.deleteById(getTokenId(token));
+		confirmationTokenRepository.deleteById(token.getId());
 	}
 
 	public long getTokenId(ConfirmationToken token) {

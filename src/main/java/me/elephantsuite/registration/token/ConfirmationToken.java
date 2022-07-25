@@ -2,8 +2,10 @@ package me.elephantsuite.registration.token;
 
 import java.time.LocalDateTime;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.FetchType;
+import jakarta.persistence.OneToOne;
 import lombok.ToString;
 import me.elephantsuite.user.ElephantUser;
 import jakarta.persistence.Column;
@@ -41,8 +43,9 @@ public class ConfirmationToken {
 	@Column(nullable = false)
 	private LocalDateTime expiresAt;
 
-	@ManyToOne(fetch = FetchType.EAGER)
+	@OneToOne(fetch = FetchType.EAGER, mappedBy = "token")
 	@JoinColumn(nullable = false, name = "elephant_user_id")
+	@JsonBackReference
 	private ElephantUser elephantUser;
 
 	public ConfirmationToken(String token, LocalDateTime createdAt, LocalDateTime expiresAt, ElephantUser elephantUser) {

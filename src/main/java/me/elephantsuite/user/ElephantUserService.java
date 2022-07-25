@@ -55,13 +55,15 @@ public class ElephantUserService implements UserDetailsService {
 
 		user.setPassword(encodedPassword);
 
-		elephantUserRepository.save(user);
-
 		String token = UUID.randomUUID().toString();
 
 		ConfirmationToken confirmationToken = new ConfirmationToken(token, LocalDateTime.now(), LocalDateTime.now().plusMinutes(15), user);
 
+		user.setToken(confirmationToken);
+
 		confirmationTokenService.saveConfirmationToken(confirmationToken);
+
+		elephantUserRepository.save(user);
 
 		return confirmationToken;
 	}
@@ -74,15 +76,11 @@ public class ElephantUserService implements UserDetailsService {
 		return elephantUserRepository.findByEmail(email);
 	}
 
-	public int enableAppUser(String email) {
-		return elephantUserRepository.enableAppUser(email);
-	}
-
 	public long getUserId(ElephantUser user) {
 		return elephantUserRepository.getId(user.getEmail());
 	}
 
-	public @Nullable ElephantUser getUserById(long id) {
+	public ElephantUser getUserById(long id) {
 		if (elephantUserRepository.existsById(id)) {
 			return elephantUserRepository.getReferenceById(id);
 		}
