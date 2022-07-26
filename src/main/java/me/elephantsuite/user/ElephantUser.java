@@ -73,11 +73,11 @@ public class ElephantUser implements UserDetails {
 	@Fetch(value = FetchMode.SUBSELECT)
 	private List<Long> friendIds = new ArrayList<>();
 
-	@OneToMany(mappedBy = "recipient",  cascade = {CascadeType.PERSIST, CascadeType.REFRESH, CascadeType.MERGE}, orphanRemoval = true, fetch = FetchType.EAGER)
+	@OneToMany(mappedBy = "recipient",  cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.EAGER)
 	@Fetch(value = FetchMode.SUBSELECT)
 	private List<Notification> notifications = new ArrayList<>();
 
-	@OneToMany(mappedBy = "author",  cascade = {CascadeType.PERSIST, CascadeType.REFRESH, CascadeType.MERGE}, orphanRemoval = true, fetch = FetchType.EAGER)
+	@OneToMany(mappedBy = "author",  cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.EAGER)
 	@Fetch(value = FetchMode.SUBSELECT)
 	private List<Deck> decks = new ArrayList<>();
 
@@ -91,11 +91,11 @@ public class ElephantUser implements UserDetails {
 	@Fetch(value = FetchMode.SUBSELECT)
 	private List<String> likedSongs = new ArrayList<>();
 
-	@OneToOne(cascade = {CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REFRESH}, orphanRemoval = true)
+	@OneToOne(cascade = CascadeType.ALL, orphanRemoval = true)
 	@JoinColumn(name = "statistics_id")
 	private ElephantUserStatistics statistics;
 
-	@OneToOne(cascade = {CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REFRESH}, orphanRemoval = true)
+	@OneToOne(cascade = CascadeType.ALL, orphanRemoval = true)
 	private ConfirmationToken token;
 
 	public ElephantUser(String firstName, String lastName, String email, String password, ElephantUserType type, Integer pfpId) {
