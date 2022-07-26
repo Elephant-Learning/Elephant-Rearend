@@ -42,7 +42,7 @@ public class DeckController {
 	}
 
 	@PostMapping(path = "resetTerms")
-	public Response addTerms(@RequestBody DeckRequest.ResetTerms resetTerms) {
+	public Response resetTerms(@RequestBody DeckRequest.ResetTerms resetTerms) {
 		return deckService.resetTerms(resetTerms);
 	}
 

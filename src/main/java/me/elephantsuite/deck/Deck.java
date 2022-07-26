@@ -1,6 +1,7 @@
 package me.elephantsuite.deck;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -28,7 +29,12 @@ import lombok.NoArgsConstructor;
 import lombok.RequiredArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
+import me.elephantsuite.deck.card.Card;
+import me.elephantsuite.deck.card.CardService;
+import me.elephantsuite.deck.service.DeckService;
 import me.elephantsuite.user.ElephantUser;
+import me.elephantsuite.user.notification.Notification;
+import org.hibernate.annotations.Cascade;
 import org.hibernate.annotations.DynamicUpdate;
 import org.hibernate.annotations.Fetch;
 import org.hibernate.annotations.FetchMode;
@@ -48,10 +54,6 @@ public class Deck {
 	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "deck_sequence")
 	private Long id;
 
-	@OneToMany(cascade = {CascadeType.PERSIST, CascadeType.REFRESH, CascadeType.MERGE}, fetch = FetchType.EAGER)
-	@Fetch(value = FetchMode.SUBSELECT)
-	private Map<String, DefinitionList> terms;
-
 	private int numberOfLikes = 0;
 
 	@ManyToOne(fetch = FetchType.EAGER, cascade = {CascadeType.PERSIST, CascadeType.REFRESH, CascadeType.MERGE})
@@ -59,12 +61,16 @@ public class Deck {
 	@JsonBackReference
 	private ElephantUser author;
 
+	@OneToMany(mappedBy = "deck",  cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+	@Fetch(value = FetchMode.SUBSELECT)
+	private List<Card> cards = new ArrayList<>();
+
 	private String name;
 
 	private final LocalDateTime created = LocalDateTime.now();
 
-	public Deck(Map<String, List<String>> terms, ElephantUser author, String name) {
-		this.terms = convertToDefinitionList(terms);
+	public Deck(List<Card> cards, ElephantUser author, String name) {
+		this.cards = cards;
 		this.author = author;
 		this.name = name;
 	}
@@ -73,17 +79,10 @@ public class Deck {
 		numberOfLikes++;
 	}
 
-	private static Map<String, DefinitionList> convertToDefinitionList(Map<String, List<String>> stringListMap) {
-		Map<String, DefinitionList> definitionListMap = new HashMap<>();
-
-		stringListMap.forEach((s, strings) -> {
-			definitionListMap.put(s, new DefinitionList(strings));
-		});
-
-		return definitionListMap;
-	}
-
-	public void resetTerms(Map<String, List<String>> map) {
-		this.terms = convertToDefinitionList(map);
+	public void resetTerms(Map<String, List<String>> newTerms, CardService cardService) {
+		List<Card> cards = DeckService.convertToCards(newTerms, this);
+		cardService.deleteAll(this.cards);
+		this.cards = cards;
+		cardService.saveAll(cards);
 	}
 }

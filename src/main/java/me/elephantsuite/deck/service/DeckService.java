@@ -1,11 +1,14 @@
 package me.elephantsuite.deck.service;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
 import lombok.AllArgsConstructor;
 import me.elephantsuite.deck.Deck;
 import me.elephantsuite.deck.DeckRepositoryService;
+import me.elephantsuite.deck.card.Card;
+import me.elephantsuite.deck.card.CardService;
 import me.elephantsuite.response.Response;
 import me.elephantsuite.response.ResponseBuilder;
 import me.elephantsuite.response.ResponseStatus;
@@ -23,6 +26,8 @@ public class DeckService {
 
 	private final DeckRepositoryService service;
 
+	private final CardService cardService;
+
 	public Response createDeck(DeckRequest.CreateDeck request) {
 		Map<String, List<String>> terms = request.getTerms();
 		long authorId = request.getAuthorId();
@@ -38,9 +43,15 @@ public class DeckService {
 				.build();
 		}
 
-		Deck deck = new Deck(terms, user, name);
+		Deck deck = new Deck(null, user, name);
+
+		List<Card> cards = convertToCards(terms, deck);
+
+		deck.setCards(cards);
 
 		user.getDecks().add(deck);
+
+		cardService.saveAll(deck.getCards());
 
 		deck = service.saveDeck(deck);
 
@@ -52,6 +63,17 @@ public class DeckService {
 			.addObject("user", user)
 			.addObject("deck", deck)
 			.build();
+	}
+
+	public static List<Card> convertToCards(Map<String, List<String>> cardsMap, Deck deck) {
+		List<Card> cards = new ArrayList<>();
+
+		cardsMap.forEach((s, strings) -> {
+			Card card = new Card(s, strings, deck);
+			cards.add(card);
+		});
+
+		return cards;
 	}
 
 	public Response likeDeck(DeckRequest.LikeDeck likeDeck) {
@@ -128,7 +150,7 @@ public class DeckService {
 				.build();
 		}
 
-		deck.resetTerms(resetTerms.getNewTerms());
+		deck.resetTerms(resetTerms.getNewTerms(), this.cardService);
 
 		deck = service.saveDeck(deck);
 
