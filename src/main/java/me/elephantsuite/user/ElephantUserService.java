@@ -91,4 +91,8 @@ public class ElephantUserService implements UserDetailsService {
 	public ElephantUser saveUser(ElephantUser user) {
 		return elephantUserRepository.save(user);
 	}
+
+	public void deleteUser(ElephantUser user) {
+		elephantUserRepository.delete(user);
+	}
 }

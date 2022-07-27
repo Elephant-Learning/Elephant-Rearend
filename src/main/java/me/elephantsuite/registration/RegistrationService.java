@@ -160,4 +160,23 @@ public class RegistrationService {
 			.build();
 	}
 
+	public Response deleteUser(long id) {
+		ElephantUser user = elephantUserService.getUserById(id);
+
+		if (user == null) {
+			return ResponseBuilder
+				.create()
+				.addResponse(ResponseStatus.FAILURE, "Invalid User ID!")
+				.addObject("userId", id)
+				.build();
+		}
+
+		elephantUserService.deleteUser(user);
+
+		return ResponseBuilder
+			.create()
+			.addResponse(ResponseStatus.SUCCESS, "Deleted User!")
+			.addObject("user", user)
+			.build();
+	}
 }
