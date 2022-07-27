@@ -16,6 +16,7 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
+import jakarta.persistence.SequenceGenerator;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -28,7 +29,8 @@ import me.elephantsuite.deck.Deck;
 @NoArgsConstructor
 public class Card {
 	@Id
-	@GeneratedValue(strategy = GenerationType.AUTO)
+	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "card_generator")
+	@SequenceGenerator(name = "card_generator", sequenceName = "card_sequence", allocationSize = 1)
 	@Column(name = "id", nullable = false)
 	private Long id;
 
