@@ -4,7 +4,6 @@ import java.time.LocalDateTime;
 import java.util.Objects;
 import java.util.function.Function;
 
-import com.google.common.base.Throwables;
 import me.elephantsuite.ElephantBackendApplication;
 import me.elephantsuite.email.EmailSender;
 import me.elephantsuite.registration.token.ConfirmationToken;
