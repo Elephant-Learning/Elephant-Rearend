@@ -1,29 +1,10 @@
 package me.elephantsuite.response;
 
-import java.lang.reflect.Type;
-import java.time.LocalDateTime;
 import java.util.HashMap;
 import java.util.List;
-import java.util.Locale;
 import java.util.Map;
 import java.util.Objects;
-import java.util.function.Consumer;
-
-import com.fasterxml.jackson.databind.JsonNode;
-import com.fasterxml.jackson.databind.node.FloatNode;
 import com.google.common.base.Throwables;
-import com.google.gson.ExclusionStrategy;
-import com.google.gson.FieldAttributes;
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
-import com.google.gson.JsonArray;
-import com.google.gson.JsonElement;
-import com.google.gson.JsonObject;
-import com.google.gson.JsonPrimitive;
-import com.google.gson.JsonSerializationContext;
-import com.google.gson.JsonSerializer;
-import me.elephantsuite.registration.token.ConfirmationToken;
-import org.hibernate.proxy.HibernateProxy;
 
 // Builds a response that is then sent to elephant client
 public class ResponseBuilder {

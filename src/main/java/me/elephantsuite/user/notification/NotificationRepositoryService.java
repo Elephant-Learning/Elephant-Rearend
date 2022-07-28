@@ -2,14 +2,9 @@ package me.elephantsuite.user.notification;
 
 import java.util.List;
 
-import javax.annotation.Nullable;
-
-import jakarta.persistence.EntityNotFoundException;
 import lombok.AllArgsConstructor;
-import me.elephantsuite.ElephantBackendApplication;
 import me.elephantsuite.user.ElephantUser;
 import me.elephantsuite.user.ElephantUserRepository;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
