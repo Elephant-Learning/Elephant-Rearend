@@ -14,4 +14,9 @@ public class Response {
 	private final String message;
 
 	private final Map<String, Object> context;
+
+	// for utility/semantics
+	public ResponseBuilder builder() {
+		return ResponseBuilder.create();
+	}
 }
