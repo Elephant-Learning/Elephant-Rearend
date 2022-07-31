@@ -40,4 +40,29 @@ public class SongService {
 			.addObject("user", user)
 			.build();
 	}
+
+	public Response unlikeSong(SongRequest request) {
+		long userId = request.getUserId();
+		String songName = request.getSongName();
+
+		ElephantUser user = service.getUserById(userId);
+
+		if (user == null) {
+			return ResponseBuilder
+				.create()
+				.addResponse(ResponseStatus.FAILURE, "Invalid User ID!")
+				.addObject("request", request)
+				.build();
+		}
+
+		user.getLikedSongs().remove(songName);
+
+		user = this.service.saveUser(user);
+
+		return ResponseBuilder
+			.create()
+			.addResponse(ResponseStatus.SUCCESS, "Added Liked Song to user!")
+			.addObject("user", user)
+			.build();
+	}
 }

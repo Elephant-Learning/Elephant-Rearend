@@ -11,7 +11,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-@RequestMapping(path = "user/friends")
+@RequestMapping(path = "friends")
 @AllArgsConstructor
 public class ElephantFriendController {
 

@@ -34,7 +34,15 @@ public class ElephantLoginService {
 				.build();
 		}
 
-		ElephantUser user = elephantUserService.getUserByEmail(email).orElse(null);
+		if (!elephantUserService.isUserAlreadyRegistered(email)) {
+			return ResponseBuilder
+				.create()
+				.addResponse(ResponseStatus.FAILURE, "Email was not registered to any user")
+				.addObject("loginInfo", request)
+				.build();
+		}
+
+		ElephantUser user = elephantUserService.getUserByEmail(email);
 
 		if (user == null) {
 			return ResponseBuilder
@@ -49,14 +57,13 @@ public class ElephantLoginService {
 				.create()
 				.addResponse(ResponseStatus.FAILURE, "Invalid password!")
 				.addObject("loginInfo", request)
-				.addObject("encryptedPassword", user.getPassword())
 				.addObject("user", user)
 				.build();
 		}
 
 		return ResponseBuilder
 			.create()
-			.addResponse(ResponseStatus.SUCCESS, "User Info Retrieved!")
+			.addResponse(ResponseStatus.SUCCESS, "User Info Authenticated and Retrieved!")
 			.addObject("user", user)
 			.build();
 	}
