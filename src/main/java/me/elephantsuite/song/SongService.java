@@ -30,6 +30,14 @@ public class SongService {
 				.build();
 		}
 
+		if (!user.isEnabled()) {
+			return ResponseBuilder
+				.create()
+				.addResponse(ResponseStatus.FAILURE, "User not enabled!")
+				.addObject("user", user)
+				.build();
+		}
+
 		user.getLikedSongs().add(songName);
 
 		user = this.service.saveUser(user);
@@ -52,6 +60,14 @@ public class SongService {
 				.create()
 				.addResponse(ResponseStatus.FAILURE, "Invalid User ID!")
 				.addObject("request", request)
+				.build();
+		}
+
+		if (!user.isEnabled()) {
+			return ResponseBuilder
+				.create()
+				.addResponse(ResponseStatus.FAILURE, "User not enabled!")
+				.addObject("user", user)
 				.build();
 		}
 

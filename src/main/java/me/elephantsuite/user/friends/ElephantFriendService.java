@@ -47,7 +47,6 @@ public class ElephantFriendService {
 				.build();
 		}
 
-		//TODO add notification and actual "request"s
 		user.getFriendIds().add(friendId);
 
 		friend.getFriendIds().add(userId);
