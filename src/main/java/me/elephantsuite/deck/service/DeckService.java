@@ -43,6 +43,14 @@ public class DeckService {
 				.build();
 		}
 
+		if (!user.isEnabled()) {
+			return ResponseBuilder
+				.create()
+				.addResponse(ResponseStatus.FAILURE, "User not enabled!")
+				.addObject("user", user)
+				.build();
+		}
+
 		Deck deck = new Deck(null, user, name);
 
 		List<Card> cards = convertToCards(terms, deck);
@@ -87,6 +95,14 @@ public class DeckService {
 				.addResponse(ResponseStatus.FAILURE, "Invalid Deck Or User ID!")
 				.addObject("deckId", likeDeck.getDeckId())
 				.addObject("userId", likeDeck.getUserId())
+				.build();
+		}
+
+		if (!user.isEnabled()) {
+			return ResponseBuilder
+				.create()
+				.addResponse(ResponseStatus.FAILURE, "User not enabled!")
+				.addObject("user", user)
 				.build();
 		}
 

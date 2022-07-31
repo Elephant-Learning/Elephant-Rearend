@@ -31,6 +31,14 @@ public class ElephantUserStatisticsService {
 				.build();
 		}
 
+		if (!user.isEnabled()) {
+			return ResponseBuilder
+				.create()
+				.addResponse(ResponseStatus.FAILURE, "User not enabled!")
+				.addObject("user", user)
+				.build();
+		}
+
 		user.getStatistics().incrementDaysStreak();
 		user.getStatistics().resetLoginDate();
 

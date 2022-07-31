@@ -51,6 +51,14 @@ public class NotificationService {
 				.build();
 		}
 
+		if (!recipient.isEnabled()) {
+			return ResponseBuilder
+				.create()
+				.addResponse(ResponseStatus.FAILURE, "Recipient not enabled!")
+				.addObject("recipient", recipient)
+				.build();
+		}
+
 		if (!type.equals(NotificationType.LIKED_DECK)) {
 			return ResponseBuilder
 				.create()
@@ -99,6 +107,15 @@ public class NotificationService {
 				.build();
 		}
 
+		if (!recipient.isEnabled() || !sender.isEnabled()) {
+			return ResponseBuilder
+				.create()
+				.addResponse(ResponseStatus.FAILURE, "Recipient or Sender not enabled!")
+				.addObject("recipient", recipient)
+				.addObject("sender", sender)
+				.build();
+		}
+
 		if (!type.equals(NotificationType.LIKED_DECK)) {
 			return ResponseBuilder
 				.create()
@@ -144,6 +161,15 @@ public class NotificationService {
 				.create()
 				.addResponse(ResponseStatus.FAILURE, "Notification type or message cannot be null!")
 				.addObject("request", request)
+				.build();
+		}
+
+		if (!recipient.isEnabled() || !sender.isEnabled()) {
+			return ResponseBuilder
+				.create()
+				.addResponse(ResponseStatus.FAILURE, "Recipient or Sender not enabled!")
+				.addObject("recipient", recipient)
+				.addObject("sender", sender)
 				.build();
 		}
 

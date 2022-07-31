@@ -52,6 +52,14 @@ public class ElephantLoginService {
 				.build();
 		}
 
+		if (!user.isEnabled()) {
+			return ResponseBuilder
+				.create()
+				.addResponse(ResponseStatus.FAILURE, "User not enabled!")
+				.addObject("user", user)
+				.build();
+		}
+
 		if (!bCryptPasswordEncoder.matches(password, user.getPassword())) {
 			return ResponseBuilder
 				.create()

@@ -30,6 +30,14 @@ public class MiscService {
 				.build();
 		}
 
+		if (!user.isEnabled()) {
+			return ResponseBuilder
+				.create()
+				.addResponse(ResponseStatus.FAILURE, "User not enabled!")
+				.addObject("user", user)
+				.build();
+		}
+
 		if (pfpid < 0 || pfpid > 47) {
 			return ResponseBuilder
 				.create()
