@@ -42,8 +42,8 @@ public class RegistrationService {
 				request.getPfpId()
 			);
 
-			if (elephantUserService.isUserAlreadyRegistered(elephantUser)) {
-				elephantUser = elephantUserService.getUserById(elephantUserService.getUserId(elephantUser));
+			if (elephantUserService.isUserAlreadyRegistered(request.getEmail())) {
+				elephantUser = elephantUserService.getUserById(elephantUserService.getUserId(request.getEmail()));
 				ConfirmationToken token = elephantUser.getToken(); // can ignore nullable warning
 				if (token != null) {
 					// resend email if after 15 mins

@@ -46,16 +46,18 @@ public class ElephantUserService {
 		return confirmationToken;
 	}
 
-	public boolean isUserAlreadyRegistered(ElephantUser user) {
-		return elephantUserRepository.findByEmail(user.getEmail()).isPresent();
+	public boolean isUserAlreadyRegistered(String email) {
+		return elephantUserRepository.getId(email) != null;
 	}
 
-	public Optional<ElephantUser> getUserByEmail(String email) {
-		return elephantUserRepository.findByEmail(email);
+
+
+	public ElephantUser getUserByEmail(String email) {
+		return getUserById(elephantUserRepository.getId(email));
 	}
 
-	public long getUserId(ElephantUser user) {
-		return elephantUserRepository.getId(user.getEmail());
+	public Long getUserId(String email) {
+		return elephantUserRepository.getId(email);
 	}
 
 	public ElephantUser getUserById(long id) {

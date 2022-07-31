@@ -10,9 +10,9 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-@RequestMapping(path = "user/login")
+@RequestMapping(path = "login")
 @AllArgsConstructor
-public class ElephantUserLoginController {
+public class ElephantLoginController {
 	private final ElephantLoginService elephantLoginService;
 
 	@PostMapping
