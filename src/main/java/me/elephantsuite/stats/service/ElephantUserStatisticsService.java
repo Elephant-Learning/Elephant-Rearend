@@ -52,4 +52,39 @@ public class ElephantUserStatisticsService {
 			.addObject("user", user)
 			.build();
 	}
+
+	public Response increaseUsageTime(ElephantUserStatisticsRequest.IncreaseUsageTimeRequest request) {
+		long userId = request.getUserId();
+		double usageTime = request.getUsageTime();
+
+		ElephantUser user = userService.getUserById(userId);
+
+		if (user == null) {
+			return ResponseBuilder
+				.create()
+				.addResponse(ResponseStatus.FAILURE, "User ID Invalid!")
+				.addObject("userId", userId)
+				.build();
+		}
+
+		if (!user.isEnabled()) {
+			return ResponseBuilder
+				.create()
+				.addResponse(ResponseStatus.FAILURE, "User not enabled!")
+				.addObject("user", user)
+				.build();
+		}
+
+		user.getStatistics().increaseUsageTime(usageTime);
+
+		userStatisticsRepositoryService.save(user.getStatistics());
+
+		user = userService.saveUser(user);
+
+		return ResponseBuilder
+			.create()
+			.addResponse(ResponseStatus.SUCCESS, "Updated Usage Time!")
+			.addObject("user", user)
+			.build();
+	}
 }
