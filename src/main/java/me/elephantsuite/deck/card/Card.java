@@ -15,11 +15,13 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToMany;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.SequenceGenerator;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import me.elephantsuite.backpack.Backpack;
 import me.elephantsuite.deck.Deck;
 
 @Entity
@@ -43,6 +45,10 @@ public class Card {
 	@JoinColumn(name = "deck_id", foreignKey = @ForeignKey(name = "deck_id"))
 	@JsonBackReference
 	private Deck deck;
+
+	@ManyToMany(mappedBy = "cards")
+	@JsonBackReference
+	private List<Backpack> backpacks = new ArrayList<>();
 
 	public Card(String term, List<String> definitions, Deck deck)  {
 		this.term = term;

@@ -26,6 +26,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
+import me.elephantsuite.backpack.Backpack;
 import me.elephantsuite.deck.Deck;
 import me.elephantsuite.registration.token.ConfirmationToken;
 import me.elephantsuite.stats.ElephantUserStatistics;
@@ -95,6 +96,10 @@ public class ElephantUser {
 	@OneToOne(cascade = CascadeType.ALL, orphanRemoval = true)
 	private ConfirmationToken token;
 
+	@OneToOne(cascade = CascadeType.ALL, orphanRemoval = true)
+	@JoinColumn(name = "backpack_id")
+	private Backpack backpack;
+
 	public ElephantUser(String firstName, String lastName, String email, String password, ElephantUserType type, Integer pfpId) {
 		this.firstName = Objects.requireNonNull(firstName);
 		this.email = Objects.requireNonNull(email);
@@ -104,6 +109,7 @@ public class ElephantUser {
 		//for whatever reason if pfpId is null just set it to something random
 		this.pfpId = pfpId == null ? new Random().nextInt(48) : pfpId;
 		this.statistics = new ElephantUserStatistics(this);
+		this.backpack = new Backpack(this);
 	}
 
 }
