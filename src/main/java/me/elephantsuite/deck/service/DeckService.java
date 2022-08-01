@@ -7,6 +7,7 @@ import java.util.Map;
 import lombok.AllArgsConstructor;
 import me.elephantsuite.deck.Deck;
 import me.elephantsuite.deck.DeckRepositoryService;
+import me.elephantsuite.deck.DeckVisibility;
 import me.elephantsuite.deck.card.Card;
 import me.elephantsuite.deck.card.CardService;
 import me.elephantsuite.response.Response;
@@ -32,6 +33,7 @@ public class DeckService {
 		Map<String, List<String>> terms = request.getTerms();
 		long authorId = request.getAuthorId();
 		String name = request.getName();
+		DeckVisibility visibility = request.getVisibility();
 
 		ElephantUser user = userService.getUserById(authorId);
 
@@ -51,7 +53,7 @@ public class DeckService {
 				.build();
 		}
 
-		Deck deck = new Deck(null, user, name);
+		Deck deck = new Deck(null, user, name, visibility);
 
 		List<Card> cards = convertToCards(terms, deck);
 
@@ -196,4 +198,83 @@ public class DeckService {
 			.build();
 	}
 
+	public Response changeVisibility(DeckRequest.ChangeVisiblity changeVisiblity) {
+		long id = changeVisiblity.getDeckId();
+		DeckVisibility visibility = changeVisiblity.getVisibility();
+
+		Deck deck = service.getDeckById(id);
+
+		if (deck == null) {
+			return ResponseBuilder
+				.create()
+				.addResponse(ResponseStatus.FAILURE, "Invalid Deck ID!")
+				.addObject("deckId", id)
+				.build();
+		}
+
+		deck.setVisibility(visibility);
+
+		deck = service.saveDeck(deck);
+
+		return ResponseBuilder
+			.create()
+			.addResponse(ResponseStatus.SUCCESS, "Changed Visibility of Deck!")
+			.addObject("deck", deck)
+			.build();
+	}
+
+	public Response shareDeck(DeckRequest.ShareDeck shareDeck) {
+		long userId = shareDeck.getSharedUserId();
+		long deckId = shareDeck.getDeckId();
+
+		Deck deck = service.getDeckById(deckId);
+		ElephantUser user = userService.getUserById(userId);
+
+		if (deck == null) {
+			return ResponseBuilder
+				.create()
+				.addResponse(ResponseStatus.FAILURE, "Invalid Deck ID!")
+				.addObject("deckId", deckId)
+				.build();
+		}
+
+		if (user == null) {
+			return ResponseBuilder
+				.create()
+				.addResponse(ResponseStatus.SUCCESS, "Invalid User ID!")
+				.addObject("userId", userId)
+				.build();
+		}
+
+		if (user.equals(deck.getAuthor())) {
+			return ResponseBuilder
+				.create()
+				.addResponse(ResponseStatus.FAILURE, "Cannot Share Own Deck With Yourself!")
+				.addObject("user", user)
+				.addObject("deck", deck)
+				.build();
+		}
+
+		if (deck.getVisibility().equals(DeckVisibility.PRIVATE)) {
+			return ResponseBuilder
+				.create()
+				.addResponse(ResponseStatus.FAILURE, "Cannot share a deck that is private!")
+				.addObject("deck", deck)
+				.addObject("sharedUser", user)
+				.build();
+		}
+
+		deck.getSharedUsers().add(user);
+		user.getSharedDecks().add(deck);
+
+		deck = service.saveDeck(deck);
+		user = userService.saveUser(user);
+
+		return ResponseBuilder
+			.create()
+			.addResponse(ResponseStatus.SUCCESS, "Shared Deck with User!")
+			.addObject("deck", deck)
+			.addObject("sharedUser", user)
+			.build();
+	}
 }

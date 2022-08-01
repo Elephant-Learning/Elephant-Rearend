@@ -8,6 +8,7 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
@@ -21,6 +22,8 @@ import lombok.Setter;
 import lombok.ToString;
 import me.elephantsuite.deck.card.Card;
 import me.elephantsuite.user.ElephantUser;
+import org.hibernate.annotations.Fetch;
+import org.hibernate.annotations.FetchMode;
 
 @Entity
 @Getter
@@ -36,7 +39,8 @@ public class Backpack {
 	@Column(name = "id", nullable = false)
 	private Long id;
 
-	@ManyToMany(cascade = {CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REFRESH})
+	@ManyToMany(cascade = {CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REFRESH}, fetch = FetchType.EAGER)
+	@Fetch(FetchMode.SUBSELECT)
 	private List<Card> cards = new ArrayList<>();
 
 	@OneToOne(mappedBy = "backpack", cascade = {CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REFRESH})

@@ -23,6 +23,8 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import me.elephantsuite.backpack.Backpack;
 import me.elephantsuite.deck.Deck;
+import org.hibernate.annotations.Fetch;
+import org.hibernate.annotations.FetchMode;
 
 @Entity
 @Getter
@@ -46,8 +48,9 @@ public class Card {
 	@JsonBackReference
 	private Deck deck;
 
-	@ManyToMany(mappedBy = "cards")
+	@ManyToMany(mappedBy = "cards", fetch = FetchType.EAGER)
 	@JsonBackReference
+	@Fetch(value = FetchMode.SUBSELECT)
 	private List<Backpack> backpacks = new ArrayList<>();
 
 	public Card(String term, List<String> definitions, Deck deck)  {
