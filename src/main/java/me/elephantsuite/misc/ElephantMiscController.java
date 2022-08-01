@@ -2,6 +2,7 @@ package me.elephantsuite.misc;
 
 import lombok.AllArgsConstructor;
 import me.elephantsuite.response.Response;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -12,6 +13,7 @@ public class ElephantMiscController {
 
 	private final MiscService miscService;
 
+	@PostMapping(path = "pfpid")
 	public Response setPfpId(MiscRequest.SetPfpId request) {
 		return miscService.setPfpId(request);
 	}
