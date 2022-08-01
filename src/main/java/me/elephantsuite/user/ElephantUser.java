@@ -3,6 +3,7 @@ package me.elephantsuite.user;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Objects;
 import java.util.Random;
@@ -18,6 +19,7 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToMany;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.OneToOne;
 import jakarta.persistence.SequenceGenerator;
@@ -36,7 +38,6 @@ import org.hibernate.annotations.FetchMode;
 
 @Getter
 @Setter
-@EqualsAndHashCode
 @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
 @NoArgsConstructor
 @Entity
@@ -89,6 +90,11 @@ public class ElephantUser {
 	@Fetch(value = FetchMode.SUBSELECT)
 	private List<String> likedSongs = new ArrayList<>();
 
+	//decks that have been shared with this user
+	@ManyToMany(fetch = FetchType.EAGER, cascade = {CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REFRESH})
+	@Fetch(value = FetchMode.SUBSELECT)
+	private List<Deck> sharedDecks = new ArrayList<>();
+
 	@OneToOne(cascade = CascadeType.ALL, orphanRemoval = true)
 	@JoinColumn(name = "statistics_id")
 	private ElephantUserStatistics statistics;
@@ -112,4 +118,12 @@ public class ElephantUser {
 		this.backpack = new Backpack(this);
 	}
 
+	@Override
+	public boolean equals(Object obj) {
+		if (obj instanceof ElephantUser elephantUser) {
+			return this.id.equals(elephantUser.id);
+		}
+
+		return false;
+	}
 }

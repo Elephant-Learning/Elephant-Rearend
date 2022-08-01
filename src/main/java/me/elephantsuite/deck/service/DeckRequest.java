@@ -7,6 +7,7 @@ import lombok.AllArgsConstructor;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.ToString;
+import me.elephantsuite.deck.DeckVisibility;
 
 
 public class DeckRequest {
@@ -21,6 +22,8 @@ public class DeckRequest {
 		private final long authorId;
 
 		private final String name;
+
+		private final DeckVisibility visibility;
 	}
 
 	@Getter
@@ -54,5 +57,27 @@ public class DeckRequest {
 		private final long userId;
 
 		private final long deckId;
+	}
+
+	@Getter
+	@AllArgsConstructor
+	@EqualsAndHashCode
+	@ToString
+	public static class ChangeVisiblity {
+
+		private final long deckId;
+
+		private final DeckVisibility visibility;
+	}
+
+	@Getter
+	@AllArgsConstructor
+	@EqualsAndHashCode
+	@ToString
+	public static class ShareDeck {
+
+		private final long deckId;
+
+		private final long sharedUserId;
 	}
 }

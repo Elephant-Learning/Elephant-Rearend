@@ -51,4 +51,14 @@ public class DeckController {
 	public Response deleteDeck(@RequestParam("id") long id) {
 		return deckService.deleteDeck(id);
 	}
+
+	@PostMapping(path = "visibility")
+	public Response changeVisibility(@RequestBody DeckRequest.ChangeVisiblity changeVisiblity) {
+		return deckService.changeVisibility(changeVisiblity);
+	}
+
+	@PostMapping(path = "shareDeck")
+	public Response shareDeck(@RequestBody DeckRequest.ShareDeck shareDeck) {
+		return deckService.shareDeck(shareDeck);
+	}
 }
