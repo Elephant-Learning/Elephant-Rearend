@@ -1,14 +1,10 @@
-package me.elephantsuite.deck.service;
-
-import java.util.List;
+package me.elephantsuite.deck.controller;
 
 import lombok.AllArgsConstructor;
-import me.elephantsuite.deck.Deck;
 import me.elephantsuite.response.Response;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;

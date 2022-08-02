@@ -1,4 +1,4 @@
-package me.elephantsuite.backpack.service;
+package me.elephantsuite.backpack.controller;
 
 import lombok.AllArgsConstructor;
 import lombok.EqualsAndHashCode;

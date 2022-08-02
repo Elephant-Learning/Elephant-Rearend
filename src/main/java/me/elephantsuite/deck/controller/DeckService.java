@@ -1,4 +1,4 @@
-package me.elephantsuite.deck.service;
+package me.elephantsuite.deck.controller;
 
 import java.util.ArrayList;
 import java.util.List;

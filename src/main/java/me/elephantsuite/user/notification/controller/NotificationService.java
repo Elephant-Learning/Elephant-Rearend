@@ -1,11 +1,8 @@
-package me.elephantsuite.user.notification.service;
-
-import java.util.List;
+package me.elephantsuite.user.notification.controller;
 
 import lombok.AllArgsConstructor;
 import me.elephantsuite.deck.Deck;
 import me.elephantsuite.deck.DeckRepositoryService;
-import me.elephantsuite.deck.service.DeckService;
 import me.elephantsuite.response.Response;
 import me.elephantsuite.response.ResponseBuilder;
 import me.elephantsuite.response.ResponseStatus;
