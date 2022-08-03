@@ -5,6 +5,7 @@ import java.util.List;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.AllArgsConstructor;
 import me.elephantsuite.ElephantBackendApplication;
+import me.elephantsuite.deck.card.CardService;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -35,7 +36,12 @@ public class DeckRepositoryService {
 		return deckRepository.findAll();
 	}
 
-	public void deleteDeck(Deck deck) {
-		deckRepository.delete(deck);
+	public void deleteDeck(Deck deck, CardService cardService) {
+		deck.getCards().forEach(card -> {
+			cardService.deleteDefinitionsByCardId(card.getId());
+			cardService.deleteCardById(card.getId());
+		});
+
+		deckRepository.deleteDeckById(deck.getId());
 	}
 }

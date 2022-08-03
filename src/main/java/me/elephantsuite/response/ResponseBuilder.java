@@ -44,7 +44,14 @@ public class ResponseBuilder {
 	}
 
 	public Response build() {
-		return new Response(Objects.requireNonNull(status, "Must set a status to create a Response"), Objects.requireNonNull(message, "Must set a message for the Response"), objMap);
+		Objects.requireNonNull(message, "Must set a message for the Response");
+		Objects.requireNonNull(status, "Must set a status to create a Response");
+
+		if (this.objMap.isEmpty()) {
+			return new Response(status, message);
+		}
+
+		return new ContextResponse(status, message, objMap);
 	}
 
 
