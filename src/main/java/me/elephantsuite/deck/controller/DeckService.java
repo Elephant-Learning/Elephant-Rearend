@@ -191,7 +191,7 @@ public class DeckService {
 				.build();
 		}
 
-		service.deleteDeck(deck);
+		service.deleteDeck(deck, cardService);
 
 		return ResponseBuilder
 			.create()

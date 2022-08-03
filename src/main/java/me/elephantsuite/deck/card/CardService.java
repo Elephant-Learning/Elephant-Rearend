@@ -32,4 +32,12 @@ public class CardService {
 	public Card saveCard(Card card) {
 		return this.repository.save(card);
 	}
+
+	public long deleteDefinitionsByCardId(long id) {
+		return repository.deleteCardDefinitionsByCardID(id);
+	}
+
+	public long deleteCardById(long id) {
+		return repository.deleteCardByID(id);
+	}
 }
