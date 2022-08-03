@@ -1,4 +1,4 @@
-package me.elephantsuite.stats.service;
+package me.elephantsuite.stats.controller;
 
 import lombok.AllArgsConstructor;
 import me.elephantsuite.response.Response;

@@ -1,14 +1,10 @@
-package me.elephantsuite.deck.service;
-
-import java.util.List;
+package me.elephantsuite.deck.controller;
 
 import lombok.AllArgsConstructor;
-import me.elephantsuite.deck.Deck;
 import me.elephantsuite.response.Response;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -29,6 +25,16 @@ public class DeckController {
 	@PostMapping(path = "like")
 	public Response likeDeck(@RequestBody DeckRequest.LikeDeck likeDeck) {
 		return deckService.likeDeck(likeDeck);
+	}
+
+	@PostMapping(path = "unlike")
+	public Response unlikeDeck(@RequestBody DeckRequest.LikeDeck likeDeck) {
+		return deckService.unlikeDeck(likeDeck);
+	}
+
+	@GetMapping(path = "getByName")
+	public Response getByName(@RequestParam("name") String name) {
+		return deckService.getByName(name);
 	}
 
 	@GetMapping(path = "getAll")
@@ -60,5 +66,10 @@ public class DeckController {
 	@PostMapping(path = "shareDeck")
 	public Response shareDeck(@RequestBody DeckRequest.ShareDeck shareDeck) {
 		return deckService.shareDeck(shareDeck);
+	}
+
+	@GetMapping(path = "get")
+	public Response getDeckById(@RequestParam("id") long id) {
+		return deckService.getById(id);
 	}
 }

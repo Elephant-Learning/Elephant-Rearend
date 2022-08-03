@@ -1,8 +1,9 @@
-package me.elephantsuite.deck.service;
+package me.elephantsuite.deck.controller;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 import lombok.AllArgsConstructor;
 import me.elephantsuite.deck.Deck;
@@ -275,6 +276,77 @@ public class DeckService {
 			.addResponse(ResponseStatus.SUCCESS, "Shared Deck with User!")
 			.addObject("deck", deck)
 			.addObject("sharedUser", user)
+			.build();
+	}
+
+	public Response getById(long id) {
+		Deck deck = service.getDeckById(id);
+
+		if (deck == null) {
+			return ResponseBuilder
+				.create()
+				.addResponse(ResponseStatus.FAILURE, "Invalid Deck ID!")
+				.addObject("id", id)
+				.build();
+		}
+
+		return ResponseBuilder
+			.create()
+			.addResponse(ResponseStatus.SUCCESS, "Retrieved Deck By ID!")
+			.addObject("deck", deck)
+			.build();
+	}
+
+	public Response unlikeDeck(DeckRequest.LikeDeck likeDeck) {
+		Deck deck = service.getDeckById(likeDeck.getDeckId());
+
+		ElephantUser user = userService.getUserById(likeDeck.getUserId());
+
+		if (deck == null || user == null) {
+			return ResponseBuilder
+				.create()
+				.addResponse(ResponseStatus.FAILURE, "Invalid Deck Or User ID!")
+				.addObject("deckId", likeDeck.getDeckId())
+				.addObject("userId", likeDeck.getUserId())
+				.build();
+		}
+
+		if (!user.isEnabled()) {
+			return ResponseBuilder
+				.create()
+				.addResponse(ResponseStatus.FAILURE, "User not enabled!")
+				.addObject("user", user)
+				.build();
+		}
+
+		deck.unlikeDeck();
+
+		deck = service.saveDeck(deck);
+
+		user.getLikedDecksIds().remove(likeDeck.getDeckId());
+
+		user = userService.saveUser(user);
+
+		return ResponseBuilder
+			.create()
+			.addResponse(ResponseStatus.SUCCESS, "Unliked Deck!")
+			.addObject("deck", deck)
+			.addObject("user", user)
+			.build();
+	}
+
+	public Response getByName(String name) {
+		List<Deck> decks = service.getAllDecks();
+
+		List<Deck> filteredDecks = decks
+			.stream()
+			.filter(deck -> deck.getName().contains(name))
+			.collect(Collectors.toList());
+
+		return ResponseBuilder
+			.create()
+			.addResponse(ResponseStatus.SUCCESS, "Retrieved Decks with Name!")
+			.addObject("decks", filteredDecks)
 			.build();
 	}
 }

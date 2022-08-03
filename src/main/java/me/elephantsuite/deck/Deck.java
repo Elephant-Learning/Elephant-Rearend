@@ -2,15 +2,12 @@ package me.elephantsuite.deck;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.CascadeType;
-import jakarta.persistence.ElementCollection;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
@@ -22,26 +19,19 @@ import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToMany;
 import jakarta.persistence.ManyToOne;
-import jakarta.persistence.MapKey;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.SequenceGenerator;
-import lombok.AllArgsConstructor;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import lombok.RequiredArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
 import me.elephantsuite.deck.card.Card;
 import me.elephantsuite.deck.card.CardService;
-import me.elephantsuite.deck.service.DeckService;
+import me.elephantsuite.deck.controller.DeckService;
 import me.elephantsuite.user.ElephantUser;
-import me.elephantsuite.user.notification.Notification;
-import org.hibernate.annotations.Cascade;
-import org.hibernate.annotations.DynamicUpdate;
 import org.hibernate.annotations.Fetch;
 import org.hibernate.annotations.FetchMode;
-import org.springframework.transaction.annotation.Transactional;
 
 @Entity
 @Getter
@@ -89,6 +79,10 @@ public class Deck {
 
 	public void likeDeck() {
 		numberOfLikes++;
+	}
+
+	public void unlikeDeck() {
+		numberOfLikes--;
 	}
 
 	public void resetTerms(Map<String, List<String>> newTerms, CardService cardService) {

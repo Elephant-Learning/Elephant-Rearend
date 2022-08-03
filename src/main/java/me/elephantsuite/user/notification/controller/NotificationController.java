@@ -1,4 +1,4 @@
-package me.elephantsuite.user.notification.service;
+package me.elephantsuite.user.notification.controller;
 
 import lombok.AllArgsConstructor;
 import me.elephantsuite.response.Response;

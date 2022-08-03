@@ -1,9 +1,8 @@
-package me.elephantsuite.stats.service;
+package me.elephantsuite.stats.controller;
 
 import lombok.AllArgsConstructor;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
-import lombok.Setter;
 import lombok.ToString;
 
 public class ElephantUserStatisticsRequest {
