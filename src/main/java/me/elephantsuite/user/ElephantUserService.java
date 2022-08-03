@@ -1,12 +1,15 @@
 package me.elephantsuite.user;
 
 import java.time.LocalDateTime;
+import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
 import java.util.UUID;
 
 import jakarta.persistence.EntityNotFoundException;
 import me.elephantsuite.ElephantBackendApplication;
+import me.elephantsuite.deck.Deck;
+import me.elephantsuite.deck.DeckRepository;
 import me.elephantsuite.registration.token.ConfirmationToken;
 import me.elephantsuite.registration.token.ConfirmationTokenService;
 import lombok.AllArgsConstructor;
@@ -22,6 +25,8 @@ import org.springframework.transaction.annotation.Transactional;
 public class ElephantUserService {
 
 	private final ElephantUserRepository elephantUserRepository;
+
+	private final DeckRepository deckRepository;
 
 	private final BCryptPasswordEncoder bCryptPasswordEncoder;
 
@@ -61,11 +66,16 @@ public class ElephantUserService {
 	}
 
 	public ElephantUser getUserById(long id) {
-		if (elephantUserRepository.existsById(id)) {
-			return elephantUserRepository.getReferenceById(id);
+		ElephantUser elephantUser = elephantUserRepository.getById(id);
+
+		List<Deck> userDecks = deckRepository.getDecksByUserId(id);
+
+		if (!elephantUser.getDecks().equals(userDecks)) {
+			elephantUser.setDecks(userDecks);
+			elephantUser = saveUser(elephantUser);
 		}
 
-		return null;
+		return elephantUser;
 	}
 
 	public ElephantUser saveUser(ElephantUser user) {

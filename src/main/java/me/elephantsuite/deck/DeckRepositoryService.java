@@ -29,11 +29,7 @@ public class DeckRepositoryService {
 	}
 
 	public List<Deck> getAllDecks() {
-		if (deckRepository.count() == 1) {
-			return List.of(getDeckById(1));
-		}
-
-		return deckRepository.findAll();
+		return deckRepository.getAllDecks();
 	}
 
 	public void deleteDeck(Deck deck, CardService cardService) {
@@ -43,5 +39,8 @@ public class DeckRepositoryService {
 		});
 
 		deckRepository.deleteDeckById(deck.getId());
+	}
+	public List<Deck> getDecksByUser(long userId) {
+		return deckRepository.getDecksByUserId(userId);
 	}
 }

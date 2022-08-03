@@ -5,13 +5,17 @@ import java.util.Map;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 
-@AllArgsConstructor
 @Getter
 public class Response {
 
 	private final ResponseStatus status;
 
 	private final String message;
+
+	Response(ResponseStatus status, String message) {
+		this.status = status;
+		this.message = message;
+	}
 
 	// for utility/semantics
 	public ResponseBuilder builder() {
