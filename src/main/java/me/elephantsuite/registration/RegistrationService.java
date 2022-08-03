@@ -175,7 +175,6 @@ public class RegistrationService {
 		return ResponseBuilder
 			.create()
 			.addResponse(ResponseStatus.SUCCESS, "Deleted User!")
-			.addObject("user", user)
 			.build();
 	}
 }
