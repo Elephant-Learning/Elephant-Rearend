@@ -81,6 +81,10 @@ public class Deck {
 		numberOfLikes++;
 	}
 
+	public void unlikeDeck() {
+		numberOfLikes--;
+	}
+
 	public void resetTerms(Map<String, List<String>> newTerms, CardService cardService) {
 		List<Card> cards = DeckService.convertToCards(newTerms, this);
 		cardService.deleteAll(this.cards);

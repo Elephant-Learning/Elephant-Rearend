@@ -27,6 +27,16 @@ public class DeckController {
 		return deckService.likeDeck(likeDeck);
 	}
 
+	@PostMapping(path = "unlike")
+	public Response unlikeDeck(@RequestBody DeckRequest.LikeDeck likeDeck) {
+		return deckService.unlikeDeck(likeDeck);
+	}
+
+	@GetMapping(path = "getByName")
+	public Response getByName(@RequestParam("name") String name) {
+		return deckService.getByName(name);
+	}
+
 	@GetMapping(path = "getAll")
 	public Response getAllDecks() {
 		return deckService.getAllDecks();
@@ -56,5 +66,10 @@ public class DeckController {
 	@PostMapping(path = "shareDeck")
 	public Response shareDeck(@RequestBody DeckRequest.ShareDeck shareDeck) {
 		return deckService.shareDeck(shareDeck);
+	}
+
+	@GetMapping(path = "get")
+	public Response getDeckById(@RequestParam("id") long id) {
+		return deckService.getById(id);
 	}
 }
