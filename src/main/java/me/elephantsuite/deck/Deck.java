@@ -7,6 +7,7 @@ import java.util.Map;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
@@ -29,6 +30,7 @@ import lombok.ToString;
 import me.elephantsuite.deck.card.Card;
 import me.elephantsuite.deck.card.CardService;
 import me.elephantsuite.deck.controller.DeckService;
+import me.elephantsuite.response.json.DeckSerializer;
 import me.elephantsuite.user.ElephantUser;
 import org.hibernate.annotations.Fetch;
 import org.hibernate.annotations.FetchMode;
@@ -39,6 +41,7 @@ import org.hibernate.annotations.FetchMode;
 @EqualsAndHashCode
 @ToString
 @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
+@JsonSerialize(using = DeckSerializer.class)
 @NoArgsConstructor
 public class Deck {
 
