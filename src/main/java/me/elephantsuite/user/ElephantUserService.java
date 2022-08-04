@@ -68,6 +68,10 @@ public class ElephantUserService {
 	public ElephantUser getUserById(long id) {
 		ElephantUser elephantUser = elephantUserRepository.getById(id);
 
+		if (elephantUser == null) {
+			return null;
+		}
+
 		List<Deck> userDecks = deckRepository.getDecksByUserId(id);
 
 		if (!elephantUser.getDecks().equals(userDecks)) {

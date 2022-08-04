@@ -43,4 +43,8 @@ public class DeckRepositoryService {
 	public List<Deck> getDecksByUser(long userId) {
 		return deckRepository.getDecksByUserId(userId);
 	}
+
+	public void saveAll(List<Deck> decks) {
+		deckRepository.saveAll(decks);
+	}
 }

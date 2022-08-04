@@ -19,7 +19,7 @@ public class BackpackRepositoryService {
 		return backpackRepository.save(backpack);
 	}
 
-	public Backpack getBackById(long id) {
+	public Backpack getBackpackById(long id) {
 		if (backpackRepository.existsById(id)) {
 			return backpackRepository.getReferenceById(id);
 		}
