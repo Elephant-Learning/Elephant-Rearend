@@ -55,6 +55,14 @@ public class BackpackService {
 				.build();
 		}
 
+		if (user.getBackpack().getCards().contains(card)) {
+			return ResponseBuilder
+				.create()
+				.addResponse(ResponseStatus.FAILURE, "Card already present in backpack!")
+				.addObject("user", user)
+				.build();
+		}
+
 		user.getBackpack().getCards().add(card);
 
 		if (!card.getBackpacks().contains(user.getBackpack())) {
@@ -101,6 +109,14 @@ public class BackpackService {
 				.create()
 				.addResponse(ResponseStatus.FAILURE, "Invalid Card ID Given!")
 				.addObject("request", request)
+				.build();
+		}
+
+		if (!user.getBackpack().getCards().contains(card)) {
+			return ResponseBuilder
+				.create()
+				.addResponse(ResponseStatus.FAILURE, "Card not present in backpack!")
+				.addObject("user", user)
 				.build();
 		}
 

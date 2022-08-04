@@ -30,6 +30,7 @@ import lombok.Setter;
 import lombok.ToString;
 import me.elephantsuite.backpack.Backpack;
 import me.elephantsuite.deck.Deck;
+import me.elephantsuite.folder.Folder;
 import me.elephantsuite.registration.token.ConfirmationToken;
 import me.elephantsuite.stats.ElephantUserStatistics;
 import me.elephantsuite.user.notification.Notification;
@@ -94,6 +95,10 @@ public class ElephantUser {
 	@ManyToMany(fetch = FetchType.EAGER, cascade = {CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REFRESH})
 	@Fetch(value = FetchMode.SUBSELECT)
 	private List<Deck> sharedDecks = new ArrayList<>();
+
+	@OneToMany(mappedBy = "user", fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+	@Fetch(FetchMode.SUBSELECT)
+	private List<Folder> folders = new ArrayList<>();
 
 	@OneToOne(cascade = CascadeType.ALL, orphanRemoval = true)
 	@JoinColumn(name = "statistics_id")
