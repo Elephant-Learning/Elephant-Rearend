@@ -85,4 +85,20 @@ public class ElephantLoginService {
 			.addObject("user", user)
 			.build();
 	}
+
+	public Response getUserByEmail(String email) {
+		if (!elephantUserService.isUserAlreadyRegistered(email)) {
+			return ResponseBuilder
+				.create()
+				.addResponse(ResponseStatus.FAILURE, "Email was not registered!")
+				.addObject("email", email)
+				.build();
+		}
+
+		return ResponseBuilder
+			.create()
+			.addResponse(ResponseStatus.SUCCESS, "Retrieved User by Email!")
+			.addObject("user", elephantUserService.getUserByEmail(email))
+			.build();
+	}
 }
