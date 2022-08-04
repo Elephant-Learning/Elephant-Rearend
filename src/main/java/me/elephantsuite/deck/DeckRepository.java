@@ -1,5 +1,7 @@
 package me.elephantsuite.deck;
 
+import java.util.List;
+
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
@@ -13,4 +15,12 @@ public interface DeckRepository extends JpaRepository<Deck, Long> {
 	@Modifying
 	@Query("DELETE FROM Deck d WHERE d.id = ?1")
 	int deleteDeckById(long id);
+
+	@Transactional
+	@Query(value = "SELECT * FROM deck", nativeQuery = true)
+	List<Deck> getAllDecks();
+
+	@Transactional
+	@Query(value = "SELECT * FROM deck WHERE deck.elephant_user_id = ?1", nativeQuery = true)
+	List<Deck> getDecksByUserId(long id);
 }

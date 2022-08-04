@@ -18,4 +18,7 @@ public interface ElephantUserRepository extends JpaRepository<ElephantUser, Long
 	@Query("SELECT id FROM ElephantUser e WHERE e.email = ?1")
 	Long getId(String email);
 
+	@Query(value = "SELECT * FROM elephant_user WHERE elephant_user.id = ?1", nativeQuery = true)
+	ElephantUser getById(long id);
+
 }

@@ -76,7 +76,7 @@ public class ElephantUser {
 	@Fetch(value = FetchMode.SUBSELECT)
 	private List<Notification> notifications = new ArrayList<>();
 
-	@OneToMany(mappedBy = "author",  cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.EAGER)
+	@OneToMany(mappedBy = "author",  cascade = CascadeType.ALL, orphanRemoval = false, fetch = FetchType.EAGER)
 	@Fetch(value = FetchMode.SUBSELECT)
 	private List<Deck> decks = new ArrayList<>();
 

@@ -1,6 +1,7 @@
 package me.elephantsuite.test;
 
 import lombok.AllArgsConstructor;
+import me.elephantsuite.deck.DeckRepositoryService;
 import me.elephantsuite.response.Response;
 import me.elephantsuite.response.ResponseBuilder;
 import me.elephantsuite.response.ResponseStatus;
@@ -17,6 +18,8 @@ public class ElephantTestController {
 
 	private ElephantUserService service;
 
+	private DeckRepositoryService deckService;
+
 	@PostMapping(path = "testUser")
 	public Response testUser(@RequestParam("email") String email) {
 		boolean alrRegistered = service.isUserAlreadyRegistered(email);
@@ -25,6 +28,15 @@ public class ElephantTestController {
 			.create()
 			.addResponse(ResponseStatus.SUCCESS, "tested some stuff")
 			.addObject("alrRegistered", alrRegistered)
+			.build();
+	}
+
+	@PostMapping(path = "testDecksByUserId")
+	public Response testDecksByUserId(@RequestParam("user_id") long userId) {
+		return ResponseBuilder
+			.create()
+			.addResponse(ResponseStatus.SUCCESS, "tested some more stuff")
+			.addObject("decks", deckService.getDecksByUser(userId))
 			.build();
 	}
 }
