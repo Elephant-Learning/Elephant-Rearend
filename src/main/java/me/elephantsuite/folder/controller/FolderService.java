@@ -156,4 +156,22 @@ public class FolderService {
 			.addObject("folder", folder)
 			.build();
 	}
+
+	public Response getFolderById(long id) {
+		Folder folder = service.getFolderById(id);
+
+		if (folder == null) {
+			return ResponseBuilder
+				.create()
+				.addResponse(ResponseStatus.FAILURE, "Invalid Folder ID!")
+				.addObject("id", id)
+				.build();
+		}
+
+		return ResponseBuilder
+			.create()
+			.addResponse(ResponseStatus.SUCCESS, "Retrieved Folder By ID!")
+			.addObject("folder", folder)
+			.build();
+	}
 }
