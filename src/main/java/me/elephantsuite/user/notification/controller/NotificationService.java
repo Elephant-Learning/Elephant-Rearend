@@ -59,7 +59,7 @@ public class NotificationService {
 		if (!type.equals(NotificationType.LIKED_DECK)) {
 			return ResponseBuilder
 				.create()
-				.addResponse(ResponseStatus.SUCCESS, "Incorrect Notification Type Used! (Should Use LIKED_DECK)")
+				.addResponse(ResponseStatus.FAILURE, "Incorrect Notification Type Used! (Should Use LIKED_DECK)")
 				.addObject("recipient", recipient)
 				.addObject("request", request)
 				.build();
@@ -113,10 +113,10 @@ public class NotificationService {
 				.build();
 		}
 
-		if (!type.equals(NotificationType.LIKED_DECK)) {
+		if (!type.equals(NotificationType.SHARED_DECK)) {
 			return ResponseBuilder
 				.create()
-				.addResponse(ResponseStatus.SUCCESS, "Incorrect Notification Type Used! (Should Use LIKED_DECK)")
+				.addResponse(ResponseStatus.FAILURE, "Incorrect Notification Type Used! (Should Use SHARED_DECK)")
 				.addObject("recipient", recipient)
 				.addObject("sender", sender)
 				.addObject("request", request)
@@ -173,7 +173,7 @@ public class NotificationService {
 		if (!type.equals(NotificationType.FRIEND_REQUEST)) {
 			return ResponseBuilder
 				.create()
-				.addResponse(ResponseStatus.SUCCESS, "Incorrect Notification Type Used! (Should use FRIEND_REQUEST)")
+				.addResponse(ResponseStatus.FAILURE, "Incorrect Notification Type Used! (Should use FRIEND_REQUEST)")
 				.addObject("recipient", recipient)
 				.addObject("sender", sender)
 				.addObject("request", request)
