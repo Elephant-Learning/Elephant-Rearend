@@ -4,7 +4,6 @@ import lombok.AllArgsConstructor;
 import me.elephantsuite.response.Response;
 import me.elephantsuite.response.ResponseBuilder;
 import me.elephantsuite.response.ResponseStatus;
-import me.elephantsuite.stats.ElephantUserStatisticsRepositoryService;
 import me.elephantsuite.user.ElephantUser;
 import me.elephantsuite.user.ElephantUserService;
 import org.springframework.stereotype.Service;
@@ -15,10 +14,7 @@ import org.springframework.transaction.annotation.Transactional;
 @AllArgsConstructor
 public class ElephantUserStatisticsService {
 
-	private final ElephantUserStatisticsRepositoryService userStatisticsRepositoryService;
-
 	private final ElephantUserService userService;
-
 
 	public Response modifyStatsOnLogin(long id) {
 		ElephantUser user = userService.getUserById(id);
@@ -42,7 +38,7 @@ public class ElephantUserStatisticsService {
 		user.getStatistics().incrementDaysStreak();
 		user.getStatistics().resetLoginDate();
 
-		userStatisticsRepositoryService.save(user.getStatistics());
+		userService.saveUser(user);
 
 		user = userService.saveUser(user);
 
@@ -77,7 +73,7 @@ public class ElephantUserStatisticsService {
 
 		user.getStatistics().increaseUsageTime(usageTime);
 
-		userStatisticsRepositoryService.save(user.getStatistics());
+		userService.saveUser(user);
 
 		user = userService.saveUser(user);
 

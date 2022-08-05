@@ -12,6 +12,7 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.ElementCollection;
+import jakarta.persistence.Embedded;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
@@ -102,8 +103,7 @@ public class ElephantUser {
 	@Fetch(FetchMode.SUBSELECT)
 	private List<Folder> folders = new ArrayList<>();
 
-	@OneToOne(cascade = CascadeType.ALL, orphanRemoval = true)
-	@JoinColumn(name = "statistics_id")
+	@Embedded
 	private ElephantUserStatistics statistics;
 
 	@OneToOne(cascade = CascadeType.ALL, orphanRemoval = true)
@@ -121,7 +121,7 @@ public class ElephantUser {
 		this.type = Objects.requireNonNull(type);
 		//for whatever reason if pfpId is null just set it to something random
 		this.pfpId = pfpId == null ? new Random().nextInt(48) : pfpId;
-		this.statistics = new ElephantUserStatistics(this);
+		this.statistics = new ElephantUserStatistics();
 		this.backpack = new Backpack(this);
 	}
 
