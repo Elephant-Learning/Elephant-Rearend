@@ -11,10 +11,32 @@ public class ElephantUserStatisticsRequest {
 	@AllArgsConstructor
 	@ToString
 	@EqualsAndHashCode
-	public static class IncreaseUsageTimeRequest {
+	public static class IncreaseUsageTime {
 
 		private final long userId;
 
 		private final double usageTime;
+	}
+
+	@Getter
+	@AllArgsConstructor
+	@ToString
+	@EqualsAndHashCode
+	public static class IncrementAnsweredWrong {
+
+		private final long userId;
+
+		private final long cardId;
+	}
+
+	@Getter
+	@AllArgsConstructor
+	@ToString
+	@EqualsAndHashCode
+	public static class IncrementAnsweredRight {
+
+		private final long userId;
+
+		private final long cardId;
 	}
 }
