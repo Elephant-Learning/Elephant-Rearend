@@ -47,6 +47,24 @@ public class ElephantFriendService {
 				.build();
 		}
 
+		if (user.getFriendIds().contains(friendId) || friend.getFriendIds().contains(userId)) {
+			return ResponseBuilder
+				.create()
+				.addResponse(ResponseStatus.FAILURE, "User already friended!")
+				.addObject("user", user)
+				.addObject("friend", friend)
+				.build();
+		}
+
+		if (userId == friendId) {
+			return ResponseBuilder
+				.create()
+				.addResponse(ResponseStatus.FAILURE, "Cannot friend yourself!")
+				.addObject("user", user)
+				.addObject("request", request)
+				.build();
+		}
+
 		user.getFriendIds().add(friendId);
 
 		friend.getFriendIds().add(userId);
@@ -86,6 +104,24 @@ public class ElephantFriendService {
 				.addResponse(ResponseStatus.FAILURE, "User or Friend are not enabled!")
 				.addObject("user", user)
 				.addObject("friend", friend)
+				.build();
+		}
+
+		if (!user.getFriendIds().contains(friendId) || !friend.getFriendIds().contains(userId)) {
+			return ResponseBuilder
+				.create()
+				.addResponse(ResponseStatus.FAILURE, "Cannot unfriend someone who is not friends already!")
+				.addObject("friend", friend)
+				.addObject("user", user)
+				.build();
+		}
+
+		if (userId == friendId) {
+			return ResponseBuilder
+				.create()
+				.addResponse(ResponseStatus.FAILURE, "Cannot unfriend yourself!")
+				.addObject("user", user)
+				.addObject("request", request)
 				.build();
 		}
 
