@@ -62,4 +62,8 @@ public class Card {
 		this.deck = deck;
 	}
 
+	@Override
+	public String toString() {
+		return this.term + " - " + this.id.toString();
+	}
 }

@@ -65,7 +65,7 @@ public class NotificationService {
 				.build();
 		}
 
-		Notification notification = new Notification(type, message, recipient, null, deck);
+		Notification notification = new Notification(type, message, recipient, null, deck.getId());
 
 		recipient.getNotifications().add(notification);
 
@@ -123,7 +123,7 @@ public class NotificationService {
 				.build();
 		}
 
-		Notification notification = new Notification(type, message, recipient, request.getSenderId(), deck);
+		Notification notification = new Notification(type, message, recipient, request.getSenderId(), deck.getId());
 
 		recipient.getNotifications().add(notification);
 

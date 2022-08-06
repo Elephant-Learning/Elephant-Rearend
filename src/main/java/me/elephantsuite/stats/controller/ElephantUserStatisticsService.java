@@ -1,9 +1,14 @@
 package me.elephantsuite.stats.controller;
 
 import lombok.AllArgsConstructor;
+import me.elephantsuite.deck.card.Card;
+import me.elephantsuite.deck.card.CardService;
 import me.elephantsuite.response.Response;
 import me.elephantsuite.response.ResponseBuilder;
 import me.elephantsuite.response.ResponseStatus;
+import me.elephantsuite.stats.ElephantUserStatisticsRepositoryService;
+import me.elephantsuite.stats.card.CardStatistics;
+import me.elephantsuite.stats.card.CardStatisticsService;
 import me.elephantsuite.user.ElephantUser;
 import me.elephantsuite.user.ElephantUserService;
 import org.springframework.stereotype.Service;
@@ -14,7 +19,13 @@ import org.springframework.transaction.annotation.Transactional;
 @AllArgsConstructor
 public class ElephantUserStatisticsService {
 
+	private final ElephantUserStatisticsRepositoryService userStatisticsRepositoryService;
+
 	private final ElephantUserService userService;
+
+	private final CardService cardService;
+
+	private final CardStatisticsService cardStatisticsService;
 
 	public Response modifyStatsOnLogin(long id) {
 		ElephantUser user = userService.getUserById(id);
@@ -38,7 +49,7 @@ public class ElephantUserStatisticsService {
 		user.getStatistics().incrementDaysStreak();
 		user.getStatistics().resetLoginDate();
 
-		userService.saveUser(user);
+		userStatisticsRepositoryService.save(user.getStatistics());
 
 		user = userService.saveUser(user);
 
@@ -49,7 +60,7 @@ public class ElephantUserStatisticsService {
 			.build();
 	}
 
-	public Response increaseUsageTime(ElephantUserStatisticsRequest.IncreaseUsageTimeRequest request) {
+	public Response increaseUsageTime(ElephantUserStatisticsRequest.IncreaseUsageTime request) {
 		long userId = request.getUserId();
 		double usageTime = request.getUsageTime();
 
@@ -73,13 +84,77 @@ public class ElephantUserStatisticsService {
 
 		user.getStatistics().increaseUsageTime(usageTime);
 
-		userService.saveUser(user);
+		userStatisticsRepositoryService.save(user.getStatistics());
 
 		user = userService.saveUser(user);
 
 		return ResponseBuilder
 			.create()
 			.addResponse(ResponseStatus.SUCCESS, "Updated Usage Time!")
+			.addObject("user", user)
+			.build();
+	}
+
+	public Response incrementAnsweredWrong(ElephantUserStatisticsRequest.IncrementAnsweredWrong request) {
+		long userId = request.getUserId();
+		long cardId = request.getCardId();
+
+		ElephantUser user = userService.getUserById(userId);
+		Card card = cardService.getCardById(cardId);
+
+		if (card == null || user == null) {
+			return ResponseBuilder
+				.create()
+				.addResponse(ResponseStatus.FAILURE, "Invalid User or Card IDs!")
+				.addObject("request", request)
+				.build();
+		}
+
+		if(!user.getStatistics().getCardStatistics().containsKey(card)) {
+			user.getStatistics().getCardStatistics().put(card, new CardStatistics(cardId));
+		}
+
+		user.getStatistics().getCardStatistics().get(card).incrementAnsweredWrong();
+
+		cardStatisticsService.save(user.getStatistics().getCardStatistics().get(card));
+		userStatisticsRepositoryService.save(user.getStatistics());
+		user = userService.saveUser(user);
+
+		return ResponseBuilder
+			.create()
+			.addResponse(ResponseStatus.SUCCESS, "Incremented Answered Wrong for Card!")
+			.addObject("user", user)
+			.build();
+	}
+
+	public Response incrementAnsweredRight(ElephantUserStatisticsRequest.IncrementAnsweredRight request) {
+		long userId = request.getUserId();
+		long cardId = request.getCardId();
+
+		ElephantUser user = userService.getUserById(userId);
+		Card card = cardService.getCardById(cardId);
+
+		if (card == null || user == null) {
+			return ResponseBuilder
+				.create()
+				.addResponse(ResponseStatus.FAILURE, "Invalid User or Card IDs!")
+				.addObject("request", request)
+				.build();
+		}
+
+		if(!user.getStatistics().getCardStatistics().containsKey(card)) {
+			user.getStatistics().getCardStatistics().put(card, new CardStatistics(cardId));
+		}
+
+		user.getStatistics().getCardStatistics().get(card).incrementAnsweredRight();
+
+		cardStatisticsService.save(user.getStatistics().getCardStatistics().get(card));
+		userStatisticsRepositoryService.save(user.getStatistics());
+		user = userService.saveUser(user);
+
+		return ResponseBuilder
+			.create()
+			.addResponse(ResponseStatus.SUCCESS, "Incremented Answered Right for Card!")
 			.addObject("user", user)
 			.build();
 	}

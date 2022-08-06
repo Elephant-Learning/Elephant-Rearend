@@ -21,7 +21,17 @@ public class ElephantUserStatisticsController {
 	}
 
 	@PostMapping(path = "increaseUsageTime")
-	public Response increaseUsageTime(@RequestBody ElephantUserStatisticsRequest.IncreaseUsageTimeRequest request) {
+	public Response increaseUsageTime(@RequestBody ElephantUserStatisticsRequest.IncreaseUsageTime request) {
 		return service.increaseUsageTime(request);
+	}
+
+	@PostMapping(path = "card/answeredWrong")
+	public Response answeredWrong(@RequestBody ElephantUserStatisticsRequest.IncrementAnsweredWrong request) {
+		return service.incrementAnsweredWrong(request);
+	}
+
+	@PostMapping(path = "card/answeredRight")
+	public Response answeredRight(@RequestBody ElephantUserStatisticsRequest.IncrementAnsweredRight request) {
+		return service.incrementAnsweredRight(request);
 	}
 }
