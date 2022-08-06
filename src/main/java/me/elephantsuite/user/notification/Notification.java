@@ -54,16 +54,14 @@ public class Notification {
 
 	private Long senderId;
 
-	@ManyToOne(fetch = FetchType.EAGER,  cascade = {CascadeType.PERSIST, CascadeType.REFRESH, CascadeType.MERGE})
-	@JoinColumn(name = "deck_id", foreignKey = @ForeignKey(name = "deck_id"))
-	private Deck deck;
+	private Long deckId;
 
-	public Notification(NotificationType type, String message, ElephantUser recipient, Long senderId, Deck deck) {
+	public Notification(NotificationType type, String message, ElephantUser recipient, Long senderId, Long deckId) {
 		this.type = type;
 		this.message = message;
 		this.recipient = recipient;
 		this.senderId = senderId;
-		this.deck = deck;
+		this.deckId = deckId;
 	}
 
 
