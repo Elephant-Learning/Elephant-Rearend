@@ -1,6 +1,8 @@
 package me.elephantsuite.stats.controller;
 
 import lombok.AllArgsConstructor;
+import me.elephantsuite.deck.Deck;
+import me.elephantsuite.deck.DeckRepositoryService;
 import me.elephantsuite.deck.card.Card;
 import me.elephantsuite.deck.card.CardService;
 import me.elephantsuite.response.Response;
@@ -26,6 +28,7 @@ public class ElephantUserStatisticsService {
 	private final CardService cardService;
 
 	private final CardStatisticsService cardStatisticsService;
+	private DeckRepositoryService deckService;
 
 	public Response modifyStatsOnLogin(long id) {
 		ElephantUser user = userService.getUserById(id);
@@ -155,6 +158,42 @@ public class ElephantUserStatisticsService {
 		return ResponseBuilder
 			.create()
 			.addResponse(ResponseStatus.SUCCESS, "Incremented Answered Right for Card!")
+			.addObject("user", user)
+			.build();
+	}
+
+	public Response updateRecentlyViewedDecks(ElephantUserStatisticsRequest.UpdateRecentlyViewedDecks request) {
+		long deckId = request.getDeckId();
+		long userId = request.getUserId();
+
+		ElephantUser user = userService.getUserById(userId);
+		Deck deck = deckService.getDeckById(deckId);
+
+		if (user == null || deck == null) {
+			return ResponseBuilder
+				.create()
+				.addResponse(ResponseStatus.FAILURE, "Invalid Deck or User IDs!")
+				.addObject("request", request)
+				.build();
+		}
+
+		if (user.getStatistics().getRecentlyViewedDeckIds().contains(deckId)) {
+			user.getStatistics().getRecentlyViewedDeckIds().remove(deckId);
+		}
+
+		user.getStatistics().getRecentlyViewedDeckIds().add(0, deckId);
+
+		//at maxed size after adding one
+		if (user.getStatistics().getRecentlyViewedDeckIds().size() == 31) {
+			user.getStatistics().getRecentlyViewedDeckIds().remove(user.getStatistics().getRecentlyViewedDeckIds().size() - 1);
+		}
+
+		userStatisticsRepositoryService.save(user.getStatistics());
+		user = userService.saveUser(user);
+
+		return ResponseBuilder
+			.create()
+			.addResponse(ResponseStatus.SUCCESS, "Added Deck to Recently Viewed Decks!")
 			.addObject("user", user)
 			.build();
 	}

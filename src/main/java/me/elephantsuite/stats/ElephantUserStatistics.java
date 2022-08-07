@@ -9,6 +9,7 @@ import java.util.Map;
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.CascadeType;
+import jakarta.persistence.ElementCollection;
 import jakarta.persistence.Embeddable;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
@@ -29,6 +30,8 @@ import lombok.ToString;
 import me.elephantsuite.deck.card.Card;
 import me.elephantsuite.stats.card.CardStatistics;
 import me.elephantsuite.user.ElephantUser;
+import org.hibernate.annotations.Fetch;
+import org.hibernate.annotations.FetchMode;
 
 @Getter
 @Setter
@@ -52,6 +55,10 @@ public class ElephantUserStatistics {
 	private double usageTime = 0;
 
 	private LocalDateTime lastLoggedIn = LocalDateTime.now();
+
+	@ElementCollection(fetch = FetchType.EAGER)
+	@Fetch(FetchMode.SUBSELECT)
+	private List<Long> recentlyViewedDeckIds = new ArrayList<>();
 
 	@OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
 	@JoinTable(name = "elephant_user_statistics_card_statistics_mapping", joinColumns = {@JoinColumn(name = "elephant_user_statistics_id", referencedColumnName = "id")}, inverseJoinColumns = {@JoinColumn(name = "card_statistics_id")})

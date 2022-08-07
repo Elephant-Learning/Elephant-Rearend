@@ -22,6 +22,18 @@ public class ElephantUserStatisticsRequest {
 	@AllArgsConstructor
 	@ToString
 	@EqualsAndHashCode
+	public static class UpdateRecentlyViewedDecks {
+
+		private final long userId;
+
+		private final long deckId;
+	}
+
+
+	@Getter
+	@AllArgsConstructor
+	@ToString
+	@EqualsAndHashCode
 	public static class IncrementAnsweredWrong {
 
 		private final long userId;
