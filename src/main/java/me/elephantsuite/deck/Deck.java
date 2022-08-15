@@ -30,12 +30,10 @@ import lombok.ToString;
 import me.elephantsuite.deck.card.Card;
 import me.elephantsuite.deck.card.CardService;
 import me.elephantsuite.deck.controller.DeckService;
-import me.elephantsuite.folder.Folder;
 import me.elephantsuite.response.json.DeckSerializer;
 import me.elephantsuite.user.ElephantUser;
 import org.hibernate.annotations.Fetch;
 import org.hibernate.annotations.FetchMode;
-import org.springframework.lang.Nullable;
 
 @Entity
 @Getter
@@ -91,9 +89,8 @@ public class Deck {
 	}
 
 	public void resetTerms(Map<String, List<String>> newTerms, CardService cardService) {
-		List<Card> cards = DeckService.convertToCards(newTerms, this);
+		List<Card> cards = DeckService.convertToCards(newTerms, this, cardService);
 		cardService.deleteAll(this.cards);
 		this.cards = cards;
-		cardService.saveAll(cards);
 	}
 }

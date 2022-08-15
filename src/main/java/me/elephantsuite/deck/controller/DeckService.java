@@ -56,13 +56,11 @@ public class DeckService {
 
 		Deck deck = new Deck(null, user, name, visibility);
 
-		List<Card> cards = convertToCards(terms, deck);
+		List<Card> cards = convertToCards(terms, deck ,cardService);
 
 		deck.setCards(cards);
 
 		user.getDecks().add(deck);
-
-		cardService.saveAll(deck.getCards());
 
 		deck = service.saveDeck(deck);
 
@@ -76,12 +74,13 @@ public class DeckService {
 			.build();
 	}
 
-	public static List<Card> convertToCards(Map<String, List<String>> cardsMap, Deck deck) {
+	public static List<Card> convertToCards(Map<String, List<String>> cardsMap, Deck deck, CardService cardService) {
 		List<Card> cards = new ArrayList<>();
 
 		cardsMap.forEach((s, strings) -> {
 			Card card = new Card(s, strings, deck);
 			cards.add(card);
+			cardService.saveCard(card);
 		});
 
 		return cards;

@@ -34,4 +34,9 @@ public class ElephantUserStatisticsController {
 	public Response answeredRight(@RequestBody ElephantUserStatisticsRequest.IncrementAnsweredRight request) {
 		return service.incrementAnsweredRight(request);
 	}
+
+	@PostMapping(path = "recentlyViewedDecks")
+	public Response updateRecentlyViewedDecks(@RequestBody ElephantUserStatisticsRequest.UpdateRecentlyViewedDecks request) {
+		return service.updateRecentlyViewedDecks(request);
+	}
 }
