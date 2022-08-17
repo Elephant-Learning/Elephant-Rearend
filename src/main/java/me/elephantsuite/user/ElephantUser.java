@@ -124,6 +124,10 @@ public class ElephantUser {
 		this.backpack = new Backpack(this);
 	}
 
+	public String getFullName() {
+		return this.firstName + " " + this.lastName;
+	}
+
 	@Override
 	public boolean equals(Object obj) {
 		if (obj instanceof ElephantUser elephantUser) {

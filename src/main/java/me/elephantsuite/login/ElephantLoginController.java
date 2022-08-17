@@ -29,4 +29,9 @@ public class ElephantLoginController {
 	public Response getUserByEmail(@RequestParam("email") String email) {
 		return elephantLoginService.getUserByEmail(email);
 	}
+
+	@GetMapping(path = "userByName")
+	public Response getUserByName(@RequestParam("name") String name) {
+		return elephantLoginService.getUserByName(name);
+	}
 }

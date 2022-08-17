@@ -89,4 +89,8 @@ public class ElephantUserService {
 	public void deleteUser(ElephantUser user) {
 		elephantUserRepository.delete(user);
 	}
+
+	public List<ElephantUser> getAllUsers() {
+		return elephantUserRepository.getAllUsers();
+	}
 }

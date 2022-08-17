@@ -33,8 +33,8 @@ public class DeckController {
 	}
 
 	@GetMapping(path = "getByName")
-	public Response getByName(@RequestParam("name") String name) {
-		return deckService.getByName(name);
+	public Response getByName(@RequestBody DeckRequest.GetByName getByName) {
+		return deckService.getByName(getByName);
 	}
 
 	@GetMapping(path = "getAll")

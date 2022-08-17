@@ -3,6 +3,7 @@ package me.elephantsuite.deck.controller;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.stream.Collectors;
 
 import lombok.AllArgsConstructor;
@@ -16,6 +17,7 @@ import me.elephantsuite.response.ResponseBuilder;
 import me.elephantsuite.response.ResponseStatus;
 import me.elephantsuite.user.ElephantUser;
 import me.elephantsuite.user.ElephantUserService;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -334,12 +336,25 @@ public class DeckService {
 			.build();
 	}
 
-	public Response getByName(String name) {
-		List<Deck> decks = service.getAllDecks();
+	public Response getByName(DeckRequest.GetByName getByName) {
+		long userId = getByName.getUserId();
+		String name = Objects.requireNonNull(getByName.getName());
 
-		List<Deck> filteredDecks = decks
+		ElephantUser user = userService.getUserById(userId);
+
+		if (user == null) {
+			return ResponseBuilder
+				.create()
+				.addResponse(ResponseStatus.FAILURE, "Invalid User ID!")
+				.addObject("request", getByName)
+				.build();
+		}
+
+		List<Deck> filteredDecks = service
+			.getAllDecks()
 			.stream()
-			.filter(deck -> deck.getName().contains(name))
+			.filter(deck -> StringUtils.containsIgnoreCase(deck.getName(), name))
+			.filter(deck -> deck.getVisibility().equals(DeckVisibility.PUBLIC) || (deck.getVisibility().equals(DeckVisibility.SHARED) && deck.getSharedUsersIds().contains(userId)) || deck.getAuthor().equals(user))
 			.collect(Collectors.toList());
 
 		return ResponseBuilder
