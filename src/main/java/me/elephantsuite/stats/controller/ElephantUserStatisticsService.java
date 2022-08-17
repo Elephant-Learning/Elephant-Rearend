@@ -177,14 +177,12 @@ public class ElephantUserStatisticsService {
 				.build();
 		}
 
-		if (user.getStatistics().getRecentlyViewedDeckIds().contains(deckId)) {
-			user.getStatistics().getRecentlyViewedDeckIds().remove(deckId);
-		}
+		user.getStatistics().getRecentlyViewedDeckIds().remove(deckId);
 
 		user.getStatistics().getRecentlyViewedDeckIds().add(0, deckId);
 
 		//at maxed size after adding one
-		if (user.getStatistics().getRecentlyViewedDeckIds().size() == 31) {
+		if (user.getStatistics().getRecentlyViewedDeckIds().size() == 51) {
 			user.getStatistics().getRecentlyViewedDeckIds().remove(user.getStatistics().getRecentlyViewedDeckIds().size() - 1);
 		}
 
