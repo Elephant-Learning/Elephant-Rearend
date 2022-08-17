@@ -38,9 +38,9 @@ public class DeckSerializer extends JsonSerializer<Deck> {
 			gen.writeEndArray();
 			gen.writeFieldName("sharedUsers");
 			gen.writeStartArray();
-				value.getSharedUsers().forEach(user -> {
+				value.getSharedUsersIds().forEach(user -> {
 					try {
-						gen.writeNumber(user.getId());
+						gen.writeNumber(user);
 					} catch (IOException e) {
 						e.printStackTrace();
 					}
