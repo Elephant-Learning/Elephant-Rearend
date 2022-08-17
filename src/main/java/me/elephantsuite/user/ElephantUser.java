@@ -93,10 +93,9 @@ public class ElephantUser {
 	@Fetch(value = FetchMode.SUBSELECT)
 	private List<String> likedSongs = new ArrayList<>();
 
-	//decks that have been shared with this user
-	@ManyToMany(fetch = FetchType.EAGER, cascade = {CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REFRESH})
+	@ElementCollection(fetch = FetchType.EAGER)
 	@Fetch(value = FetchMode.SUBSELECT)
-	private List<Deck> sharedDecks = new ArrayList<>();
+	private List<Long> sharedDeckIds = new ArrayList<>();
 
 	@OneToMany(mappedBy = "user", fetch = FetchType.EAGER, cascade = CascadeType.ALL)
 	@Fetch(FetchMode.SUBSELECT)

@@ -264,8 +264,8 @@ public class DeckService {
 				.build();
 		}
 
-		deck.getSharedUsers().add(user);
-		user.getSharedDecks().add(deck);
+		deck.getSharedUsersIds().add(userId);
+		user.getSharedDeckIds().add(deckId);
 
 		deck = service.saveDeck(deck);
 		user = userService.saveUser(user);
