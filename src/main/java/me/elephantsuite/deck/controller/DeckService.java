@@ -225,6 +225,53 @@ public class DeckService {
 			.build();
 	}
 
+	//use same as share deck bc lazy
+	public Response unshareDeck(DeckRequest.ShareDeck shareDeck) {
+		long userId = shareDeck.getSharedUserId();
+		long deckId = shareDeck.getDeckId();
+
+		Deck deck = service.getDeckById(deckId);
+		ElephantUser user = userService.getUserById(userId);
+
+		if (deck == null) {
+			return ResponseBuilder
+					.create()
+					.addResponse(ResponseStatus.FAILURE, "Invalid Deck ID!")
+					.addObject("deckId", deckId)
+					.build();
+		}
+
+		if (user == null) {
+			return ResponseBuilder
+					.create()
+					.addResponse(ResponseStatus.SUCCESS, "Invalid User ID!")
+					.addObject("userId", userId)
+					.build();
+		}
+
+		if (!deck.getSharedUsersIds().contains(userId) || !user.getSharedDeckIds().contains(deckId)) {
+			return ResponseBuilder
+					.create()
+					.addResponse(ResponseStatus.FAILURE, "Deck and user are not shared with each other!")
+					.addObject("user", user)
+					.addObject("deck", deck)
+					.build();
+		}
+
+		deck.getSharedUsersIds().remove(userId);
+		user.getSharedDeckIds().remove(deckId);
+
+		deck = service.saveDeck(deck);
+		user = userService.saveUser(user);
+
+		return ResponseBuilder
+				.create()
+				.addResponse(ResponseStatus.SUCCESS, "Unshared Deck from User!")
+				.addObject("deck", deck)
+				.addObject("user", user)
+				.build();
+	}
+
 	public Response shareDeck(DeckRequest.ShareDeck shareDeck) {
 		long userId = shareDeck.getSharedUserId();
 		long deckId = shareDeck.getDeckId();
@@ -263,6 +310,15 @@ public class DeckService {
 				.addResponse(ResponseStatus.FAILURE, "Cannot share a deck that is private!")
 				.addObject("deck", deck)
 				.addObject("sharedUser", user)
+				.build();
+		}
+
+		if (deck.getSharedUsersIds().contains(userId) || user.getSharedDeckIds().contains(deckId)) {
+			return ResponseBuilder
+				.create()
+				.addResponse(ResponseStatus.FAILURE, "Deck and user are already shared with each other!")
+				.addObject("user", user)
+				.addObject("deck", deck)
 				.build();
 		}
 
