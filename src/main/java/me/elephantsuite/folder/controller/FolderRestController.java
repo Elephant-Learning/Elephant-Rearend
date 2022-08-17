@@ -33,6 +33,11 @@ public class FolderRestController {
 		return service.removeDeck(removeDeck);
 	}
 
+	@PostMapping("setName")
+	public Response setFolderName(@RequestBody FolderRequest.SetName setName) {
+		return service.setFolderName(setName);
+	}
+
 	@GetMapping("get")
 	public Response getFolder(@RequestParam("id") long id) {
 		return service.getFolderById(id);

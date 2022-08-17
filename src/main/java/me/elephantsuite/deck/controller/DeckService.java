@@ -348,4 +348,30 @@ public class DeckService {
 			.addObject("decks", filteredDecks)
 			.build();
 	}
+
+    public Response setName(DeckRequest.SetName setName) {
+		long deckId = setName.getDeckId();
+		String name = setName.getName();
+
+		Deck deck = service.getDeckById(deckId);
+
+		if (deck == null) {
+			return ResponseBuilder
+				.create()
+				.addResponse(ResponseStatus.FAILURE, "Invalid Deck ID!")
+				.addObject("id", deckId)
+				.build();
+		}
+
+		deck.setName(name);
+
+		service.saveDeck(deck);
+
+		return ResponseBuilder
+			.create()
+			.addResponse(ResponseStatus.SUCCESS, "Set Deck Name!")
+			.addObject("deck", deck)
+			.build();
+
+	}
 }

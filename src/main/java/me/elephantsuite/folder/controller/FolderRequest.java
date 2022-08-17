@@ -40,4 +40,14 @@ public class FolderRequest {
 
 		private final long deckId;
 	}
+
+	@Getter
+	@AllArgsConstructor
+	@EqualsAndHashCode
+	@ToString
+	public static class SetName {
+		private final long folderId;
+
+		private final String name;
+	}
 }

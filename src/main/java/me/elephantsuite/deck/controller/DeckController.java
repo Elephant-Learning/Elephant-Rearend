@@ -63,6 +63,11 @@ public class DeckController {
 		return deckService.changeVisibility(changeVisiblity);
 	}
 
+	@PostMapping("setName")
+	public Response setName(@RequestBody DeckRequest.SetName setName) {
+		return deckService.setName(setName);
+	}
+
 	@PostMapping(path = "shareDeck")
 	public Response shareDeck(@RequestBody DeckRequest.ShareDeck shareDeck) {
 		return deckService.shareDeck(shareDeck);

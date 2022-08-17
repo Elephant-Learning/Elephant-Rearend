@@ -80,4 +80,15 @@ public class DeckRequest {
 
 		private final long sharedUserId;
 	}
+
+	@Getter
+	@AllArgsConstructor
+	@EqualsAndHashCode
+	@ToString
+	public static class SetName {
+
+		private final long deckId;
+
+		private final String name;
+	}
 }
