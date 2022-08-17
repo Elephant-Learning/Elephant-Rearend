@@ -68,6 +68,11 @@ public class DeckController {
 		return deckService.shareDeck(shareDeck);
 	}
 
+	@PostMapping("unshareDeck")
+	public Response unshareDeck(@RequestBody DeckRequest.ShareDeck shareDeck) {
+		return deckService.unshareDeck(shareDeck);
+	}
+
 	@GetMapping(path = "get")
 	public Response getDeckById(@RequestParam("id") long id) {
 		return deckService.getById(id);
