@@ -1,6 +1,8 @@
 package me.elephantsuite.login;
 
+import java.util.List;
 import java.util.Objects;
+import java.util.stream.Collectors;
 
 import lombok.AllArgsConstructor;
 import me.elephantsuite.registration.EmailValidator;
@@ -9,6 +11,7 @@ import me.elephantsuite.response.ResponseBuilder;
 import me.elephantsuite.response.ResponseStatus;
 import me.elephantsuite.user.ElephantUser;
 import me.elephantsuite.user.ElephantUserService;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -99,6 +102,20 @@ public class ElephantLoginService {
 			.create()
 			.addResponse(ResponseStatus.SUCCESS, "Retrieved User by Email!")
 			.addObject("user", elephantUserService.getUserByEmail(email))
+			.build();
+	}
+
+	public Response getUserByName(String name) {
+		List<ElephantUser> filteredUsers = elephantUserService
+				.getAllUsers()
+				.stream()
+				.filter(elephantUser -> StringUtils.containsIgnoreCase(elephantUser.getFullName(), name))
+				.collect(Collectors.toList());
+
+		return ResponseBuilder
+			.create()
+			.addResponse(ResponseStatus.SUCCESS, "Retrieved Users By Name!")
+			.addObject("users", filteredUsers)
 			.build();
 	}
 }

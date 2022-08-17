@@ -174,4 +174,29 @@ public class FolderService {
 			.addObject("folder", folder)
 			.build();
 	}
+
+	public Response setFolderName(FolderRequest.SetName setName) {
+		long folderId = setName.getFolderId();
+		String name = setName.getName();
+
+		Folder folder = service.getFolderById(folderId);
+
+		if (folder == null) {
+			return ResponseBuilder
+				.create()
+				.addResponse(ResponseStatus.FAILURE, "Invalid Folder ID!")
+				.addObject("request", setName)
+				.build();
+		}
+
+		folder.setName(name);
+
+		service.save(folder);
+
+		return ResponseBuilder
+			.create()
+			.addResponse(ResponseStatus.SUCCESS, "Set Folder Name!")
+			.addObject("folder", folder)
+			.build();
+	}
 }
