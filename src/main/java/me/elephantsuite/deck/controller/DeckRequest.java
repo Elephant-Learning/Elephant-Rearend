@@ -80,14 +80,4 @@ public class DeckRequest {
 
 		private final long sharedUserId;
 	}
-
-	@Getter
-	@AllArgsConstructor
-	@EqualsAndHashCode
-	@ToString
-	public static class GetByName {
-		private final long userId;
-
-		private final String name;
-	}
 }
