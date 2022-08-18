@@ -392,9 +392,7 @@ public class DeckService {
 			.build();
 	}
 
-	public Response getByName(DeckRequest.GetByName getByName) {
-		long userId = getByName.getUserId();
-		String name = Objects.requireNonNull(getByName.getName());
+	public Response getByName(long userId, String name) {
 
 		ElephantUser user = userService.getUserById(userId);
 
@@ -402,7 +400,8 @@ public class DeckService {
 			return ResponseBuilder
 				.create()
 				.addResponse(ResponseStatus.FAILURE, "Invalid User ID!")
-				.addObject("request", getByName)
+				.addObject("userId", userId)
+				.addObject("name", name)
 				.build();
 		}
 
