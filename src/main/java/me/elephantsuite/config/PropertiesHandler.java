@@ -6,6 +6,7 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Objects;
 import java.util.Properties;
 import java.util.function.Function;
 
@@ -17,7 +18,7 @@ public class PropertiesHandler {
 
 	private final Map<String, String> configValues;
 
-	public static final Path CONFIG_HOME_DIRECTORY = Paths.get(System.getProperty("user.home")).resolve("Elephant Backend Config");
+	public static final Path CONFIG_HOME_DIRECTORY = Paths.get("src", "main", "resources").resolve("Elephant Backend Config");
 
 	static {
 		if (!Files.exists(CONFIG_HOME_DIRECTORY)) {
@@ -70,9 +71,9 @@ public class PropertiesHandler {
 
 		Properties properties = new Properties();
 
-		configValues.forEach(properties::put);
+		properties.putAll(configValues);
 
-		properties.store(Files.newOutputStream(propertiesPath), "This stores the configuration properties for the quotebook bot");
+		properties.store(Files.newOutputStream(propertiesPath), "This stores the configuration properties for Elephant Backend");
 
 	}
 
@@ -170,6 +171,10 @@ public class PropertiesHandler {
 		public Builder addConfigOption(String key, String defaultValue) {
 			configValues.put(key, defaultValue);
 			return this;
+		}
+
+		public Builder addConfigOption(String key, Object value) {
+			return addConfigOption(key, Objects.toString(value));
 		}
 
 		public Builder setFileName(String fileName) {
