@@ -1,6 +1,8 @@
 package me.elephantsuite.misc;
 
 import lombok.AllArgsConstructor;
+import me.elephantsuite.ElephantBackendApplication;
+import me.elephantsuite.config.PropertiesHandler;
 import me.elephantsuite.response.Response;
 import me.elephantsuite.response.ResponseBuilder;
 import me.elephantsuite.response.ResponseStatus;
@@ -38,7 +40,9 @@ public class MiscService {
 				.build();
 		}
 
-		if (pfpid < 0 || pfpid > 47) {
+		PropertiesHandler handler = ElephantBackendApplication.ELEPHANT_CONFIG;
+
+		if (pfpid < 0 || pfpid > handler.getConfigOption("pfpIdMax", Integer::parseInt)) {
 			return ResponseBuilder
 				.create()
 				.addResponse(ResponseStatus.FAILURE, "PFP ID out of bounds! (Needs to be in between 1 and 47 inclusive!)")

@@ -29,6 +29,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
+import me.elephantsuite.ElephantBackendApplication;
 import me.elephantsuite.backpack.Backpack;
 import me.elephantsuite.deck.Deck;
 import me.elephantsuite.folder.Folder;
@@ -122,7 +123,7 @@ public class ElephantUser {
 		this.type = Objects.requireNonNull(type);
 		this.countryCode = Objects.requireNonNull(countryCode);
 		//for whatever reason if pfpId is null just set it to something random
-		this.pfpId = pfpId == null ? new Random().nextInt(48) : pfpId;
+		this.pfpId = pfpId == null ? new Random().nextInt(ElephantBackendApplication.ELEPHANT_CONFIG.getConfigOption("pfpIdMax", Integer::parseInt) + 1) : pfpId;
 		this.statistics = new ElephantUserStatistics(this);
 		this.backpack = new Backpack(this);
 	}

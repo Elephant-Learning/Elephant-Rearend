@@ -1,6 +1,8 @@
 package me.elephantsuite.stats.controller;
 
 import lombok.AllArgsConstructor;
+import me.elephantsuite.ElephantBackendApplication;
+import me.elephantsuite.config.PropertiesHandler;
 import me.elephantsuite.deck.Deck;
 import me.elephantsuite.deck.DeckRepositoryService;
 import me.elephantsuite.deck.card.Card;
@@ -182,7 +184,10 @@ public class ElephantUserStatisticsService {
 		user.getStatistics().getRecentlyViewedDeckIds().add(0, deckId);
 
 		//at maxed size after adding one
-		if (user.getStatistics().getRecentlyViewedDeckIds().size() == 51) {
+
+		PropertiesHandler handler = ElephantBackendApplication.ELEPHANT_CONFIG;
+
+		if (user.getStatistics().getRecentlyViewedDeckIds().size() == handler.getConfigOption("recentlyViewedDecksMax", Integer::parseInt) + 1) {
 			user.getStatistics().getRecentlyViewedDeckIds().remove(user.getStatistics().getRecentlyViewedDeckIds().size() - 1);
 		}
 
