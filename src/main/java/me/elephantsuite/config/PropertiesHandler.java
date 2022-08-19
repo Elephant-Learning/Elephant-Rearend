@@ -10,8 +10,10 @@ import java.util.Objects;
 import java.util.Properties;
 import java.util.function.Function;
 
+import lombok.Getter;
 import me.elephantsuite.ElephantBackendApplication;
 
+@Getter
 public class PropertiesHandler {
 
 	private final Path propertiesPath;
@@ -107,9 +109,6 @@ public class PropertiesHandler {
 		return configValues.containsKey(key);
 	}
 
-	public Map<String, String> getConfigValues() {
-		return this.configValues;
-	}
 
 	/**
 	 * Returns a string representation of the object.
