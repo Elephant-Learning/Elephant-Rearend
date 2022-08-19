@@ -28,4 +28,6 @@ public class RegistrationRequest {
 	private final ElephantUserType type;
 
 	private final Integer pfpId;
+
+	private final Integer countryCode;
 }

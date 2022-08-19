@@ -70,6 +70,8 @@ public class ElephantUser {
 
 	private int pfpId;
 
+	private int countryCode;
+
 	@ElementCollection(fetch = FetchType.EAGER)
 	@JoinColumn(nullable = false, name = "elephant_user_id")
 	@Fetch(value = FetchMode.SUBSELECT)
@@ -112,12 +114,13 @@ public class ElephantUser {
 	@JoinColumn(name = "backpack_id")
 	private Backpack backpack;
 
-	public ElephantUser(String firstName, String lastName, String email, String password, ElephantUserType type, Integer pfpId) {
+	public ElephantUser(String firstName, String lastName, String email, String password, ElephantUserType type, Integer countryCode, Integer pfpId) {
 		this.firstName = Objects.requireNonNull(firstName);
 		this.email = Objects.requireNonNull(email);
 		this.lastName = Objects.requireNonNull(lastName);
 		this.password = Objects.requireNonNull(password);
 		this.type = Objects.requireNonNull(type);
+		this.countryCode = Objects.requireNonNull(countryCode);
 		//for whatever reason if pfpId is null just set it to something random
 		this.pfpId = pfpId == null ? new Random().nextInt(48) : pfpId;
 		this.statistics = new ElephantUserStatistics(this);

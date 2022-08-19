@@ -39,6 +39,7 @@ public class RegistrationService {
 				request.getEmail(),
 				request.getPassword(),
 				request.getType(),
+				request.getCountryCode(),
 				request.getPfpId()
 			);
 
