@@ -18,7 +18,7 @@ public class ElephantBackendApplication {
 		.builder()
 		.addConfigOption("isDevelopment", "true")
 		.addConfigOption("senderEmailAddress", "no-reply@elephantsuite.me")
-		.addConfigOption("elephantDomain", "http://localhost:8080")
+		.addConfigOption("elephantDomain", "localhost:8080")
 		.setFileName("elephant-config.properties")
 		.build();
 

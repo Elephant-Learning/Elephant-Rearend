@@ -47,9 +47,10 @@ public class Card {
 	private String term;
 
 	@ManyToOne(fetch = FetchType.EAGER,  cascade = {CascadeType.PERSIST, CascadeType.REFRESH, CascadeType.MERGE})
-	@JoinColumn(name = "deck_id", foreignKey = @ForeignKey(name = "deck_id"))
 	@JsonBackReference
 	private Deck deck;
+
+	private String deckName;
 
 	@ManyToMany(mappedBy = "cards", fetch = FetchType.EAGER)
 	@JsonBackReference
@@ -60,6 +61,7 @@ public class Card {
 		this.term = term;
 		this.definitions = definitions;
 		this.deck = deck;
+		this.deckName = deck.getName();
 	}
 
 	@Override

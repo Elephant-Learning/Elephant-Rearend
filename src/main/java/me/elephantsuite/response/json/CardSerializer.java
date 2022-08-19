@@ -21,7 +21,12 @@ public class CardSerializer extends JsonSerializer<Card> {
 
 		gen.writeStartObject();
 			gen.writeNumberField("id", value.getId());
-			gen.writeNumberField("deckId", value.getDeck().getId());
+			if (value.getDeck() == null) {
+				gen.writeNullField("deckId");
+			} else {
+				gen.writeNumberField("deckId", value.getDeck().getId());
+			}
+			gen.writeStringField("deckName", value.getDeckName());
 			gen.writeStringField("term", value.getTerm());
 			gen.writeFieldName("definitions");
 			gen.writeStartArray();

@@ -1,5 +1,6 @@
 package me.elephantsuite.deck;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import jakarta.persistence.EntityNotFoundException;
@@ -34,9 +35,11 @@ public class DeckRepositoryService {
 
 	public void deleteDeck(Deck deck, CardService cardService) {
 		deck.getCards().forEach(card -> {
-			cardService.deleteDefinitionsByCardId(card.getId());
-			cardService.deleteCardById(card.getId());
+			card.setDeck(null);
+			cardService.saveCard(card);
 		});
+
+		deck.setCards(new ArrayList<>());
 
 		deckRepository.deleteDeckById(deck.getId());
 	}
