@@ -39,6 +39,7 @@ public class RegistrationService {
 				request.getEmail(),
 				request.getPassword(),
 				request.getType(),
+				request.getCountryCode(),
 				request.getPfpId()
 			);
 
@@ -93,7 +94,7 @@ public class RegistrationService {
 
 			ConfirmationToken token = elephantUserService.signUpUser(elephantUser);
 
-			String link = ElephantBackendApplication.ELEPHANT_CONFIG.getConfigOption("elephantDomain", Function.identity()) + "/user/registration/confirm?token=" + token.getToken();
+			String link = ElephantBackendApplication.ELEPHANT_CONFIG.getConfigOption("elephantDomain", Function.identity()) + "/registration/confirm?token=" + token.getToken();
 
 			if (!ElephantBackendApplication.ELEPHANT_CONFIG.getConfigOption("isDevelopment", Boolean::parseBoolean)) {
 				try {
