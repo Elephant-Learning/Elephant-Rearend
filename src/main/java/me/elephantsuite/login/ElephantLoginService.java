@@ -1,5 +1,6 @@
 package me.elephantsuite.login;
 
+import java.util.Comparator;
 import java.util.List;
 import java.util.Objects;
 import java.util.stream.Collectors;
@@ -105,11 +106,25 @@ public class ElephantLoginService {
 			.build();
 	}
 
-	public Response getUserByName(String name) {
+	public Response getUserByName(String name, long userId) {
+
+		ElephantUser user = elephantUserService.getUserById(userId);
+
+		if (user == null) {
+			return ResponseBuilder
+				.create()
+				.addResponse(ResponseStatus.FAILURE, "Invalid User ID!")
+				.addObject("name", name)
+				.addObject("userId", userId)
+				.build();
+		}
+
 		List<ElephantUser> filteredUsers = elephantUserService
 				.getAllUsers()
 				.stream()
 				.filter(elephantUser -> StringUtils.containsIgnoreCase(elephantUser.getFullName(), name))
+				.filter(user1 -> !user1.equals(user))
+				.sorted((o1, o2) -> compareCountries(o1, o2, user))
 				.collect(Collectors.toList());
 
 		return ResponseBuilder
@@ -117,5 +132,17 @@ public class ElephantLoginService {
 			.addResponse(ResponseStatus.SUCCESS, "Retrieved Users By Name!")
 			.addObject("users", filteredUsers)
 			.build();
+	}
+
+	private static int compareCountries(ElephantUser o1, ElephantUser o2, ElephantUser user) {
+		if (o1.getCountryCode() == user.getCountryCode()) {
+			return -1;
+		}
+
+		if (o2.getCountryCode() == user.getCountryCode()) {
+			return 1;
+		}
+
+		return 0;
 	}
 }

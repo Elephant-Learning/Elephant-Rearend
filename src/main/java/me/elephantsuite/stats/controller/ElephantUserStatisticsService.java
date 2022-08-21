@@ -51,10 +51,10 @@ public class ElephantUserStatisticsService {
 				.build();
 		}
 
-		user.getStatistics().incrementDaysStreak();
-		user.getStatistics().resetLoginDate();
+		user.getElephantUserStatistics().incrementDaysStreak();
+		user.getElephantUserStatistics().resetLoginDate();
 
-		userStatisticsRepositoryService.save(user.getStatistics());
+		userStatisticsRepositoryService.save(user.getElephantUserStatistics());
 
 		user = userService.saveUser(user);
 
@@ -87,9 +87,9 @@ public class ElephantUserStatisticsService {
 				.build();
 		}
 
-		user.getStatistics().increaseUsageTime(usageTime);
+		user.getElephantUserStatistics().increaseUsageTime(usageTime);
 
-		userStatisticsRepositoryService.save(user.getStatistics());
+		userStatisticsRepositoryService.save(user.getElephantUserStatistics());
 
 		user = userService.saveUser(user);
 
@@ -115,14 +115,14 @@ public class ElephantUserStatisticsService {
 				.build();
 		}
 
-		if(!user.getStatistics().getCardStatistics().containsKey(card)) {
-			user.getStatistics().getCardStatistics().put(card, new CardStatistics(cardId));
+		if(!user.getElephantUserStatistics().getCardStatistics().containsKey(card)) {
+			user.getElephantUserStatistics().getCardStatistics().put(card, new CardStatistics(cardId));
 		}
 
-		user.getStatistics().getCardStatistics().get(card).incrementAnsweredWrong();
+		user.getElephantUserStatistics().getCardStatistics().get(card).incrementAnsweredWrong();
 
-		cardStatisticsService.save(user.getStatistics().getCardStatistics().get(card));
-		userStatisticsRepositoryService.save(user.getStatistics());
+		cardStatisticsService.save(user.getElephantUserStatistics().getCardStatistics().get(card));
+		userStatisticsRepositoryService.save(user.getElephantUserStatistics());
 		user = userService.saveUser(user);
 
 		return ResponseBuilder
@@ -147,14 +147,14 @@ public class ElephantUserStatisticsService {
 				.build();
 		}
 
-		if(!user.getStatistics().getCardStatistics().containsKey(card)) {
-			user.getStatistics().getCardStatistics().put(card, new CardStatistics(cardId));
+		if(!user.getElephantUserStatistics().getCardStatistics().containsKey(card)) {
+			user.getElephantUserStatistics().getCardStatistics().put(card, new CardStatistics(cardId));
 		}
 
-		user.getStatistics().getCardStatistics().get(card).incrementAnsweredRight();
+		user.getElephantUserStatistics().getCardStatistics().get(card).incrementAnsweredRight();
 
-		cardStatisticsService.save(user.getStatistics().getCardStatistics().get(card));
-		userStatisticsRepositoryService.save(user.getStatistics());
+		cardStatisticsService.save(user.getElephantUserStatistics().getCardStatistics().get(card));
+		userStatisticsRepositoryService.save(user.getElephantUserStatistics());
 		user = userService.saveUser(user);
 
 		return ResponseBuilder
@@ -179,19 +179,19 @@ public class ElephantUserStatisticsService {
 				.build();
 		}
 
-		user.getStatistics().getRecentlyViewedDeckIds().remove(deckId);
+		user.getElephantUserStatistics().getRecentlyViewedDeckIds().remove(deckId);
 
-		user.getStatistics().getRecentlyViewedDeckIds().add(0, deckId);
+		user.getElephantUserStatistics().getRecentlyViewedDeckIds().add(0, deckId);
 
 		//at maxed size after adding one
 
 		PropertiesHandler handler = ElephantBackendApplication.ELEPHANT_CONFIG;
 
-		if (user.getStatistics().getRecentlyViewedDeckIds().size() == handler.getConfigOption("recentlyViewedDecksMax", Integer::parseInt) + 1) {
-			user.getStatistics().getRecentlyViewedDeckIds().remove(user.getStatistics().getRecentlyViewedDeckIds().size() - 1);
+		if (user.getElephantUserStatistics().getRecentlyViewedDeckIds().size() == handler.getConfigOption("recentlyViewedDecksMax", Integer::parseInt) + 1) {
+			user.getElephantUserStatistics().getRecentlyViewedDeckIds().remove(user.getElephantUserStatistics().getRecentlyViewedDeckIds().size() - 1);
 		}
 
-		userStatisticsRepositoryService.save(user.getStatistics());
+		userStatisticsRepositoryService.save(user.getElephantUserStatistics());
 		user = userService.saveUser(user);
 
 		return ResponseBuilder

@@ -1,9 +1,6 @@
 package me.elephantsuite.user;
 
 import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Objects;
 import java.util.Random;
@@ -20,11 +17,9 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
-import jakarta.persistence.ManyToMany;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.OneToOne;
 import jakarta.persistence.SequenceGenerator;
-import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -105,8 +100,8 @@ public class ElephantUser {
 	private List<Folder> folders = new ArrayList<>();
 
 	@OneToOne(cascade = CascadeType.ALL, orphanRemoval = true)
-	@JoinColumn(name = "statistics_id")
-	private ElephantUserStatistics statistics;
+	@JoinColumn(name = "elephant_user_statistics_id")
+	private ElephantUserStatistics elephantUserStatistics;
 
 	@OneToOne(cascade = CascadeType.ALL, orphanRemoval = true)
 	private ConfirmationToken token;
@@ -124,7 +119,7 @@ public class ElephantUser {
 		this.countryCode = Objects.requireNonNull(countryCode);
 		//for whatever reason if pfpId is null just set it to something random
 		this.pfpId = pfpId == null ? new Random().nextInt(ElephantBackendApplication.ELEPHANT_CONFIG.getConfigOption("pfpIdMax", Integer::parseInt) + 1) : pfpId;
-		this.statistics = new ElephantUserStatistics(this);
+		this.elephantUserStatistics = new ElephantUserStatistics(this);
 		this.backpack = new Backpack(this);
 	}
 
