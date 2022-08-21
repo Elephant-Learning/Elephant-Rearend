@@ -31,7 +31,7 @@ public class ElephantLoginController {
 	}
 
 	@GetMapping(path = "userByName")
-	public Response getUserByName(@RequestParam("name") String name) {
-		return elephantLoginService.getUserByName(name);
+	public Response getUserByName(@RequestParam("userId") long userId, @RequestParam("name") String name) {
+		return elephantLoginService.getUserByName(name, userId);
 	}
 }
