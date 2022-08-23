@@ -25,4 +25,19 @@ public interface ElephantUserRepository extends JpaRepository<ElephantUser, Long
 	@Query(value = "SELECT * FROM elephant_user WHERE elephant_user.id = ?1", nativeQuery = true)
 	ElephantUser getById(long id);
 
+	@Transactional
+	@Modifying
+	@Query(value = "DELETE FROM elephant_user_friend_ids WHERE elephant_user_friend_ids.friend_ids = ?1", nativeQuery = true)
+	int deleteUserFromFriends(long userId);
+
+	@Transactional
+	@Modifying
+	@Query(value = "DELETE FROM elephant_user_liked_decks_ids WHERE elephant_user_liked_decks_ids.liked_decks_ids = ?1", nativeQuery = true)
+	int deleteLikedDecksFromUser(long deckId);
+
+	@Transactional
+	@Modifying
+	@Query(value = "DELETE FROM elephant_user_shared_deck_ids WHERE elephant_user_shared_deck_ids.shared_deck_ids = ?1", nativeQuery = true)
+	int deleteSharedDecksFromUser(long deckId);
+
 }

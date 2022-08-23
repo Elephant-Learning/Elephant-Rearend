@@ -95,7 +95,7 @@ public class ElephantUser {
 	@Fetch(value = FetchMode.SUBSELECT)
 	private List<Long> sharedDeckIds = new ArrayList<>();
 
-	@OneToMany(mappedBy = "user", fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+	@OneToMany(mappedBy = "user", fetch = FetchType.EAGER, cascade = CascadeType.ALL, orphanRemoval = true)
 	@Fetch(FetchMode.SUBSELECT)
 	private List<Folder> folders = new ArrayList<>();
 
