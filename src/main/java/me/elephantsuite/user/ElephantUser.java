@@ -111,12 +111,12 @@ public class ElephantUser {
 	private Backpack backpack;
 
 	public ElephantUser(String firstName, String lastName, String email, String password, ElephantUserType type, Integer countryCode, Integer pfpId) {
-		this.firstName = Objects.requireNonNull(firstName);
-		this.email = Objects.requireNonNull(email);
-		this.lastName = Objects.requireNonNull(lastName);
-		this.password = Objects.requireNonNull(password);
-		this.type = Objects.requireNonNull(type);
-		this.countryCode = Objects.requireNonNull(countryCode);
+		this.firstName = Objects.requireNonNull(firstName, "firstName cannot be null");
+		this.email = Objects.requireNonNull(email, "email cannot be null");
+		this.lastName = Objects.requireNonNull(lastName, "lastName cannot be null");
+		this.password = Objects.requireNonNull(password, "password cannot be null");
+		this.type = Objects.requireNonNull(type, "type cannot be null");
+		this.countryCode = Objects.requireNonNull(countryCode, "countryCode cannot be null");
 		//for whatever reason if pfpId is null just set it to something random
 		this.pfpId = pfpId == null ? new Random().nextInt(ElephantBackendApplication.ELEPHANT_CONFIG.getConfigOption("pfpIdMax", Integer::parseInt) + 1) : pfpId;
 		this.elephantUserStatistics = new ElephantUserStatistics(this);

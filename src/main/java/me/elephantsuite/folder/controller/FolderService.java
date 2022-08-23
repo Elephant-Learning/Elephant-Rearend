@@ -1,18 +1,11 @@
 package me.elephantsuite.folder.controller;
 
-import java.util.ArrayList;
 import java.util.List;
-import java.util.Objects;
 import java.util.stream.Collectors;
 
 import lombok.AllArgsConstructor;
-import me.elephantsuite.ElephantBackendApplication;
-import me.elephantsuite.backpack.BackpackRepositoryService;
-import me.elephantsuite.backpack.controller.BackpackService;
 import me.elephantsuite.deck.Deck;
 import me.elephantsuite.deck.DeckRepositoryService;
-import me.elephantsuite.deck.card.Card;
-import me.elephantsuite.deck.card.CardService;
 import me.elephantsuite.folder.Folder;
 import me.elephantsuite.folder.FolderRepositoryService;
 import me.elephantsuite.response.Response;

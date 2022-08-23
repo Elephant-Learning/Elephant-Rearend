@@ -1,7 +1,6 @@
 package me.elephantsuite.registration;
 
 import java.time.LocalDateTime;
-import java.util.Objects;
 import java.util.function.Function;
 
 import me.elephantsuite.ElephantBackendApplication;
