@@ -21,6 +21,11 @@ public interface DeckRepository extends JpaRepository<Deck, Long> {
 	List<Deck> getAllDecks();
 
 	@Transactional
+	@Modifying
+	@Query(value = "DELETE FROM deck_shared_users_ids WHERE deck_shared_users_ids.shared_users_ids = ?1", nativeQuery = true)
+	void deleteUserFromSharedDecks(long userId);
+
+	@Transactional
 	@Query(value = "SELECT * FROM deck WHERE deck.elephant_user_id = ?1", nativeQuery = true)
 	List<Deck> getDecksByUserId(long id);
 }

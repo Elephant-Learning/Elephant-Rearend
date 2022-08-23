@@ -2,18 +2,14 @@ package me.elephantsuite.user;
 
 import java.time.LocalDateTime;
 import java.util.List;
-import java.util.Objects;
-import java.util.Optional;
 import java.util.UUID;
 
-import jakarta.persistence.EntityNotFoundException;
-import me.elephantsuite.ElephantBackendApplication;
 import me.elephantsuite.deck.Deck;
 import me.elephantsuite.deck.DeckRepository;
 import me.elephantsuite.registration.token.ConfirmationToken;
 import me.elephantsuite.registration.token.ConfirmationTokenService;
 import lombok.AllArgsConstructor;
-import org.springframework.lang.Nullable;
+import me.elephantsuite.user.notification.NotificationRepository;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -31,6 +27,8 @@ public class ElephantUserService {
 	private final BCryptPasswordEncoder bCryptPasswordEncoder;
 
 	private final ConfirmationTokenService confirmationTokenService;
+
+	private final NotificationRepository notificationRepository;
 
 	public ConfirmationToken signUpUser(ElephantUser user) {
 
@@ -87,6 +85,9 @@ public class ElephantUserService {
 	}
 
 	public void deleteUser(ElephantUser user) {
+		notificationRepository.deleteNotificationSenderId(user.getId());
+		deckRepository.deleteUserFromSharedDecks(user.getId());
+		elephantUserRepository.deleteUserFromFriends(user.getId());
 		elephantUserRepository.delete(user);
 	}
 

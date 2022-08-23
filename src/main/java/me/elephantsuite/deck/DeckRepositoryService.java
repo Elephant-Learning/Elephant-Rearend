@@ -7,6 +7,11 @@ import jakarta.persistence.EntityNotFoundException;
 import lombok.AllArgsConstructor;
 import me.elephantsuite.ElephantBackendApplication;
 import me.elephantsuite.deck.card.CardService;
+import me.elephantsuite.folder.FolderRepository;
+import me.elephantsuite.folder.FolderRepositoryService;
+import me.elephantsuite.stats.ElephantUserStatisticsRepository;
+import me.elephantsuite.user.ElephantUserRepository;
+import me.elephantsuite.user.notification.NotificationRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -16,6 +21,14 @@ import org.springframework.transaction.annotation.Transactional;
 public class DeckRepositoryService {
 
 	private final DeckRepository deckRepository;
+
+	private final FolderRepository folderRepository;
+
+	private final NotificationRepository notificationRepository;
+
+	private final ElephantUserRepository elephantUserRepository;
+
+	private final ElephantUserStatisticsRepository elephantUserStatisticsRepository;
 
 	public Deck saveDeck(Deck deck) {
 		return deckRepository.save(deck);
@@ -42,6 +55,16 @@ public class DeckRepositoryService {
 		deck.setCards(new ArrayList<>());
 
 		deckRepository.deleteDeckById(deck.getId());
+
+		folderRepository.deleteDeckFromFolder(deck.getId());
+
+		notificationRepository.deleteNotificationDeckId(deck.getId());
+
+    	elephantUserRepository.deleteLikedDecksFromUser(deck.getId());
+
+		elephantUserRepository.deleteSharedDecksFromUser(deck.getId());
+
+		elephantUserStatisticsRepository.deleteRecentlyViewedDeck(deck.getId());
 	}
 	public List<Deck> getDecksByUser(long userId) {
 		return deckRepository.getDecksByUserId(userId);
@@ -49,5 +72,9 @@ public class DeckRepositoryService {
 
 	public void saveAll(List<Deck> decks) {
 		deckRepository.saveAll(decks);
+	}
+
+	public void deleteUserFromSharedUserIds(long userId) {
+		deckRepository.deleteUserFromSharedDecks(userId);
 	}
 }
