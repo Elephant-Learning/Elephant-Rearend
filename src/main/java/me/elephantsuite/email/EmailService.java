@@ -32,7 +32,7 @@ public final class EmailService implements EmailSender {
 			helper.setText(email, html);
 			helper.setTo(to);
 			helper.setSubject("Verify your email");
-			helper.setFrom(ElephantBackendApplication.ELEPHANT_CONFIG.getConfigOption("senderEmailAddress", Function.identity()));
+			helper.setFrom(ElephantBackendApplication.ELEPHANT_CONFIG.getConfigOption("senderEmailAddress"));
 			mailSender.send(mimeMessage);
 		} catch (RuntimeException | MessagingException e) {
 			LOGGER.error("Failed to send email", e);

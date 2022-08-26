@@ -31,7 +31,7 @@ public class CardStatistics {
 	@Column(name = "id", nullable = false)
 	private Long id;
 
-	private long cardId;
+	private Long cardId;
 
 	private int answeredRight;
 

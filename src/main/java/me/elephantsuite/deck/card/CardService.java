@@ -4,6 +4,7 @@ import java.util.List;
 
 import lombok.AllArgsConstructor;
 import me.elephantsuite.deck.Deck;
+import me.elephantsuite.stats.card.CardStatisticsRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -13,6 +14,8 @@ import org.springframework.transaction.annotation.Transactional;
 public class CardService {
 
 	private final CardRepository repository;
+
+	private final CardStatisticsRepository cardStatisticsRepository;
 
 	public Card getCardById(long id) {
 		if (repository.existsById(id)) {
@@ -38,6 +41,8 @@ public class CardService {
 	}
 
 	public long deleteCardById(long id) {
+		cardStatisticsRepository.deleteCardStatisticsMapping(id);
+		cardStatisticsRepository.deleteCardStatistics(id);
 		return repository.deleteCardByID(id);
 	}
 }
