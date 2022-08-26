@@ -417,4 +417,23 @@ public class DeckService {
 			.addObject("decks", filteredDecks)
 			.build();
 	}
+
+	public Response deleteCard(long cardId) {
+		Card card = cardService.getCardById(cardId);
+
+		if (card == null) {
+			return ResponseBuilder
+				.create()
+				.addResponse(ResponseStatus.FAILURE, "Invalid Card ID!")
+				.addObject("cardId", cardId)
+				.build();
+		}
+
+		cardService.deleteCardById(cardId);
+
+		return ResponseBuilder
+			.create()
+			.addResponse(ResponseStatus.SUCCESS, "Deleted Card!")
+			.build();
+	}
 }

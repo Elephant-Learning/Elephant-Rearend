@@ -58,6 +58,11 @@ public class DeckController {
 		return deckService.deleteDeck(id);
 	}
 
+	@DeleteMapping(path = "deleteCard")
+	public Response deleteCard(@RequestParam("cardId") long cardId) {
+		return deckService.deleteCard(cardId);
+	}
+
 	@PostMapping(path = "visibility")
 	public Response changeVisibility(@RequestBody DeckRequest.ChangeVisiblity changeVisiblity) {
 		return deckService.changeVisibility(changeVisiblity);
