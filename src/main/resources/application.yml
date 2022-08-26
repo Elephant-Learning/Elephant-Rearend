@@ -18,10 +18,10 @@ spring:
         enable_lazy_load_no_trans: true
     show-sql: true
   mail:
-    host: localhost
-    port: 1025
-    username: hello
-    password: hello
+    host: smtp.gmail.com
+    port: 587
+    username: shrihunreddy@gmail.com
+    password: psugfimpmerpmmnw
 
     properties:
       mail:
