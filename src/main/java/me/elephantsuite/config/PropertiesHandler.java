@@ -101,6 +101,10 @@ public class PropertiesHandler {
 		return parser.apply(configValues.get(key));
 	}
 
+	public String getConfigOption(String key) {
+		return configValues.get(key);
+	}
+
 	public boolean hasConfigOption(String key) {
 		return configValues.get(key) != null && !configValues.get(key).isEmpty();
 	}

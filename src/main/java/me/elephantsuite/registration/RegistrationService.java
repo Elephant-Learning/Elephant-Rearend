@@ -54,7 +54,7 @@ public class RegistrationService {
 							// reset expiration to be due in another 15 minutes
 							confirmationTokenService.addExpiredLimit(token, 15);
 
-							String link = ElephantBackendApplication.ELEPHANT_CONFIG.getConfigOption("elephantDomain", Function.identity()) + "/user/registration/confirm?token=" + token.getToken();
+							String link = ElephantBackendApplication.ELEPHANT_CONFIG.getConfigOption("elephantDomain") + "/user/registration/confirm?token=" + token.getToken();
 
 							try {
 								emailSender.send(elephantUser.getEmail(), "<h1> ey " + elephantUser.getFirstName() + " click dis <a href=\"" + link + "\">link</a> fo free fall guyz coins </h1>", true);
@@ -93,7 +93,7 @@ public class RegistrationService {
 
 			ConfirmationToken token = elephantUserService.signUpUser(elephantUser);
 
-			String link = ElephantBackendApplication.ELEPHANT_CONFIG.getConfigOption("elephantDomain", Function.identity()) + "/registration/confirm?token=" + token.getToken();
+			String link = ElephantBackendApplication.ELEPHANT_CONFIG.getConfigOption("elephantDomain") + "/registration/confirm?token=" + token.getToken();
 
 			if (!ElephantBackendApplication.ELEPHANT_CONFIG.getConfigOption("isDevelopment", Boolean::parseBoolean)) {
 				try {
