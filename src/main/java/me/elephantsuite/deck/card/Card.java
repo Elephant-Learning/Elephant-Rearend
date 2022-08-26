@@ -52,11 +52,6 @@ public class Card {
 
 	private String deckName;
 
-	@ManyToMany(mappedBy = "cards", fetch = FetchType.EAGER)
-	@JsonBackReference
-	@Fetch(value = FetchMode.SUBSELECT)
-	private List<Backpack> backpacks = new ArrayList<>();
-
 	public Card(String term, List<String> definitions, Deck deck)  {
 		this.term = term;
 		this.definitions = definitions;
