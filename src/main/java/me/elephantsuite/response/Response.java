@@ -4,6 +4,8 @@ import java.util.Map;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
+import me.elephantsuite.response.ResponseBuilder;
+import me.elephantsuite.response.ResponseStatus;
 
 @Getter
 public class Response {

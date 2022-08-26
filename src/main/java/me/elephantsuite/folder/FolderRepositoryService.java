@@ -1,11 +1,6 @@
 package me.elephantsuite.folder;
 
-import java.util.List;
-
 import lombok.AllArgsConstructor;
-import me.elephantsuite.folder.controller.FolderRequest;
-import me.elephantsuite.response.Response;
-import me.elephantsuite.user.ElephantUser;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 

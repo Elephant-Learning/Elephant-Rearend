@@ -1,7 +1,5 @@
 package me.elephantsuite.user.friends;
 
-import java.util.Objects;
-
 import lombok.AllArgsConstructor;
 import me.elephantsuite.response.Response;
 import me.elephantsuite.response.ResponseBuilder;

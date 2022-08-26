@@ -1,7 +1,5 @@
 package me.elephantsuite.registration;
 
-import java.util.Objects;
-
 import lombok.AllArgsConstructor;
 import me.elephantsuite.response.Response;
 import org.springframework.web.bind.annotation.DeleteMapping;

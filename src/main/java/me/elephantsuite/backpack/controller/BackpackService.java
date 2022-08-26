@@ -65,9 +65,7 @@ public class BackpackService {
 
 		user.getBackpack().getCards().add(card);
 
-		if (!card.getBackpacks().contains(user.getBackpack())) {
-			card.getBackpacks().add(user.getBackpack());
-		}
+
 
 		backpackService.saveBackpack(user.getBackpack());
 		cardService.saveCard(card);
@@ -121,7 +119,6 @@ public class BackpackService {
 		}
 
 		user.getBackpack().getCards().remove(card);
-		card.getBackpacks().remove(user.getBackpack());
 
 
 		backpackService.saveBackpack(user.getBackpack());
