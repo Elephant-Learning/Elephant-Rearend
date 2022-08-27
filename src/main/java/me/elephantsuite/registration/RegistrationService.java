@@ -97,7 +97,7 @@ public class RegistrationService {
 
 			if (!ElephantBackendApplication.ELEPHANT_CONFIG.getConfigOption("isDevelopment", Boolean::parseBoolean)) {
 				try {
-					emailSender.send(elephantUser.getEmail(), "<h1> ey " + request.getFirstName() + " click dis <a href=\"" + link + "\">link</a> fo free fall guyz coins </h1>", true);
+					emailSender.send(elephantUser.getEmail(), "ey " + request.getFirstName() + " click this for free fall guys coins: " + link, true);
 				} catch (IllegalStateException e) {
 					return ResponseBuilder
 						.create()
