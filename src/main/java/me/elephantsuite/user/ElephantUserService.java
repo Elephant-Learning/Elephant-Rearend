@@ -4,11 +4,13 @@ import java.time.LocalDateTime;
 import java.util.List;
 import java.util.UUID;
 
+import me.elephantsuite.backpack.BackpackRepositoryService;
 import me.elephantsuite.deck.Deck;
 import me.elephantsuite.deck.DeckRepository;
 import me.elephantsuite.registration.token.ConfirmationToken;
 import me.elephantsuite.registration.token.ConfirmationTokenService;
 import lombok.AllArgsConstructor;
+import me.elephantsuite.stats.ElephantUserStatisticsRepositoryService;
 import me.elephantsuite.user.notification.NotificationRepository;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -30,6 +32,10 @@ public class ElephantUserService {
 
 	private final NotificationRepository notificationRepository;
 
+	private final BackpackRepositoryService backpackRepositoryService;
+
+	private final ElephantUserStatisticsRepositoryService elephantUserStatisticsRepositoryService;
+
 	public ConfirmationToken signUpUser(ElephantUser user) {
 
 		String encodedPassword = bCryptPasswordEncoder.encode(user.getPassword());
@@ -43,6 +49,10 @@ public class ElephantUserService {
 		user.setToken(confirmationToken);
 
 		confirmationTokenService.saveConfirmationToken(confirmationToken);
+
+		backpackRepositoryService.saveBackpack(user.getBackpack());
+
+		elephantUserStatisticsRepositoryService.save(user.getElephantUserStatistics());
 
 		elephantUserRepository.save(user);
 
