@@ -11,6 +11,7 @@ import java.util.Properties;
 import java.util.function.Function;
 
 import lombok.Getter;
+import lombok.SneakyThrows;
 import me.elephantsuite.ElephantBackendApplication;
 
 @Getter
@@ -21,6 +22,8 @@ public class PropertiesHandler {
 	private final Map<String, String> configValues;
 
 	public static final Path CONFIG_HOME_DIRECTORY = Paths.get("src", "main", "resources").resolve("Elephant Backend Config");
+
+	public static final Path HTML_FILE_DIRECTORY = Paths.get("src", "main", "resources").resolve("html");
 
 	static {
 		if (!Files.exists(CONFIG_HOME_DIRECTORY)) {
@@ -92,17 +95,53 @@ public class PropertiesHandler {
 			save();
 			load();
 		} catch (IOException e) {
-			ElephantBackendApplication.LOGGER.error("Error while initializing Properties Config for file " + "\"" + propertiesPath + "\"" + " for Guild " + "\"" + configValues.get("name") + "\"" + "!");
+			ElephantBackendApplication.LOGGER.error("Error while initializing Properties Config for file " + "\"" + propertiesPath + "\"" + "!");
 			e.printStackTrace();
 		}
 	}
 
 	public <T> T getConfigOption(String key, Function<String, T> parser) {
-		return parser.apply(configValues.get(key));
+		String value = configValues.get(key);
+
+		Path htmlPath = HTML_FILE_DIRECTORY.resolve(value);
+
+		if (!value.endsWith(".html") || !Files.exists(htmlPath)) {
+			return parser.apply(value);
+		}
+
+		String file;
+
+		try {
+			file = Files.readString(htmlPath);
+		} catch (IOException e) {
+			ElephantBackendApplication.LOGGER.error("Error while reading string for html file on path \"" + htmlPath + "\"!", e);
+			e.printStackTrace();
+			return null;
+		}
+
+		return parser.apply(file);
 	}
 
 	public String getConfigOption(String key) {
-		return configValues.get(key);
+		String value = configValues.get(key);
+
+		Path htmlPath = HTML_FILE_DIRECTORY.resolve(value);
+
+		if (!value.endsWith(".html") || !Files.exists(htmlPath)) {
+			return value;
+		}
+
+		String file;
+
+		try {
+			file = Files.readString(htmlPath);
+		} catch (IOException e) {
+			ElephantBackendApplication.LOGGER.error("Error while reading string for html file on path \"" + htmlPath + "\"!", e);
+			e.printStackTrace();
+			return null;
+		}
+
+		return file;
 	}
 
 	public boolean hasConfigOption(String key) {
