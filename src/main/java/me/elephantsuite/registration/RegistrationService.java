@@ -109,7 +109,7 @@ public class RegistrationService {
 			}
 			return ResponseBuilder
 				.create()
-				.addResponse(ResponseStatus.SUCCESS, "token confirmed, email sent")
+				.addResponse(ResponseStatus.SUCCESS, "User Created, Confirmation Token Email Sent!")
 				.addObject("user", elephantUser)
 				.addObject("link", link)
 				.build();
