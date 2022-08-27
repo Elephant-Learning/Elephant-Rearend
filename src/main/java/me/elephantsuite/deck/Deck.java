@@ -47,7 +47,7 @@ public class Deck {
 	@JsonBackReference
 	private ElephantUser author;
 
-	@OneToMany(mappedBy = "deck",  cascade = {CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REFRESH}, orphanRemoval = false, fetch = FetchType.EAGER)
+	@OneToMany(cascade = {CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REFRESH}, orphanRemoval = false, fetch = FetchType.EAGER)
 	@Fetch(value = FetchMode.SUBSELECT)
 	private List<Card> cards = new ArrayList<>();
 
@@ -75,8 +75,6 @@ public class Deck {
 	}
 
 	public void resetTerms(Map<String, List<String>> newTerms, CardService cardService) {
-		List<Card> cards = DeckService.convertToCards(newTerms, this, cardService);
-		cardService.deleteAll(this.cards);
-		this.cards = cards;
+		this.cards = DeckService.convertToCards(newTerms, this, cardService);
 	}
 }

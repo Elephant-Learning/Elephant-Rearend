@@ -46,16 +46,15 @@ public class Card {
 
 	private String term;
 
-	@ManyToOne(fetch = FetchType.EAGER,  cascade = {CascadeType.PERSIST, CascadeType.REFRESH, CascadeType.MERGE})
-	@JsonBackReference
-	private Deck deck;
+	//@ManyToOne(fetch = FetchType.EAGER,  cascade = {CascadeType.PERSIST, CascadeType.REFRESH, CascadeType.MERGE})
+	//@JsonBackReference
+	//private Deck deck;
 
 	private String deckName;
 
 	public Card(String term, List<String> definitions, Deck deck)  {
 		this.term = term;
 		this.definitions = definitions;
-		this.deck = deck;
 		this.deckName = deck.getName();
 	}
 

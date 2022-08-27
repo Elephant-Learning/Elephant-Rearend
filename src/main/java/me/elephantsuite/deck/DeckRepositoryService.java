@@ -47,10 +47,6 @@ public class DeckRepositoryService {
 	}
 
 	public void deleteDeck(Deck deck, CardService cardService) {
-		deck.getCards().forEach(card -> {
-			card.setDeck(null);
-			cardService.saveCard(card);
-		});
 
 		deck.setCards(new ArrayList<>());
 
