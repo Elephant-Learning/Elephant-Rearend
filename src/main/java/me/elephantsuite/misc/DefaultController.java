@@ -15,6 +15,6 @@ public class DefaultController {
 
 	@GetMapping
 	public String getDefaultMsg() {
-		return ElephantBackendApplication.ELEPHANT_CONFIG.getConfigOption("defaultWelcomeMessage");
+		return ElephantBackendApplication.ELEPHANT_CONFIG.getConfigOption("welcomeMessageHtmlFile");
 	}
 }

@@ -57,7 +57,7 @@ public class RegistrationService {
 							String link = ElephantBackendApplication.ELEPHANT_CONFIG.getConfigOption("elephantDomain") + "/user/registration/confirm?token=" + token.getToken();
 
 							try {
-								emailSender.send(elephantUser.getEmail(), "<h1> ey " + elephantUser.getFirstName() + " click dis <a href=\"" + link + "\">link</a> fo free fall guyz coins </h1>", true);
+								emailSender.send(elephantUser.getEmail(), ElephantBackendApplication.ELEPHANT_CONFIG.getConfigOption("confirmationEmailHtmlFile").replace("[TOKEN]", token.getToken()), true);
 							} catch (IllegalStateException e) {
 								return ResponseBuilder
 									.create()
@@ -97,7 +97,8 @@ public class RegistrationService {
 
 			if (!ElephantBackendApplication.ELEPHANT_CONFIG.getConfigOption("isDevelopment", Boolean::parseBoolean)) {
 				try {
-					emailSender.send(elephantUser.getEmail(), "ey " + request.getFirstName() + " click this for free fall guys coins: " + link, true);
+					String html = ElephantBackendApplication.ELEPHANT_CONFIG.getConfigOption("confirmationEmailHtmlFile").replace("[TOKEN]", token.getToken());
+					emailSender.send(elephantUser.getEmail(), html, true);
 				} catch (IllegalStateException e) {
 					return ResponseBuilder
 						.create()

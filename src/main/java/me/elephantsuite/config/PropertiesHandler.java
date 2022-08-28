@@ -103,9 +103,13 @@ public class PropertiesHandler {
 	public <T> T getConfigOption(String key, Function<String, T> parser) {
 		String value = configValues.get(key);
 
+		if (!value.endsWith(".html")) {
+			return parser.apply(value);
+		}
+
 		Path htmlPath = HTML_FILE_DIRECTORY.resolve(value);
 
-		if (!value.endsWith(".html") || !Files.exists(htmlPath)) {
+		if (!Files.exists(htmlPath)) {
 			return parser.apply(value);
 		}
 
@@ -125,9 +129,13 @@ public class PropertiesHandler {
 	public String getConfigOption(String key) {
 		String value = configValues.get(key);
 
+		if (!value.endsWith(".html")) {
+			return value;
+		}
+
 		Path htmlPath = HTML_FILE_DIRECTORY.resolve(value);
 
-		if (!value.endsWith(".html") || !Files.exists(htmlPath)) {
+		if (!Files.exists(htmlPath)) {
 			return value;
 		}
 
