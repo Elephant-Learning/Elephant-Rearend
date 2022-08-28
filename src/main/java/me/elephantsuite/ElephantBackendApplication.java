@@ -22,7 +22,8 @@ public class ElephantBackendApplication {
 		.addConfigOption("pfpIdMax", 47)
 		.addConfigOption("recentlyViewedDecksMax", 50)
 		.setFileName("elephant-config.properties")
-		.addConfigOption("defaultWelcomeMessage", "Welcome to Elephant Backend. Check the postman for details on how to use.")
+		.addConfigOption("welcomeMessageHtmlFile", "WelcomeRedirectMessage.html")
+		.addConfigOption("confirmationEmailHtmlFile", "ConfirmAccountEmail.html")
 		.build();
 
 	public static void main(String[] args) {
