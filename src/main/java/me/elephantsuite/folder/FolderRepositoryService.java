@@ -23,4 +23,9 @@ public class FolderRepositoryService {
 
 		return null;
 	}
+
+    public void deleteFolder(Folder folder) {
+		repository.deleteFolderFromDeckIds(folder.getId());
+		repository.deleteFolder(folder.getId());
+    }
 }

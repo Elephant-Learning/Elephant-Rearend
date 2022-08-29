@@ -13,4 +13,14 @@ public interface FolderRepository extends JpaRepository<Folder, Long> {
     @Modifying
     @Query(value = "DELETE FROM folder_deck_ids WHERE folder_deck_ids.deck_ids = ?1", nativeQuery = true)
     int deleteDeckFromFolder(long deckId);
+
+    @Transactional
+    @Modifying
+    @Query(value = "DELETE FROM folder_deck_ids WHERE folder_deck_ids.folder_id = ?1", nativeQuery = true)
+    int deleteFolderFromDeckIds(long folderId);
+
+    @Transactional
+    @Modifying
+    @Query(value = "DELETE FROM Folder f WHERE f.id = ?1")
+    int deleteFolder(long folderId);
 }

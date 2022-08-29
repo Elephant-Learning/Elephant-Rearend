@@ -42,4 +42,9 @@ public class FolderRestController {
 	public Response getFolder(@RequestParam("id") long id) {
 		return service.getFolderById(id);
 	}
+
+	@DeleteMapping("delete")
+	public Response deleteFolder(@RequestParam("id") long id) {
+		return service.deleteFolder(id);
+	}
 }
