@@ -192,4 +192,23 @@ public class FolderService {
 			.addObject("folder", folder)
 			.build();
 	}
+
+    public Response deleteFolder(long id) {
+		Folder folder = service.getFolderById(id);
+
+		if (folder == null) {
+			return ResponseBuilder
+					.create()
+					.addResponse(ResponseStatus.FAILURE, "Invalid Folder ID!")
+					.addObject("id", id)
+					.build();
+		}
+
+		service.deleteFolder(folder);
+
+		return ResponseBuilder
+				.create()
+				.addResponse(ResponseStatus.SUCCESS, "Deleted Folder!")
+				.build();
+    }
 }
