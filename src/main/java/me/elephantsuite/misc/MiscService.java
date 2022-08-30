@@ -60,4 +60,26 @@ public class MiscService {
 			.addObject("user", user)
 			.build();
 	}
+
+    public Response setNewUserFalse(long userId) {
+		ElephantUser user = userService.getUserById(userId);
+
+		if (user == null) {
+			return ResponseBuilder
+					.create()
+					.addResponse(ResponseStatus.SUCCESS, "Invalid User ID!")
+					.addObject("userId", userId)
+					.build();
+		}
+
+		user.setNewUser(false);
+
+		userService.saveUser(user);
+
+		return ResponseBuilder
+				.create()
+				.addResponse(ResponseStatus.SUCCESS, "Set New User False!")
+				.addObject("user", user)
+				.build();
+    }
 }
