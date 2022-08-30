@@ -2,10 +2,7 @@ package me.elephantsuite.misc;
 
 import lombok.AllArgsConstructor;
 import me.elephantsuite.response.Response;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping(path = "misc")
@@ -17,5 +14,10 @@ public class ElephantMiscController {
 	@PostMapping(path = "pfpid")
 	public Response setPfpId(@RequestBody MiscRequest.SetPfpId request) {
 		return miscService.setPfpId(request);
+	}
+
+	@PostMapping(path = "newUserFalse")
+	public Response setNewUserFalse(@RequestParam("id") long userId) {
+		return miscService.setNewUserFalse(userId);
 	}
 }
