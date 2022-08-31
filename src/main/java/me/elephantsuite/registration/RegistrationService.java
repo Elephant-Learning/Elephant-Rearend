@@ -31,6 +31,15 @@ public class RegistrationService {
 
 	// when given a request process it
 	public Response register(RegistrationRequest request) {
+
+		if (request.getPassword().isBlank() || request.getPassword().length() < 4) {
+			return ResponseBuilder
+					.create()
+					.addResponse(ResponseStatus.FAILURE, "Password cannot be blank or be less than 4 characters")
+					.addObject("request", request)
+					.build();
+		}
+
 		if (emailValidator.test(request.getEmail())) {
 			ElephantUser elephantUser = new ElephantUser(
 				request.getFirstName(),
