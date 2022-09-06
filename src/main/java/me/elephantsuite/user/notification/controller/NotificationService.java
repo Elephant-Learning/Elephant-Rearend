@@ -1,5 +1,8 @@
 package me.elephantsuite.user.notification.controller;
 
+import java.util.Objects;
+import java.util.Optional;
+
 import lombok.AllArgsConstructor;
 import me.elephantsuite.deck.Deck;
 import me.elephantsuite.deck.DeckRepositoryService;
@@ -123,6 +126,24 @@ public class NotificationService {
 				.build();
 		}
 
+		Optional<Long> deckShared = recipient.getNotifications()
+			.stream()
+			.map(Notification::getDeckId)
+			.filter(Objects::nonNull)
+			.filter(aLong -> aLong.equals(deck.getId()))
+			.findFirst();
+
+		if (deckShared.isPresent()) {
+			return ResponseBuilder
+				.create()
+				.addResponse(ResponseStatus.FAILURE, "Deck Already Shared With User!")
+				.addObject("recipient", recipient)
+				.addObject("sender", sender)
+				.addObject("request", request)
+				.build();
+		}
+
+
 		Notification notification = new Notification(type, message, recipient, request.getSenderId(), deck.getId());
 
 		recipient.getNotifications().add(notification);
@@ -174,6 +195,23 @@ public class NotificationService {
 			return ResponseBuilder
 				.create()
 				.addResponse(ResponseStatus.FAILURE, "Incorrect Notification Type Used! (Should use FRIEND_REQUEST)")
+				.addObject("recipient", recipient)
+				.addObject("sender", sender)
+				.addObject("request", request)
+				.build();
+		}
+
+		Optional<Long> senderExists = recipient.getNotifications()
+			.stream()
+			.map(Notification::getSenderId)
+			.filter(Objects::nonNull)
+			.filter(aLong -> aLong.equals(request.getSenderId()))
+			.findFirst();
+
+		if (senderExists.isPresent()) {
+			return ResponseBuilder
+				.create()
+				.addResponse(ResponseStatus.FAILURE, "Friend Request Notification already sent!")
 				.addObject("recipient", recipient)
 				.addObject("sender", sender)
 				.addObject("request", request)
