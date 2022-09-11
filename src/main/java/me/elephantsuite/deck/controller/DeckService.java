@@ -215,6 +215,18 @@ public class DeckService {
 
 		deck.setVisibility(visibility);
 
+		List<ElephantUser> sharedUsers = deck.getSharedUsersIds()
+			.stream()
+			.map(userService::getUserById)
+			.toList();
+
+		for (ElephantUser elephantUser : sharedUsers) {
+			elephantUser.getSharedDeckIds().remove(deck.getId());
+			userService.saveUser(elephantUser);
+		}
+
+		deck.getSharedUsersIds().clear();
+
 		deck = service.saveDeck(deck);
 
 		return ResponseBuilder
