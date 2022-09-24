@@ -16,8 +16,8 @@ public class EmailConfig {
 		JavaMailSenderImpl javaMailSender = new JavaMailSenderImpl();
 		javaMailSender.setHost("smtp.gmail.com");
 		javaMailSender.setPort(587);
-		javaMailSender.setUsername("elephantsuite@gmail.com");
-		javaMailSender.setPassword("drltvibfcnottodw");
+		javaMailSender.setUsername("elephantnoreply@gmail.com");
+		javaMailSender.setPassword("ccbqsesqvrdvxzjo");
 		Properties properties = new Properties();
 		properties.put("mail.smtp.auth", "true");
 		properties.put("mail.smtp.starttls.enable", "true");
