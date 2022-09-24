@@ -10,7 +10,7 @@ spring:
     username: uuhaxsbwdbjjde
   jpa:
     hibernate:
-       ddl-auto: update
+       ddl-auto: create-drop
     properties:
       hibernate:
         dialect: org.hibernate.dialect.PostgreSQLDialect
@@ -20,8 +20,8 @@ spring:
   mail:
     host: smtp.gmail.com
     port: 587
-    username: elephantsuite@gmail.com
-    password: drltvibfcnottodw
+    username: elephantnoreply@gmail.com
+    password: ccbqsesqvrdvxzjo
 
     properties:
       mail:
