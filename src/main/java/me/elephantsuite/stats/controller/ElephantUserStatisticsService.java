@@ -7,9 +7,10 @@ import me.elephantsuite.deck.Deck;
 import me.elephantsuite.deck.DeckRepositoryService;
 import me.elephantsuite.deck.card.Card;
 import me.elephantsuite.deck.card.CardService;
-import me.elephantsuite.response.Response;
-import me.elephantsuite.response.ResponseBuilder;
-import me.elephantsuite.response.ResponseStatus;
+import me.elephantsuite.response.api.Response;
+import me.elephantsuite.response.api.ResponseBuilder;
+import me.elephantsuite.response.util.ResponseStatus;
+import me.elephantsuite.response.util.ResponseUtil;
 import me.elephantsuite.stats.ElephantUserStatisticsRepositoryService;
 import me.elephantsuite.stats.card.CardStatistics;
 import me.elephantsuite.stats.card.CardStatisticsService;
@@ -36,19 +37,11 @@ public class ElephantUserStatisticsService {
 		ElephantUser user = userService.getUserById(id);
 
 		if (user == null) {
-			return ResponseBuilder
-				.create()
-				.addResponse(ResponseStatus.FAILURE, "User ID Invalid!")
-				.addObject("userId", id)
-				.build();
+			return ResponseUtil.getInvalidUserResponse(id);
 		}
 
 		if (!user.isEnabled()) {
-			return ResponseBuilder
-				.create()
-				.addResponse(ResponseStatus.FAILURE, "User not enabled!")
-				.addObject("user", user)
-				.build();
+			return ResponseUtil.getFailureResponse("User not enabled!", user);
 		}
 
 		user.getElephantUserStatistics().incrementDaysStreak();
@@ -72,19 +65,11 @@ public class ElephantUserStatisticsService {
 		ElephantUser user = userService.getUserById(userId);
 
 		if (user == null) {
-			return ResponseBuilder
-				.create()
-				.addResponse(ResponseStatus.FAILURE, "User ID Invalid!")
-				.addObject("userId", userId)
-				.build();
+			return ResponseUtil.getInvalidUserResponse(userId);
 		}
 
 		if (!user.isEnabled()) {
-			return ResponseBuilder
-				.create()
-				.addResponse(ResponseStatus.FAILURE, "User not enabled!")
-				.addObject("user", user)
-				.build();
+			return ResponseUtil.getFailureResponse("User not enabled!", user);
 		}
 
 		user.getElephantUserStatistics().increaseUsageTime(usageTime);
@@ -108,11 +93,7 @@ public class ElephantUserStatisticsService {
 		Card card = cardService.getCardById(cardId);
 
 		if (card == null || user == null) {
-			return ResponseBuilder
-				.create()
-				.addResponse(ResponseStatus.FAILURE, "Invalid User or Card IDs!")
-				.addObject("request", request)
-				.build();
+			return ResponseUtil.getFailureResponse("Invalid User or Card IDs!", request);
 		}
 
 		if(!user.getElephantUserStatistics().getCardStatistics().containsKey(card)) {
@@ -140,11 +121,7 @@ public class ElephantUserStatisticsService {
 		Card card = cardService.getCardById(cardId);
 
 		if (card == null || user == null) {
-			return ResponseBuilder
-				.create()
-				.addResponse(ResponseStatus.FAILURE, "Invalid User or Card IDs!")
-				.addObject("request", request)
-				.build();
+			return ResponseUtil.getFailureResponse("Invalid User or Card IDs!", request);
 		}
 
 		if(!user.getElephantUserStatistics().getCardStatistics().containsKey(card)) {
@@ -172,11 +149,7 @@ public class ElephantUserStatisticsService {
 		Deck deck = deckService.getDeckById(deckId);
 
 		if (user == null || deck == null) {
-			return ResponseBuilder
-				.create()
-				.addResponse(ResponseStatus.FAILURE, "Invalid Deck or User IDs!")
-				.addObject("request", request)
-				.build();
+			return ResponseUtil.getFailureResponse("Invalid User or Deck IDs!", request);
 		}
 
 		user.getElephantUserStatistics().getRecentlyViewedDeckIds().remove(deckId);

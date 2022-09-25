@@ -1,9 +1,10 @@
 package me.elephantsuite.song;
 
 import lombok.AllArgsConstructor;
-import me.elephantsuite.response.Response;
-import me.elephantsuite.response.ResponseBuilder;
-import me.elephantsuite.response.ResponseStatus;
+import me.elephantsuite.response.api.Response;
+import me.elephantsuite.response.api.ResponseBuilder;
+import me.elephantsuite.response.util.ResponseStatus;
+import me.elephantsuite.response.util.ResponseUtil;
 import me.elephantsuite.user.ElephantUser;
 import me.elephantsuite.user.ElephantUserService;
 import org.springframework.stereotype.Service;
@@ -23,19 +24,11 @@ public class SongService {
 		ElephantUser user = service.getUserById(userId);
 
 		if (user == null) {
-			return ResponseBuilder
-				.create()
-				.addResponse(ResponseStatus.FAILURE, "Invalid User ID!")
-				.addObject("request", request)
-				.build();
+			return ResponseUtil.getInvalidUserResponse(userId);
 		}
 
 		if (!user.isEnabled()) {
-			return ResponseBuilder
-				.create()
-				.addResponse(ResponseStatus.FAILURE, "User not enabled!")
-				.addObject("user", user)
-				.build();
+			return ResponseUtil.getFailureResponse("User not enabled!", request);
 		}
 
 		user.getLikedSongs().add(songName);
@@ -56,19 +49,11 @@ public class SongService {
 		ElephantUser user = service.getUserById(userId);
 
 		if (user == null) {
-			return ResponseBuilder
-				.create()
-				.addResponse(ResponseStatus.FAILURE, "Invalid User ID!")
-				.addObject("request", request)
-				.build();
+			return ResponseUtil.getInvalidUserResponse(userId);
 		}
 
 		if (!user.isEnabled()) {
-			return ResponseBuilder
-				.create()
-				.addResponse(ResponseStatus.FAILURE, "User not enabled!")
-				.addObject("user", user)
-				.build();
+			return ResponseUtil.getFailureResponse("User not enabled!", request);
 		}
 
 		user.getLikedSongs().remove(songName);

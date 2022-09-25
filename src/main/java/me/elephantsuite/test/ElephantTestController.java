@@ -2,9 +2,9 @@ package me.elephantsuite.test;
 
 import lombok.AllArgsConstructor;
 import me.elephantsuite.deck.DeckRepositoryService;
-import me.elephantsuite.response.Response;
-import me.elephantsuite.response.ResponseBuilder;
-import me.elephantsuite.response.ResponseStatus;
+import me.elephantsuite.response.api.Response;
+import me.elephantsuite.response.api.ResponseBuilder;
+import me.elephantsuite.response.util.ResponseStatus;
 import me.elephantsuite.user.ElephantUserService;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;

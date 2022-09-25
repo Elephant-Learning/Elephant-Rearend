@@ -1,7 +1,7 @@
 package me.elephantsuite.misc;
 
 import lombok.AllArgsConstructor;
-import me.elephantsuite.response.Response;
+import me.elephantsuite.response.api.Response;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -19,5 +19,10 @@ public class ElephantMiscController {
 	@PostMapping(path = "newUserFalse")
 	public Response setNewUserFalse(@RequestParam("id") long userId) {
 		return miscService.setNewUserFalse(userId);
+	}
+
+	@PostMapping(path = "countryCode")
+	public Response changeCountryCode(@RequestBody MiscRequest.SetCountryCode request) {
+		return miscService.setCountryCode(request);
 	}
 }

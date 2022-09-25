@@ -2,9 +2,9 @@ package me.elephantsuite.config.controller;
 
 import lombok.AllArgsConstructor;
 import me.elephantsuite.ElephantBackendApplication;
-import me.elephantsuite.response.Response;
-import me.elephantsuite.response.ResponseBuilder;
-import me.elephantsuite.response.ResponseStatus;
+import me.elephantsuite.response.api.Response;
+import me.elephantsuite.response.api.ResponseBuilder;
+import me.elephantsuite.response.util.ResponseStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 

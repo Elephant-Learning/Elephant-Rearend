@@ -1,7 +1,7 @@
 package me.elephantsuite.login;
 
 import lombok.AllArgsConstructor;
-import me.elephantsuite.response.Response;
+import me.elephantsuite.response.api.Response;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;

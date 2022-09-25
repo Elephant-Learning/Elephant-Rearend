@@ -4,6 +4,7 @@ import java.time.LocalDateTime;
 import java.util.List;
 import java.util.UUID;
 
+import me.elephantsuite.ElephantBackendApplication;
 import me.elephantsuite.backpack.BackpackRepositoryService;
 import me.elephantsuite.deck.Deck;
 import me.elephantsuite.deck.DeckRepository;
@@ -44,7 +45,7 @@ public class ElephantUserService {
 
 		String token = UUID.randomUUID().toString();
 
-		ConfirmationToken confirmationToken = new ConfirmationToken(token, LocalDateTime.now(), LocalDateTime.now().plusMinutes(15), user);
+		ConfirmationToken confirmationToken = new ConfirmationToken(token, LocalDateTime.now(), LocalDateTime.now().plusMinutes(ElephantBackendApplication.ELEPHANT_CONFIG.getConfigOption("tokenExpiredLimitMinutes", Long::parseLong)), user);
 
 		user.setToken(confirmationToken);
 

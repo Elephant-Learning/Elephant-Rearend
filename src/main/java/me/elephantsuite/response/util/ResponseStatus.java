@@ -1,4 +1,4 @@
-package me.elephantsuite.response;
+package me.elephantsuite.response.util;
 
 public enum ResponseStatus {
 	SUCCESS,

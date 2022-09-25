@@ -1,7 +1,7 @@
 package me.elephantsuite.config.controller;
 
 import lombok.AllArgsConstructor;
-import me.elephantsuite.response.Response;
+import me.elephantsuite.response.api.Response;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;

@@ -4,9 +4,10 @@ import lombok.AllArgsConstructor;
 import me.elephantsuite.backpack.BackpackRepositoryService;
 import me.elephantsuite.deck.card.Card;
 import me.elephantsuite.deck.card.CardService;
-import me.elephantsuite.response.Response;
-import me.elephantsuite.response.ResponseBuilder;
-import me.elephantsuite.response.ResponseStatus;
+import me.elephantsuite.response.api.Response;
+import me.elephantsuite.response.api.ResponseBuilder;
+import me.elephantsuite.response.util.ResponseStatus;
+import me.elephantsuite.response.util.ResponseUtil;
 import me.elephantsuite.user.ElephantUser;
 import me.elephantsuite.user.ElephantUserService;
 import org.springframework.stereotype.Service;
@@ -30,37 +31,21 @@ public class BackpackService {
 		ElephantUser user = userService.getUserById(userId);
 
 		if (user == null) {
-			return ResponseBuilder
-				.create()
-				.addResponse(ResponseStatus.FAILURE, "Invalid Author ID Given!")
-				.addObject("request", request)
-				.build();
+			return ResponseUtil.getInvalidUserResponse(userId);
 		}
 
 		if (!user.isEnabled()) {
-			return ResponseBuilder
-				.create()
-				.addResponse(ResponseStatus.FAILURE, "User not enabled!")
-				.addObject("user", user)
-				.build();
+			return ResponseUtil.getFailureResponse("User not enabled!", request);
 		}
 
 		Card card = cardService.getCardById(cardId);
 
 		if (card == null) {
-			return ResponseBuilder
-				.create()
-				.addResponse(ResponseStatus.FAILURE, "Invalid Card ID Given!")
-				.addObject("request", request)
-				.build();
+			return ResponseUtil.getFailureResponse("Invalid Card ID Given!", request);
 		}
 
 		if (user.getBackpack().getCards().contains(card)) {
-			return ResponseBuilder
-				.create()
-				.addResponse(ResponseStatus.FAILURE, "Card already present in backpack!")
-				.addObject("user", user)
-				.build();
+			return ResponseUtil.getFailureResponse("Card already present in backpack!", request);
 		}
 
 		user.getBackpack().getCards().add(card);
@@ -85,37 +70,21 @@ public class BackpackService {
 		ElephantUser user = userService.getUserById(userId);
 
 		if (user == null) {
-			return ResponseBuilder
-				.create()
-				.addResponse(ResponseStatus.FAILURE, "Invalid Author ID Given!")
-				.addObject("request", request)
-				.build();
+			return ResponseUtil.getInvalidUserResponse(userId);
 		}
 
 		if (!user.isEnabled()) {
-			return ResponseBuilder
-				.create()
-				.addResponse(ResponseStatus.FAILURE, "User not enabled!")
-				.addObject("user", user)
-				.build();
+			return ResponseUtil.getFailureResponse("User not enabled!", request);
 		}
 
 		Card card = cardService.getCardById(cardId);
 
 		if (card == null) {
-			return ResponseBuilder
-				.create()
-				.addResponse(ResponseStatus.FAILURE, "Invalid Card ID Given!")
-				.addObject("request", request)
-				.build();
+			return ResponseUtil.getFailureResponse("Invalid Card ID Given!", request);
 		}
 
 		if (!user.getBackpack().getCards().contains(card)) {
-			return ResponseBuilder
-				.create()
-				.addResponse(ResponseStatus.FAILURE, "Card not present in backpack!")
-				.addObject("user", user)
-				.build();
+			return ResponseUtil.getFailureResponse("Card not present in backpack!", request);
 		}
 
 		user.getBackpack().getCards().remove(card);

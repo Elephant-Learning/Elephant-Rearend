@@ -6,9 +6,10 @@ import java.util.Optional;
 import lombok.AllArgsConstructor;
 import me.elephantsuite.deck.Deck;
 import me.elephantsuite.deck.DeckRepositoryService;
-import me.elephantsuite.response.Response;
-import me.elephantsuite.response.ResponseBuilder;
-import me.elephantsuite.response.ResponseStatus;
+import me.elephantsuite.response.api.Response;
+import me.elephantsuite.response.api.ResponseBuilder;
+import me.elephantsuite.response.util.ResponseStatus;
+import me.elephantsuite.response.util.ResponseUtil;
 import me.elephantsuite.user.ElephantUser;
 import me.elephantsuite.user.ElephantUserService;
 import me.elephantsuite.user.notification.Notification;
@@ -36,36 +37,19 @@ public class NotificationService {
 		Deck deck = deckService.getDeckById(request.getDeckId());
 
 		if (recipient == null) {
-			return ResponseBuilder
-				.create()
-				.addResponse(ResponseStatus.FAILURE, "Sender ID is Invalid!")
-				.addObject("request", request)
-				.build();
+			return ResponseUtil.getInvalidUserResponse(request);
 		}
 
 		if (message == null || type == null || deck == null) {
-			return ResponseBuilder
-				.create()
-				.addResponse(ResponseStatus.FAILURE, "Notification type, message, and deck id cannot be null/invalid!")
-				.addObject("request", request)
-				.build();
+			return ResponseUtil.getFailureResponse("Notification type, message, and deck id cannot be null/invalid!", request);
 		}
 
 		if (!recipient.isEnabled()) {
-			return ResponseBuilder
-				.create()
-				.addResponse(ResponseStatus.FAILURE, "Recipient not enabled!")
-				.addObject("recipient", recipient)
-				.build();
+			return ResponseUtil.getFailureResponse("Recipient not enabled!", request);
 		}
 
 		if (!type.equals(NotificationType.LIKED_DECK)) {
-			return ResponseBuilder
-				.create()
-				.addResponse(ResponseStatus.FAILURE, "Incorrect Notification Type Used! (Should Use LIKED_DECK)")
-				.addObject("recipient", recipient)
-				.addObject("request", request)
-				.build();
+			return ResponseUtil.getFailureResponse("Incorrect Notification Type Used! (Should Use LIKED_DECK)", request);
 		}
 
 		Notification notification = new Notification(type, message, recipient, null, deck.getId());
@@ -92,38 +76,19 @@ public class NotificationService {
 		Deck deck = deckService.getDeckById(request.getDeckId());
 
 		if (recipient == null || sender == null) {
-			return ResponseBuilder
-				.create()
-				.addResponse(ResponseStatus.FAILURE, "Sender or Recipient IDs are Invalid!")
-				.addObject("request", request)
-				.build();
+			return ResponseUtil.getInvalidUserResponse(request);
 		}
 
 		if (message == null || type == null || deck == null) {
-			return ResponseBuilder
-				.create()
-				.addResponse(ResponseStatus.FAILURE, "Notification type, message, and deck id cannot be null/invalid!")
-				.addObject("request", request)
-				.build();
+			return ResponseUtil.getFailureResponse("Notification type, message, and deck id cannot be null/invalid!", request);
 		}
 
 		if (!recipient.isEnabled() || !sender.isEnabled()) {
-			return ResponseBuilder
-				.create()
-				.addResponse(ResponseStatus.FAILURE, "Recipient or Sender not enabled!")
-				.addObject("recipient", recipient)
-				.addObject("sender", sender)
-				.build();
+			return ResponseUtil.getFailureResponse("Recipient or Sender not enabled!", request);
 		}
 
 		if (!type.equals(NotificationType.SHARED_DECK)) {
-			return ResponseBuilder
-				.create()
-				.addResponse(ResponseStatus.FAILURE, "Incorrect Notification Type Used! (Should Use SHARED_DECK)")
-				.addObject("recipient", recipient)
-				.addObject("sender", sender)
-				.addObject("request", request)
-				.build();
+			return ResponseUtil.getFailureResponse("Incorrect Notification Type Used! (Should Use SHARED_DECK)", request);
 		}
 
 		Optional<Long> deckShared = recipient.getNotifications()
@@ -134,13 +99,7 @@ public class NotificationService {
 			.findFirst();
 
 		if (deckShared.isPresent()) {
-			return ResponseBuilder
-				.create()
-				.addResponse(ResponseStatus.FAILURE, "Deck Already Shared With User!")
-				.addObject("recipient", recipient)
-				.addObject("sender", sender)
-				.addObject("request", request)
-				.build();
+			return ResponseUtil.getFailureResponse("Deck Already Shared With User!", request);
 		}
 
 
@@ -167,38 +126,19 @@ public class NotificationService {
 		ElephantUser sender = userService.getUserById(request.getSenderId());
 
 		if (sender == null || recipient == null) {
-			return ResponseBuilder
-				.create()
-				.addResponse(ResponseStatus.FAILURE, "Sender or Recipient IDs are Invalid!")
-				.addObject("request", request)
-				.build();
+			return ResponseUtil.getFailureResponse("Sender or Recipient IDs are Invalid!", request);
 		}
 
 		if (message == null || type == null) {
-			return ResponseBuilder
-				.create()
-				.addResponse(ResponseStatus.FAILURE, "Notification type or message cannot be null!")
-				.addObject("request", request)
-				.build();
+			return ResponseUtil.getFailureResponse("Notification type or message cannot be null!", request);
 		}
 
 		if (!recipient.isEnabled() || !sender.isEnabled()) {
-			return ResponseBuilder
-				.create()
-				.addResponse(ResponseStatus.FAILURE, "Recipient or Sender not enabled!")
-				.addObject("recipient", recipient)
-				.addObject("sender", sender)
-				.build();
+			return ResponseUtil.getFailureResponse("Recipient or Sender not enabled!", request);
 		}
 
 		if (!type.equals(NotificationType.FRIEND_REQUEST)) {
-			return ResponseBuilder
-				.create()
-				.addResponse(ResponseStatus.FAILURE, "Incorrect Notification Type Used! (Should use FRIEND_REQUEST)")
-				.addObject("recipient", recipient)
-				.addObject("sender", sender)
-				.addObject("request", request)
-				.build();
+			return ResponseUtil.getFailureResponse("Incorrect Notification Type Used! (Should use FRIEND_REQUEST)", request);
 		}
 
 		Optional<Long> senderExists = recipient.getNotifications()
@@ -209,13 +149,7 @@ public class NotificationService {
 			.findFirst();
 
 		if (senderExists.isPresent()) {
-			return ResponseBuilder
-				.create()
-				.addResponse(ResponseStatus.FAILURE, "Friend Request Notification already sent!")
-				.addObject("recipient", recipient)
-				.addObject("sender", sender)
-				.addObject("request", request)
-				.build();
+			return ResponseUtil.getFailureResponse("Friend Request Notification already sent!", request);
 		}
 
 		Notification notification = new Notification(type, message, recipient, request.getSenderId(), null);

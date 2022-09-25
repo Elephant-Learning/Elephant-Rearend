@@ -21,6 +21,7 @@ public class ElephantBackendApplication {
 		.addConfigOption("elephantDomain", "localhost:8080")
 		.addConfigOption("pfpIdMax", 47)
 		.addConfigOption("recentlyViewedDecksMax", 50)
+		.addConfigOption("tokenExpiredLimitMinutes", 15)
 		.setFileName("elephant-config.properties")
 		.addConfigOption("welcomeMessageHtmlFile", "WelcomeRedirectMessage.html")
 		.addConfigOption("confirmationEmailHtmlFile", "ConfirmAccountEmail.html")

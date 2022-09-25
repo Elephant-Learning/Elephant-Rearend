@@ -1,7 +1,7 @@
 package me.elephantsuite.song;
 
 import lombok.AllArgsConstructor;
-import me.elephantsuite.response.Response;
+import me.elephantsuite.response.api.Response;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;

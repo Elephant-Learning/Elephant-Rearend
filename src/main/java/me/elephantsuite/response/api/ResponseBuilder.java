@@ -1,9 +1,10 @@
-package me.elephantsuite.response;
+package me.elephantsuite.response.api;
 
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
 import com.google.common.base.Throwables;
+import me.elephantsuite.response.util.ResponseStatus;
 
 // Builds a response that is then sent to elephant client
 public class ResponseBuilder {

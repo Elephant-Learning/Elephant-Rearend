@@ -1,6 +1,7 @@
-package me.elephantsuite.response;
+package me.elephantsuite.response.api;
 
 import lombok.Getter;
+import me.elephantsuite.response.util.ResponseStatus;
 
 @Getter
 public class ExceptionResponse extends Response {

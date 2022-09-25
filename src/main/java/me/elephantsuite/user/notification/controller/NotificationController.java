@@ -1,7 +1,7 @@
 package me.elephantsuite.user.notification.controller;
 
 import lombok.AllArgsConstructor;
-import me.elephantsuite.response.Response;
+import me.elephantsuite.response.api.Response;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;

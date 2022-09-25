@@ -1,11 +1,7 @@
-package me.elephantsuite.response;
+package me.elephantsuite.response.api;
 
-import java.util.Map;
-
-import lombok.AllArgsConstructor;
 import lombok.Getter;
-import me.elephantsuite.response.ResponseBuilder;
-import me.elephantsuite.response.ResponseStatus;
+import me.elephantsuite.response.util.ResponseStatus;
 
 @Getter
 public class Response {

@@ -16,4 +16,14 @@ public class MiscRequest {
 
 		private final int pfpId;
 	}
+
+	@Getter
+	@AllArgsConstructor
+	@EqualsAndHashCode
+	@ToString
+	public static class SetCountryCode {
+		private final long userId;
+
+		private final int countryCode;
+	}
 }

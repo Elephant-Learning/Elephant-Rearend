@@ -1,15 +1,15 @@
 package me.elephantsuite.registration;
 
 import java.time.LocalDateTime;
-import java.util.function.Function;
 
 import me.elephantsuite.ElephantBackendApplication;
 import me.elephantsuite.email.EmailSender;
 import me.elephantsuite.registration.token.ConfirmationToken;
 import me.elephantsuite.registration.token.ConfirmationTokenService;
-import me.elephantsuite.response.Response;
-import me.elephantsuite.response.ResponseBuilder;
-import me.elephantsuite.response.ResponseStatus;
+import me.elephantsuite.response.api.Response;
+import me.elephantsuite.response.api.ResponseBuilder;
+import me.elephantsuite.response.util.ResponseStatus;
+import me.elephantsuite.response.util.ResponseUtil;
 import me.elephantsuite.user.ElephantUser;
 import me.elephantsuite.user.ElephantUserService;
 import lombok.AllArgsConstructor;
@@ -33,11 +33,7 @@ public class RegistrationService {
 	public Response register(RegistrationRequest request) {
 
 		if (request.getPassword().isBlank() || request.getPassword().length() < 4) {
-			return ResponseBuilder
-					.create()
-					.addResponse(ResponseStatus.FAILURE, "Password cannot be blank or be less than 4 characters")
-					.addObject("request", request)
-					.build();
+			return ResponseUtil.getFailureResponse("Password cannot be blank or be less than 4 characters!", request);
 		}
 
 		if (emailValidator.test(request.getEmail())) {
@@ -61,9 +57,7 @@ public class RegistrationService {
 
 						if (!ElephantBackendApplication.ELEPHANT_CONFIG.getConfigOption("isDevelopment", Boolean::parseBoolean)) {
 							// reset expiration to be due in another 15 minutes
-							confirmationTokenService.addExpiredLimit(token, 15);
-
-							String link = ElephantBackendApplication.ELEPHANT_CONFIG.getConfigOption("elephantDomain") + "/user/registration/confirm?token=" + token.getToken();
+							confirmationTokenService.addExpiredLimit(token, ElephantBackendApplication.ELEPHANT_CONFIG.getConfigOption("tokenExpiredLimitMinutes", Integer::parseInt));
 
 							try {
 								emailSender.send(elephantUser.getEmail(), ElephantBackendApplication.ELEPHANT_CONFIG.getConfigOption("confirmationEmailHtmlFile").replace("[TOKEN]", token.getToken()), true);
@@ -93,11 +87,7 @@ public class RegistrationService {
 				}
 
 				//if null then token already used and email is confirmed already registered
-				return ResponseBuilder
-					.create()
-					.addResponse(ResponseStatus.FAILURE, "User already registered and validated")
-					.addObject("user", elephantUser) // can ignore
-					.build();
+				return ResponseUtil.getFailureResponse("User already registered and validated", request);
 			}
 
 			ConfirmationToken token = elephantUserService.signUpUser(elephantUser);
@@ -125,11 +115,7 @@ public class RegistrationService {
 				.build();
 		}
 
-		return ResponseBuilder
-			.create()
-			.addResponse(ResponseStatus.FAILURE, "a valid email was not sent!")
-			.addObject("request", request)
-			.build();
+		return ResponseUtil.getFailureResponse("A valid email was not sent!", request);
 	}
 
 	@Transactional
@@ -137,21 +123,13 @@ public class RegistrationService {
 		ConfirmationToken confirmationToken = confirmationTokenService.getToken(token).orElse(null);
 
 		if (confirmationToken == null) {
-			return ResponseBuilder
-				.create()
-				.addResponse(ResponseStatus.FAILURE, "Insert a valid token!")
-				.addObject("token", token)
-				.build();
+			return ResponseUtil.getFailureResponse("Insert a valid token!", token);
 		}
 
 		LocalDateTime expiredAt = confirmationToken.getExpiresAt();
 
 		if (expiredAt.isBefore(LocalDateTime.now())) {
-			return ResponseBuilder
-				.create()
-				.addResponse(ResponseStatus.FAILURE, "Token Expired")
-				.addObject("token", confirmationToken)
-				.build();
+			return ResponseUtil.getFailureResponse("Token Expired", confirmationToken);
 		}
 
 		confirmationToken.getElephantUser().setToken(null);
@@ -173,11 +151,7 @@ public class RegistrationService {
 		ElephantUser user = elephantUserService.getUserById(id);
 
 		if (user == null) {
-			return ResponseBuilder
-				.create()
-				.addResponse(ResponseStatus.FAILURE, "Invalid User ID!")
-				.addObject("userId", id)
-				.build();
+			return ResponseUtil.getInvalidUserResponse(id);
 		}
 
 		elephantUserService.deleteUser(user);
