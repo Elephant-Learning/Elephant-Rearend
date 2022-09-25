@@ -1,8 +1,9 @@
-package me.elephantsuite.response;
+package me.elephantsuite.response.api;
 
 import java.util.Map;
 
 import lombok.Getter;
+import me.elephantsuite.response.util.ResponseStatus;
 
 @Getter
 public class ContextResponse extends Response {

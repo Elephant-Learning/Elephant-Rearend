@@ -5,9 +5,10 @@ import java.util.stream.Collectors;
 
 import lombok.AllArgsConstructor;
 import me.elephantsuite.registration.EmailValidator;
-import me.elephantsuite.response.Response;
-import me.elephantsuite.response.ResponseBuilder;
-import me.elephantsuite.response.ResponseStatus;
+import me.elephantsuite.response.api.Response;
+import me.elephantsuite.response.api.ResponseBuilder;
+import me.elephantsuite.response.util.ResponseStatus;
+import me.elephantsuite.response.util.ResponseUtil;
 import me.elephantsuite.user.ElephantUser;
 import me.elephantsuite.user.ElephantUserService;
 import org.apache.commons.lang3.StringUtils;
@@ -29,38 +30,21 @@ public class ElephantLoginService {
 		String password = request.getPassword();
 
 		if (!emailValidator.test(email)) {
-			return ResponseBuilder
-				.create()
-				.addResponse(ResponseStatus.FAILURE, "Email not in correct format!")
-				.addObject("loginInfo", request)
-				.build();
+			return ResponseUtil.getFailureResponse("Email not in correct format!", request);
 		}
 
 		if (!elephantUserService.isUserAlreadyRegistered(email)) {
-			return ResponseBuilder
-				.create()
-				.addResponse(ResponseStatus.FAILURE, "Email was not registered to any user")
-				.addObject("loginInfo", request)
-				.build();
+			return ResponseUtil.getFailureResponse("Email was not registered to any user", request);
 		}
 
 		ElephantUser user = elephantUserService.getUserByEmail(email);
 
 		if (user == null) {
-			return ResponseBuilder
-				.create()
-				.addResponse(ResponseStatus.FAILURE, "Email was not registered to any user!")
-				.addObject("loginInfo", request)
-				.build();
+			return ResponseUtil.getFailureResponse("Email was not registered to any user!", request);
 		}
 
 		if (!bCryptPasswordEncoder.matches(password, user.getPassword())) {
-			return ResponseBuilder
-				.create()
-				.addResponse(ResponseStatus.FAILURE, "Invalid password!")
-				.addObject("loginInfo", request)
-				.addObject("user", user)
-				.build();
+			return ResponseUtil.getFailureResponse("Invalid password!", request);
 		}
 
 		return ResponseBuilder
@@ -74,11 +58,7 @@ public class ElephantLoginService {
 		ElephantUser user = elephantUserService.getUserById(id);
 
 		if (user == null) {
-			return ResponseBuilder
-				.create()
-				.addResponse(ResponseStatus.FAILURE, "ID does not match any user!")
-				.addObject("id", id)
-				.build();
+			return ResponseUtil.getInvalidUserResponse(id);
 		}
 
 		return ResponseBuilder
@@ -90,11 +70,7 @@ public class ElephantLoginService {
 
 	public Response getUserByEmail(String email) {
 		if (!elephantUserService.isUserAlreadyRegistered(email)) {
-			return ResponseBuilder
-				.create()
-				.addResponse(ResponseStatus.FAILURE, "Email was not registered!")
-				.addObject("email", email)
-				.build();
+			return ResponseUtil.getFailureResponse("Email was not registered!", email);
 		}
 
 		return ResponseBuilder
@@ -109,12 +85,7 @@ public class ElephantLoginService {
 		ElephantUser user = elephantUserService.getUserById(userId);
 
 		if (user == null) {
-			return ResponseBuilder
-				.create()
-				.addResponse(ResponseStatus.FAILURE, "Invalid User ID!")
-				.addObject("name", name)
-				.addObject("userId", userId)
-				.build();
+			return ResponseUtil.getInvalidUserResponse(userId);
 		}
 
 		List<ElephantUser> filteredUsers = elephantUserService

@@ -1,9 +1,10 @@
 package me.elephantsuite.user.friends;
 
 import lombok.AllArgsConstructor;
-import me.elephantsuite.response.Response;
-import me.elephantsuite.response.ResponseBuilder;
-import me.elephantsuite.response.ResponseStatus;
+import me.elephantsuite.response.api.Response;
+import me.elephantsuite.response.api.ResponseBuilder;
+import me.elephantsuite.response.util.ResponseStatus;
+import me.elephantsuite.response.util.ResponseUtil;
 import me.elephantsuite.user.ElephantUser;
 import me.elephantsuite.user.ElephantUserService;
 import org.springframework.stereotype.Service;
@@ -28,39 +29,19 @@ public class ElephantFriendService {
 		ElephantUser friend = this.userService.getUserById(friendId);
 
 		if (user == null || friend == null) {
-			return ResponseBuilder
-				.create()
-				.addResponse(ResponseStatus.FAILURE, "User or Friend IDs are invalid!")
-				.addObject("userId", userId)
-				.addObject("friendId", friendId)
-				.build();
+			return ResponseUtil.getFailureResponse("User or Friend IDs are invalid!", request);
 		}
 
 		if (!user.isEnabled() || !friend.isEnabled()) {
-			return ResponseBuilder
-				.create()
-				.addResponse(ResponseStatus.FAILURE, "User or Friend are not enabled!")
-				.addObject("user", user)
-				.addObject("friend", friend)
-				.build();
+			return ResponseUtil.getFailureResponse("User or Friend are not enabled!", request);
 		}
 
 		if (user.getFriendIds().contains(friendId) || friend.getFriendIds().contains(userId)) {
-			return ResponseBuilder
-				.create()
-				.addResponse(ResponseStatus.FAILURE, "User already friended!")
-				.addObject("user", user)
-				.addObject("friend", friend)
-				.build();
+			return ResponseUtil.getFailureResponse("User already friended!", request);
 		}
 
 		if (userId == friendId) {
-			return ResponseBuilder
-				.create()
-				.addResponse(ResponseStatus.FAILURE, "Cannot friend yourself!")
-				.addObject("user", user)
-				.addObject("request", request)
-				.build();
+			return ResponseUtil.getFailureResponse("Cannot friend yourself!", request);
 		}
 
 		user.getFriendIds().add(friendId);
@@ -88,39 +69,19 @@ public class ElephantFriendService {
 		ElephantUser friend = this.userService.getUserById(friendId);
 
 		if (user == null || friend == null) {
-			return ResponseBuilder
-				.create()
-				.addResponse(ResponseStatus.FAILURE, "User or Friend IDs are invalid!")
-				.addObject("userId", userId)
-				.addObject("friendId", friendId)
-				.build();
+			return ResponseUtil.getFailureResponse("User or Friend IDs are invalid!", request);
 		}
 
 		if (!user.isEnabled() || !friend.isEnabled()) {
-			return ResponseBuilder
-				.create()
-				.addResponse(ResponseStatus.FAILURE, "User or Friend are not enabled!")
-				.addObject("user", user)
-				.addObject("friend", friend)
-				.build();
+			return ResponseUtil.getFailureResponse("User or Friend are not enabled!", request);
 		}
 
 		if (!user.getFriendIds().contains(friendId) || !friend.getFriendIds().contains(userId)) {
-			return ResponseBuilder
-				.create()
-				.addResponse(ResponseStatus.FAILURE, "Cannot unfriend someone who is not friends already!")
-				.addObject("friend", friend)
-				.addObject("user", user)
-				.build();
+			return ResponseUtil.getFailureResponse("Cannot unfriend someone who is not friends already!", request);
 		}
 
 		if (userId == friendId) {
-			return ResponseBuilder
-				.create()
-				.addResponse(ResponseStatus.FAILURE, "Cannot unfriend yourself!")
-				.addObject("user", user)
-				.addObject("request", request)
-				.build();
+			return ResponseUtil.getFailureResponse("Cannot unfriend yourself!", request);
 		}
 
 

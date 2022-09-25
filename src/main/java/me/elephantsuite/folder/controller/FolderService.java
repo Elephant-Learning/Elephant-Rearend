@@ -8,9 +8,10 @@ import me.elephantsuite.deck.Deck;
 import me.elephantsuite.deck.DeckRepositoryService;
 import me.elephantsuite.folder.Folder;
 import me.elephantsuite.folder.FolderRepositoryService;
-import me.elephantsuite.response.Response;
-import me.elephantsuite.response.ResponseBuilder;
-import me.elephantsuite.response.ResponseStatus;
+import me.elephantsuite.response.api.Response;
+import me.elephantsuite.response.api.ResponseBuilder;
+import me.elephantsuite.response.util.ResponseStatus;
+import me.elephantsuite.response.util.ResponseUtil;
 import me.elephantsuite.user.ElephantUser;
 import me.elephantsuite.user.ElephantUserService;
 import org.springframework.stereotype.Service;
@@ -35,11 +36,7 @@ public class FolderService {
 		ElephantUser user = userService.getUserById(userId);
 
 		if (user == null) {
-			return ResponseBuilder
-				.create()
-				.addResponse(ResponseStatus.FAILURE, "Invalid User ID!")
-				.addObject("request", createFolder)
-				.build();
+			return ResponseUtil.getInvalidUserResponse(createFolder);
 		}
 
 		List<Deck> decks = deckIds
@@ -49,12 +46,7 @@ public class FolderService {
 
 
 		if (decks.contains(null)) {
-			return ResponseBuilder
-				.create()
-				.addResponse(ResponseStatus.FAILURE, "Invalid Deck ID found!")
-				.addObject("request", createFolder)
-				.addObject("user", user)
-				.build();
+			return ResponseUtil.getFailureResponse("Invalid Deck ID found!", createFolder);
 		}
 
 		//backpackService.initBackpack();
@@ -86,20 +78,11 @@ public class FolderService {
 		Folder folder = service.getFolderById(folderId);
 
 		if (deck == null || folder == null) {
-			return ResponseBuilder
-				.create()
-				.addResponse(ResponseStatus.FAILURE, "Invalid Deck or Folder ID!")
-				.addObject("request", removeDeck)
-				.build();
+			return ResponseUtil.getFailureResponse("Invalid Folder Or Deck ID", removeDeck);
 		}
 
 		if (!folder.getDeckIds().contains(deckId)) {
-			return ResponseBuilder
-				.create()
-				.addResponse(ResponseStatus.FAILURE, "Deck is not in that folder!")
-				.addObject("deck", deck)
-				.addObject("folder", folder)
-				.build();
+			return ResponseUtil.getFailureResponse("Deck is not in that folder!", removeDeck);
 		}
 
 		folder.getDeckIds().remove(deckId);
@@ -123,20 +106,11 @@ public class FolderService {
 		Folder folder = service.getFolderById(folderId);
 
 		if (deck == null || folder == null) {
-			return ResponseBuilder
-				.create()
-				.addResponse(ResponseStatus.FAILURE, "Invalid Deck or Folder ID!")
-				.addObject("request", addDeck)
-				.build();
+			return ResponseUtil.getFailureResponse("Invalid Deck or Folder ID!", addDeck);
 		}
 
 		if (folder.getDeckIds().contains(deckId)) {
-			return ResponseBuilder
-				.create()
-				.addResponse(ResponseStatus.FAILURE, "Deck is already in that folder!")
-				.addObject("deck", deck)
-				.addObject("folder", folder)
-				.build();
+			return ResponseUtil.getFailureResponse("Deck is already in that folder!", addDeck);
 		}
 
 		folder.getDeckIds().add(deckId);
@@ -154,11 +128,7 @@ public class FolderService {
 		Folder folder = service.getFolderById(id);
 
 		if (folder == null) {
-			return ResponseBuilder
-				.create()
-				.addResponse(ResponseStatus.FAILURE, "Invalid Folder ID!")
-				.addObject("id", id)
-				.build();
+			return ResponseUtil.getFailureResponse("Invalid Folder ID!", id);
 		}
 
 		return ResponseBuilder
@@ -175,11 +145,7 @@ public class FolderService {
 		Folder folder = service.getFolderById(folderId);
 
 		if (folder == null) {
-			return ResponseBuilder
-				.create()
-				.addResponse(ResponseStatus.FAILURE, "Invalid Folder ID!")
-				.addObject("request", setName)
-				.build();
+			return ResponseUtil.getFailureResponse("Invalid Folder ID!", setName);
 		}
 
 		folder.setName(name);
@@ -197,11 +163,7 @@ public class FolderService {
 		Folder folder = service.getFolderById(id);
 
 		if (folder == null) {
-			return ResponseBuilder
-					.create()
-					.addResponse(ResponseStatus.FAILURE, "Invalid Folder ID!")
-					.addObject("id", id)
-					.build();
+			return ResponseUtil.getFailureResponse("Invalid Folder ID!", id);
 		}
 
 		service.deleteFolder(folder);
