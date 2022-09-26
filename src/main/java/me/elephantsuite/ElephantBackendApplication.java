@@ -25,6 +25,7 @@ public class ElephantBackendApplication {
 		.setFileName("elephant-config.properties")
 		.addConfigOption("welcomeMessageHtmlFile", "WelcomeRedirectMessage.html")
 		.addConfigOption("confirmationEmailHtmlFile", "ConfirmAccountEmail.html")
+		.addConfigOption("forgotPasswordEmailHtmlFile", "ForgotPasswordEmail.html")
 		.build();
 
 	public static void main(String[] args) {

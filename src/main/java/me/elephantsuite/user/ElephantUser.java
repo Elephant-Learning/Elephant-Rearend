@@ -31,6 +31,7 @@ import me.elephantsuite.folder.Folder;
 import me.elephantsuite.registration.token.ConfirmationToken;
 import me.elephantsuite.stats.ElephantUserStatistics;
 import me.elephantsuite.user.notification.Notification;
+import me.elephantsuite.user.password.ResetPasswordToken;
 import org.hibernate.annotations.Fetch;
 import org.hibernate.annotations.FetchMode;
 
@@ -106,7 +107,10 @@ public class ElephantUser {
 	private ElephantUserStatistics elephantUserStatistics;
 
 	@OneToOne(cascade = CascadeType.ALL, orphanRemoval = true)
-	private ConfirmationToken token;
+	private ConfirmationToken confirmationToken;
+
+	@OneToOne(cascade = CascadeType.ALL, orphanRemoval = true)
+	private ResetPasswordToken resetPasswordToken;
 
 	@OneToOne(cascade = CascadeType.ALL, orphanRemoval = true)
 	@JoinColumn(name = "backpack_id")

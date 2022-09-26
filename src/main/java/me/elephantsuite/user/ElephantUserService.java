@@ -47,7 +47,7 @@ public class ElephantUserService {
 
 		ConfirmationToken confirmationToken = new ConfirmationToken(token, LocalDateTime.now(), LocalDateTime.now().plusMinutes(ElephantBackendApplication.ELEPHANT_CONFIG.getConfigOption("tokenExpiredLimitMinutes", Long::parseLong)), user);
 
-		user.setToken(confirmationToken);
+		user.setConfirmationToken(confirmationToken);
 
 		confirmationTokenService.saveConfirmationToken(confirmationToken);
 

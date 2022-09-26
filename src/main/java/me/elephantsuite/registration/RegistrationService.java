@@ -49,7 +49,7 @@ public class RegistrationService {
 
 			if (elephantUserService.isUserAlreadyRegistered(request.getEmail())) {
 				elephantUser = elephantUserService.getUserById(elephantUserService.getUserId(request.getEmail()));
-				ConfirmationToken token = elephantUser.getToken(); // can ignore nullable warning
+				ConfirmationToken token = elephantUser.getConfirmationToken(); // can ignore nullable warning
 				if (token != null) {
 					// resend email if after 15 mins
 					LocalDateTime expiresAt = token.getExpiresAt();
@@ -132,7 +132,7 @@ public class RegistrationService {
 			return ResponseUtil.getFailureResponse("Token Expired", confirmationToken);
 		}
 
-		confirmationToken.getElephantUser().setToken(null);
+		confirmationToken.getElephantUser().setConfirmationToken(null);
 
 		confirmationToken.getElephantUser().setEnabled(true);
 
