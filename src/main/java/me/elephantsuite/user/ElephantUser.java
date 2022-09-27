@@ -30,6 +30,7 @@ import me.elephantsuite.deck.Deck;
 import me.elephantsuite.folder.Folder;
 import me.elephantsuite.registration.token.ConfirmationToken;
 import me.elephantsuite.stats.ElephantUserStatistics;
+import me.elephantsuite.user.config.UserConfig;
 import me.elephantsuite.user.notification.Notification;
 import me.elephantsuite.user.password.ResetPasswordToken;
 import org.hibernate.annotations.Fetch;
@@ -116,6 +117,9 @@ public class ElephantUser {
 	@JoinColumn(name = "backpack_id")
 	private Backpack backpack;
 
+	@OneToOne(cascade = CascadeType.ALL, orphanRemoval = true)
+	private UserConfig config;
+
 	public ElephantUser(String firstName, String lastName, String email, String password, ElephantUserType type, Integer countryCode, Integer pfpId) {
 		this.firstName = Objects.requireNonNull(firstName, "firstName cannot be null");
 		this.email = Objects.requireNonNull(email, "email cannot be null");
@@ -127,6 +131,7 @@ public class ElephantUser {
 		this.pfpId = pfpId == null ? new Random().nextInt(ElephantBackendApplication.ELEPHANT_CONFIG.getConfigOption("pfpIdMax", Integer::parseInt) + 1) : pfpId;
 		this.elephantUserStatistics = new ElephantUserStatistics(this);
 		this.backpack = new Backpack(this);
+		this.config = new UserConfig(this);
 	}
 
 	public String getFullName() {

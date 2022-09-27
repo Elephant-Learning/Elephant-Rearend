@@ -38,9 +38,11 @@ public class ResetPasswordService {
 		}
 
 		//TODO add replace values
-		emailService.send(user.getEmail(), ElephantBackendApplication.ELEPHANT_CONFIG.getConfigOption("forgotPasswordEmailHtmlFile"), true);
 
 		ResetPasswordToken token = new ResetPasswordToken(UUID.randomUUID().toString(), LocalDateTime.now().plusMinutes(ElephantBackendApplication.ELEPHANT_CONFIG.getConfigOption("tokenExpiredLimitMinutes", Long::parseLong)), user);
+
+		emailService.send(user.getEmail(), ElephantBackendApplication.ELEPHANT_CONFIG.getConfigOption("forgotPasswordEmailHtmlFile").replace("[UUID]", token.getToken()), true);
+
 
 		user.setResetPasswordToken(token);
 
