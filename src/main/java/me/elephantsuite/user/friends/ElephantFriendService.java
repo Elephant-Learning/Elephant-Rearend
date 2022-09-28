@@ -1,6 +1,8 @@
 package me.elephantsuite.user.friends;
 
 import lombok.AllArgsConstructor;
+import me.elephantsuite.ElephantBackendApplication;
+import me.elephantsuite.email.EmailService;
 import me.elephantsuite.response.api.Response;
 import me.elephantsuite.response.api.ResponseBuilder;
 import me.elephantsuite.response.util.ResponseStatus;
@@ -17,7 +19,7 @@ public class ElephantFriendService {
 
 	private final ElephantUserService userService;
 
-
+	private final EmailService emailService;
 
 	public Response addFriend(FriendRequest request) {
 
@@ -43,6 +45,8 @@ public class ElephantFriendService {
 		if (userId == friendId) {
 			return ResponseUtil.getFailureResponse("Cannot friend yourself!", request);
 		}
+
+		emailService.send(user.getEmail(), ElephantBackendApplication.ELEPHANT_CONFIG.getConfigOption("friendEmailHtmlFile"), true);
 
 		user.getFriendIds().add(friendId);
 
