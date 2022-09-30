@@ -9,6 +9,8 @@ import me.elephantsuite.email.EmailSender;
 import me.elephantsuite.email.EmailService;
 import me.elephantsuite.response.api.Response;
 import me.elephantsuite.response.api.ResponseBuilder;
+import me.elephantsuite.response.exception.InvalidIdException;
+import me.elephantsuite.response.exception.InvalidIdType;
 import me.elephantsuite.response.util.ResponseStatus;
 import me.elephantsuite.response.util.ResponseUtil;
 import me.elephantsuite.user.ElephantUser;
@@ -34,7 +36,7 @@ public class ResetPasswordService {
 		ElephantUser user = userService.getUserById(userId);
 
 		if (user == null) {
-			return ResponseUtil.getInvalidUserResponse(userId);
+			throw new InvalidIdException(userId, InvalidIdType.USER);
 		}
 
 		//TODO add replace values
@@ -64,11 +66,7 @@ public class ResetPasswordService {
 		ResetPasswordToken resetToken = service.getByToken(token);
 
 		if (resetToken == null) {
-			return ResponseBuilder
-				.create()
-				.addResponse(ResponseStatus.FAILURE, "Invalid Reset Token!")
-				.addObject("request", request)
-				.build();
+			throw new InvalidIdException(request, InvalidIdType.RESET_TOKEN);
 		}
 
 		String encodedPassword = encoder.encode(newPassword);

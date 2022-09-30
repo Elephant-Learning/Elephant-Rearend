@@ -8,6 +8,9 @@ import me.elephantsuite.deck.Deck;
 import me.elephantsuite.deck.DeckRepositoryService;
 import me.elephantsuite.response.api.Response;
 import me.elephantsuite.response.api.ResponseBuilder;
+import me.elephantsuite.response.exception.InvalidIdException;
+import me.elephantsuite.response.exception.InvalidIdType;
+import me.elephantsuite.response.exception.UserNotEnabledException;
 import me.elephantsuite.response.util.ResponseStatus;
 import me.elephantsuite.response.util.ResponseUtil;
 import me.elephantsuite.user.ElephantUser;
@@ -37,7 +40,7 @@ public class NotificationService {
 		Deck deck = deckService.getDeckById(request.getDeckId());
 
 		if (recipient == null) {
-			return ResponseUtil.getInvalidUserResponse(request);
+			throw new InvalidIdException(request, InvalidIdType.USER);
 		}
 
 		if (message == null || type == null || deck == null) {
@@ -45,7 +48,7 @@ public class NotificationService {
 		}
 
 		if (!recipient.isEnabled()) {
-			return ResponseUtil.getFailureResponse("Recipient not enabled!", request);
+			throw new UserNotEnabledException(recipient);
 		}
 
 		if (!type.equals(NotificationType.LIKED_DECK)) {
