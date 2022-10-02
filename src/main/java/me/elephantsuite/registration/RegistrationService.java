@@ -8,6 +8,8 @@ import me.elephantsuite.registration.token.ConfirmationToken;
 import me.elephantsuite.registration.token.ConfirmationTokenService;
 import me.elephantsuite.response.api.Response;
 import me.elephantsuite.response.api.ResponseBuilder;
+import me.elephantsuite.response.exception.InvalidIdException;
+import me.elephantsuite.response.exception.InvalidIdType;
 import me.elephantsuite.response.util.ResponseStatus;
 import me.elephantsuite.response.util.ResponseUtil;
 import me.elephantsuite.user.ElephantUser;
@@ -123,7 +125,7 @@ public class RegistrationService {
 		ConfirmationToken confirmationToken = confirmationTokenService.getToken(token).orElse(null);
 
 		if (confirmationToken == null) {
-			return ResponseUtil.getFailureResponse("Insert a valid token!", token);
+			throw new InvalidIdException(token, InvalidIdType.CONFIRMATION_TOKEN);
 		}
 
 		LocalDateTime expiredAt = confirmationToken.getExpiresAt();
@@ -151,7 +153,7 @@ public class RegistrationService {
 		ElephantUser user = elephantUserService.getUserById(id);
 
 		if (user == null) {
-			return ResponseUtil.getInvalidUserResponse(id);
+			throw new InvalidIdException(id, InvalidIdType.USER);
 		}
 
 		elephantUserService.deleteUser(user);

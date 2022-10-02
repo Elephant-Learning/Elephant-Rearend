@@ -10,6 +10,8 @@ import me.elephantsuite.folder.Folder;
 import me.elephantsuite.folder.FolderRepositoryService;
 import me.elephantsuite.response.api.Response;
 import me.elephantsuite.response.api.ResponseBuilder;
+import me.elephantsuite.response.exception.InvalidIdException;
+import me.elephantsuite.response.exception.InvalidIdType;
 import me.elephantsuite.response.util.ResponseStatus;
 import me.elephantsuite.response.util.ResponseUtil;
 import me.elephantsuite.user.ElephantUser;
@@ -36,7 +38,7 @@ public class FolderService {
 		ElephantUser user = userService.getUserById(userId);
 
 		if (user == null) {
-			return ResponseUtil.getInvalidUserResponse(createFolder);
+			throw new InvalidIdException(createFolder, InvalidIdType.USER);
 		}
 
 		List<Deck> decks = deckIds
@@ -46,7 +48,7 @@ public class FolderService {
 
 
 		if (decks.contains(null)) {
-			return ResponseUtil.getFailureResponse("Invalid Deck ID found!", createFolder);
+			throw new InvalidIdException(createFolder, InvalidIdType.DECK);
 		}
 
 		//backpackService.initBackpack();
@@ -78,7 +80,7 @@ public class FolderService {
 		Folder folder = service.getFolderById(folderId);
 
 		if (deck == null || folder == null) {
-			return ResponseUtil.getFailureResponse("Invalid Folder Or Deck ID", removeDeck);
+			throw new InvalidIdException(removeDeck, InvalidIdType.DECK, InvalidIdType.FOLDER);
 		}
 
 		if (!folder.getDeckIds().contains(deckId)) {
@@ -106,7 +108,7 @@ public class FolderService {
 		Folder folder = service.getFolderById(folderId);
 
 		if (deck == null || folder == null) {
-			return ResponseUtil.getFailureResponse("Invalid Deck or Folder ID!", addDeck);
+			throw new InvalidIdException(addDeck, InvalidIdType.DECK, InvalidIdType.FOLDER);
 		}
 
 		if (folder.getDeckIds().contains(deckId)) {
@@ -128,7 +130,7 @@ public class FolderService {
 		Folder folder = service.getFolderById(id);
 
 		if (folder == null) {
-			return ResponseUtil.getFailureResponse("Invalid Folder ID!", id);
+			throw new InvalidIdException(id, InvalidIdType.FOLDER);
 		}
 
 		return ResponseBuilder
@@ -145,7 +147,7 @@ public class FolderService {
 		Folder folder = service.getFolderById(folderId);
 
 		if (folder == null) {
-			return ResponseUtil.getFailureResponse("Invalid Folder ID!", setName);
+			throw new InvalidIdException(setName, InvalidIdType.FOLDER);
 		}
 
 		folder.setName(name);
@@ -163,7 +165,7 @@ public class FolderService {
 		Folder folder = service.getFolderById(id);
 
 		if (folder == null) {
-			return ResponseUtil.getFailureResponse("Invalid Folder ID!", id);
+			throw new InvalidIdException(id, InvalidIdType.FOLDER);
 		}
 
 		service.deleteFolder(folder);

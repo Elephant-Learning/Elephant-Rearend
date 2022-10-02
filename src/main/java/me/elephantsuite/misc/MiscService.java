@@ -5,6 +5,9 @@ import me.elephantsuite.ElephantBackendApplication;
 import me.elephantsuite.config.PropertiesHandler;
 import me.elephantsuite.response.api.Response;
 import me.elephantsuite.response.api.ResponseBuilder;
+import me.elephantsuite.response.exception.InvalidIdException;
+import me.elephantsuite.response.exception.InvalidIdType;
+import me.elephantsuite.response.exception.UserNotEnabledException;
 import me.elephantsuite.response.util.ResponseStatus;
 import me.elephantsuite.response.util.ResponseUtil;
 import me.elephantsuite.user.ElephantUser;
@@ -26,11 +29,11 @@ public class MiscService {
 		ElephantUser user = userService.getUserById(userId);
 
 		if (user == null) {
-			return ResponseUtil.getInvalidUserResponse(userId);
+			throw new InvalidIdException(request, InvalidIdType.USER);
 		}
 
 		if (!user.isEnabled()) {
-			return ResponseUtil.getFailureResponse("User not Enabled!", request);
+			throw new UserNotEnabledException(user);
 		}
 
 		PropertiesHandler handler = ElephantBackendApplication.ELEPHANT_CONFIG;
@@ -54,7 +57,7 @@ public class MiscService {
 		ElephantUser user = userService.getUserById(userId);
 
 		if (user == null) {
-			return ResponseUtil.getInvalidUserResponse(userId);
+			throw new InvalidIdException(userId, InvalidIdType.USER);
 		}
 
 		user.setNewUser(false);
@@ -75,7 +78,7 @@ public class MiscService {
 		ElephantUser user = userService.getUserById(userId);
 
 		if (user == null) {
-			return ResponseUtil.getInvalidUserResponse(userId);
+			throw new InvalidIdException(request, InvalidIdType.USER);
 		}
 
 		user.setCountryCode(countryCode);
