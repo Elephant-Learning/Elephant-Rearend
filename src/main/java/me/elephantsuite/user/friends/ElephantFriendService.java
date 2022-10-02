@@ -5,6 +5,9 @@ import me.elephantsuite.ElephantBackendApplication;
 import me.elephantsuite.email.EmailService;
 import me.elephantsuite.response.api.Response;
 import me.elephantsuite.response.api.ResponseBuilder;
+import me.elephantsuite.response.exception.InvalidIdException;
+import me.elephantsuite.response.exception.InvalidIdType;
+import me.elephantsuite.response.exception.UserNotEnabledException;
 import me.elephantsuite.response.util.ResponseStatus;
 import me.elephantsuite.response.util.ResponseUtil;
 import me.elephantsuite.user.ElephantUser;
@@ -31,11 +34,11 @@ public class ElephantFriendService {
 		ElephantUser friend = this.userService.getUserById(friendId);
 
 		if (user == null || friend == null) {
-			return ResponseUtil.getFailureResponse("User or Friend IDs are invalid!", request);
+			throw new InvalidIdException(new ElephantUser[]{user, friend}, InvalidIdType.USER);
 		}
 
 		if (!user.isEnabled() || !friend.isEnabled()) {
-			return ResponseUtil.getFailureResponse("User or Friend are not enabled!", request);
+			throw new UserNotEnabledException(user, friend);
 		}
 
 		if (user.getFriendIds().contains(friendId) || friend.getFriendIds().contains(userId)) {
@@ -73,11 +76,11 @@ public class ElephantFriendService {
 		ElephantUser friend = this.userService.getUserById(friendId);
 
 		if (user == null || friend == null) {
-			return ResponseUtil.getFailureResponse("User or Friend IDs are invalid!", request);
+			throw new InvalidIdException(new ElephantUser[]{user, friend}, InvalidIdType.USER);
 		}
 
 		if (!user.isEnabled() || !friend.isEnabled()) {
-			return ResponseUtil.getFailureResponse("User or Friend are not enabled!", request);
+			throw new UserNotEnabledException(friend, user);
 		}
 
 		if (!user.getFriendIds().contains(friendId) || !friend.getFriendIds().contains(userId)) {

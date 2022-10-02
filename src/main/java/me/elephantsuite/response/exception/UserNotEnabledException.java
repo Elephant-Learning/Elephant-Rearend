@@ -7,9 +7,9 @@ import me.elephantsuite.user.ElephantUser;
 
 public class UserNotEnabledException extends RuntimeException {
 
-	private final ElephantUser user;
+	private final ElephantUser[] user;
 
-	public UserNotEnabledException(ElephantUser user) {
+	public UserNotEnabledException(ElephantUser... user) {
 		this.user = user;
 	}
 

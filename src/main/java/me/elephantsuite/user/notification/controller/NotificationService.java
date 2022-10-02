@@ -79,7 +79,7 @@ public class NotificationService {
 		Deck deck = deckService.getDeckById(request.getDeckId());
 
 		if (recipient == null || sender == null) {
-			return ResponseUtil.getInvalidUserResponse(request);
+			throw new InvalidIdException(new ElephantUser[]{recipient, sender}, InvalidIdType.USER);
 		}
 
 		if (message == null || type == null || deck == null) {
@@ -87,7 +87,7 @@ public class NotificationService {
 		}
 
 		if (!recipient.isEnabled() || !sender.isEnabled()) {
-			return ResponseUtil.getFailureResponse("Recipient or Sender not enabled!", request);
+			throw new UserNotEnabledException(recipient, sender);
 		}
 
 		if (!type.equals(NotificationType.SHARED_DECK)) {
@@ -129,7 +129,7 @@ public class NotificationService {
 		ElephantUser sender = userService.getUserById(request.getSenderId());
 
 		if (sender == null || recipient == null) {
-			return ResponseUtil.getFailureResponse("Sender or Recipient IDs are Invalid!", request);
+			throw new InvalidIdException(new ElephantUser[]{sender, recipient}, InvalidIdType.USER);
 		}
 
 		if (message == null || type == null) {
@@ -137,7 +137,7 @@ public class NotificationService {
 		}
 
 		if (!recipient.isEnabled() || !sender.isEnabled()) {
-			return ResponseUtil.getFailureResponse("Recipient or Sender not enabled!", request);
+			throw new UserNotEnabledException(recipient, sender);
 		}
 
 		if (!type.equals(NotificationType.FRIEND_REQUEST)) {
@@ -176,11 +176,7 @@ public class NotificationService {
 		Notification notification = notificationService.getById(id);
 
 		if (notification == null) {
-			return ResponseBuilder
-				.create()
-				.addResponse(ResponseStatus.FAILURE, "Invalid Notification ID!")
-				.addObject("notificationId", id)
-				.build();
+			throw new InvalidIdException(id, InvalidIdType.NOTIFICATION);
 		}
 
 		ElephantUser user = notification.getRecipient();

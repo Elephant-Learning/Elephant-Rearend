@@ -8,6 +8,8 @@ import java.util.Arrays;
 import lombok.AllArgsConstructor;
 import me.elephantsuite.response.api.Response;
 import me.elephantsuite.response.api.ResponseBuilder;
+import me.elephantsuite.response.exception.InvalidIdException;
+import me.elephantsuite.response.exception.InvalidIdType;
 import me.elephantsuite.response.util.ResponseStatus;
 import me.elephantsuite.response.util.ResponseUtil;
 import me.elephantsuite.user.ElephantUser;
@@ -32,7 +34,7 @@ public class UserConfigService {
 		ElephantUser user = userService.getUserById(userId);
 
 		if (user == null) {
-			return ResponseUtil.getInvalidUserResponse(userId);
+			throw new InvalidIdException(userId, InvalidIdType.USER);
 		}
 
 		Method configMethod = Arrays.stream(UserConfig.class
