@@ -117,4 +117,18 @@ public class ElephantLoginService {
 
 		return 0;
 	}
+
+	public Response getUserByNameNoId(String name) {
+		List<ElephantUser> filteredUsers = elephantUserService
+				.getAllUsers()
+				.stream()
+				.filter(elephantUser -> StringUtils.containsIgnoreCase(elephantUser.getFullName(), name))
+				.toList();
+
+		return ResponseBuilder
+				.create()
+				.addResponse(ResponseStatus.SUCCESS, "Retrieved Users By Name!")
+				.addObject("users", filteredUsers)
+				.build();
+	}
 }
