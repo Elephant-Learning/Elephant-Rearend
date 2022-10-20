@@ -11,6 +11,7 @@ import me.elephantsuite.response.exception.InvalidIdException;
 import me.elephantsuite.response.exception.InvalidIdType;
 import me.elephantsuite.response.util.ResponseStatus;
 import me.elephantsuite.response.util.ResponseUtil;
+import me.elephantsuite.stats.controller.ElephantUserStatisticsService;
 import me.elephantsuite.user.ElephantUser;
 import me.elephantsuite.user.ElephantUserService;
 import org.apache.commons.lang3.StringUtils;
@@ -25,6 +26,8 @@ public class ElephantLoginService {
 	private final ElephantUserService elephantUserService;
 	private final EmailValidator emailValidator;
 	private final BCryptPasswordEncoder bCryptPasswordEncoder;
+
+	private final ElephantUserStatisticsService elephantUserStatisticsService;
 
 	public Response login(LoginRequest request) {
 
@@ -49,6 +52,8 @@ public class ElephantLoginService {
 		if (!bCryptPasswordEncoder.matches(password, user.getPassword())) {
 			return ResponseUtil.getFailureResponse("Invalid password!", request);
 		}
+
+		elephantUserStatisticsService.modifyStatsOnLogin(user.getId());
 
 		return ResponseBuilder
 			.create()
