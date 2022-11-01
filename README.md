@@ -1,2 +1,7 @@
 # Elephant-Rearend
-Backend Files for Elepant - The Ultimate Student Suite (doesn't include any information).
+
+Backend files for Elephant - The Ultimate Student Suite
+Database storage cannot be found or accessed here.
+
+## Content
+🍑

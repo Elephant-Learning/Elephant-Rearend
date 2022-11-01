@@ -29,7 +29,7 @@ public class ElephantLoginService {
 
 	private final ElephantUserStatisticsService elephantUserStatisticsService;
 
-	public Response login(LoginRequest request) {
+	public Response login(LoginRequest request, boolean stats) {
 
 		String email = request.getEmail();
 		String password = request.getPassword();
@@ -53,7 +53,9 @@ public class ElephantLoginService {
 			return ResponseUtil.getFailureResponse("Invalid password!", request);
 		}
 
-		elephantUserStatisticsService.modifyStatsOnLogin(user.getId());
+		if (stats) {
+			elephantUserStatisticsService.modifyStatsOnLogin(user.getId());
+		}
 
 		return ResponseBuilder
 			.create()

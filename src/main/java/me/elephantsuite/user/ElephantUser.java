@@ -105,7 +105,7 @@ public class ElephantUser {
 
 	@OneToOne(cascade = CascadeType.ALL, orphanRemoval = true)
 	@JoinColumn(name = "elephant_user_statistics_id")
-	private ElephantUserStatistics elephantUserStatistics;
+	private ElephantUserStatistics elephantUserStatistics = new ElephantUserStatistics(this);
 
 	@OneToOne(cascade = CascadeType.ALL, orphanRemoval = true)
 	private ConfirmationToken confirmationToken;
@@ -115,10 +115,10 @@ public class ElephantUser {
 
 	@OneToOne(cascade = CascadeType.ALL, orphanRemoval = true)
 	@JoinColumn(name = "backpack_id")
-	private Backpack backpack;
+	private Backpack backpack = new Backpack(this);
 
 	@OneToOne(cascade = CascadeType.ALL, orphanRemoval = true)
-	private UserConfig config;
+	private UserConfig config = new UserConfig(this);
 
 	public ElephantUser(String firstName, String lastName, String email, String password, ElephantUserType type, Integer countryCode, Integer pfpId) {
 		this.firstName = Objects.requireNonNull(firstName, "firstName cannot be null");
@@ -129,9 +129,6 @@ public class ElephantUser {
 		this.countryCode = Objects.requireNonNull(countryCode, "countryCode cannot be null");
 		//for whatever reason if pfpId is null just set it to something random
 		this.pfpId = pfpId == null ? new Random().nextInt(ElephantBackendApplication.ELEPHANT_CONFIG.getConfigOption("pfpIdMax", Integer::parseInt) + 1) : pfpId;
-		this.elephantUserStatistics = new ElephantUserStatistics(this);
-		this.backpack = new Backpack(this);
-		this.config = new UserConfig(this);
 	}
 
 	public String getFullName() {
