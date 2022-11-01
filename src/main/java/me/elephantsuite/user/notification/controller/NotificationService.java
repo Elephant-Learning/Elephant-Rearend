@@ -4,8 +4,10 @@ import java.util.Objects;
 import java.util.Optional;
 
 import lombok.AllArgsConstructor;
+import me.elephantsuite.ElephantBackendApplication;
 import me.elephantsuite.deck.Deck;
 import me.elephantsuite.deck.DeckRepositoryService;
+import me.elephantsuite.email.EmailService;
 import me.elephantsuite.response.api.Response;
 import me.elephantsuite.response.api.ResponseBuilder;
 import me.elephantsuite.response.exception.InvalidIdException;
@@ -31,6 +33,8 @@ public class NotificationService {
 	private final NotificationRepositoryService notificationService;
 
 	private final DeckRepositoryService deckService;
+
+	private final EmailService emailService;
 
 	public Response sendLikedDeck(NotificationRequest.LikedDeckRequest request) {
 
@@ -156,6 +160,8 @@ public class NotificationService {
 		}
 
 		Notification notification = new Notification(type, message, recipient, request.getSenderId(), null);
+
+		emailService.send(recipient.getEmail(), ElephantBackendApplication.ELEPHANT_CONFIG.getConfigOption("friendEmailHtmlFile"), true);
 
 		recipient.getNotifications().add(notification);
 

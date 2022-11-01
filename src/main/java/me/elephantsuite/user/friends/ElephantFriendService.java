@@ -22,8 +22,6 @@ public class ElephantFriendService {
 
 	private final ElephantUserService userService;
 
-	private final EmailService emailService;
-
 	public Response addFriend(FriendRequest request) {
 
 		long userId = request.getUserId();
@@ -49,7 +47,6 @@ public class ElephantFriendService {
 			return ResponseUtil.getFailureResponse("Cannot friend yourself!", request);
 		}
 
-		emailService.send(user.getEmail(), ElephantBackendApplication.ELEPHANT_CONFIG.getConfigOption("friendEmailHtmlFile"), true);
 
 		user.getFriendIds().add(friendId);
 

@@ -16,7 +16,7 @@ import org.springframework.stereotype.Service;
 
 @Service
 @AllArgsConstructor
-public final class EmailService implements EmailSender {
+public class EmailService implements EmailSender {
 
 	private final static Logger LOGGER = LogManager.getLogger(EmailService.class);
 	private final JavaMailSender mailSender;
