@@ -3,6 +3,8 @@ package me.elephantsuite.misc;
 import lombok.AllArgsConstructor;
 import me.elephantsuite.ElephantBackendApplication;
 import me.elephantsuite.config.PropertiesHandler;
+import me.elephantsuite.email.EmailService;
+import me.elephantsuite.registration.EmailValidator;
 import me.elephantsuite.response.api.Response;
 import me.elephantsuite.response.api.ResponseBuilder;
 import me.elephantsuite.response.exception.InvalidIdException;
@@ -21,6 +23,10 @@ import org.springframework.transaction.annotation.Transactional;
 public class MiscService {
 
 	private final ElephantUserService userService;
+
+	private final EmailValidator emailValidator;
+
+	private final EmailService emailService;
 
 	public Response setPfpId(MiscRequest.SetPfpId request) {
 		long userId = request.getUserId();
@@ -90,5 +96,32 @@ public class MiscService {
 			.addResponse(ResponseStatus.SUCCESS, "Set User's Country Code!")
 			.addObject("user", user)
 			.build();
+	}
+
+	public Response inviteUser(MiscRequest.InviteUser request) {
+		long userId = request.getUserId();
+		String email = request.getEmailToInvite();
+
+		ElephantUser user = userService.getUserById(userId);
+
+		if (user == null) {
+			throw new InvalidIdException(request, InvalidIdType.USER);
+		}
+
+		if (!emailValidator.test(email)) {
+			return ResponseBuilder
+					.create()
+					.addResponse(ResponseStatus.FAILURE, "Incorrect Email Format!")
+					.addObject("request", request)
+					.build();
+		}
+
+		emailService.send(email, ElephantBackendApplication.ELEPHANT_CONFIG.getConfigOption("inviteEmailHtmlFile"), true);
+
+		return ResponseBuilder
+				.create()
+				.addResponse(ResponseStatus.SUCCESS, "Invited " + email + " to Elephant!")
+				.addObject("request", request)
+				.build();
 	}
 }

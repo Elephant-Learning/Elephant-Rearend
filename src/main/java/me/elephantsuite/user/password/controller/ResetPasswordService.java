@@ -69,6 +69,20 @@ public class ResetPasswordService {
 			throw new InvalidIdException(request, InvalidIdType.RESET_TOKEN);
 		}
 
+		if (resetToken.getExpiresAt().isBefore(LocalDateTime.now())) {
+			resetToken.setExpiresAt(LocalDateTime.now().plusMinutes(ElephantBackendApplication.ELEPHANT_CONFIG.getConfigOption("tokenExpiredLimitMinutes", Long::parseLong)));
+
+			resetToken = service.save(resetToken);
+
+			emailService.send(resetToken.getElephantUser().getEmail(), ElephantBackendApplication.ELEPHANT_CONFIG.getConfigOption("forgotPasswordEmailHtmlFile").replace("[UUID]", resetToken.getToken()), true);
+
+			return ResponseBuilder
+				.create()
+				.addResponse(ResponseStatus.DEFER, "Token Expired, Please check your email again")
+				.addObject("resetToken", resetToken)
+				.build();
+		}
+
 		String encodedPassword = encoder.encode(newPassword);
 
 		ElephantUser user = resetToken.getElephantUser();

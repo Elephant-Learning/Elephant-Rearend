@@ -96,6 +96,10 @@ public class ElephantUser {
 	private List<String> likedSongs = new ArrayList<>();
 
 	@ElementCollection(fetch = FetchType.EAGER)
+	@Fetch(FetchMode.SUBSELECT)
+	private List<String> invitedUsers = new ArrayList<>();
+
+	@ElementCollection(fetch = FetchType.EAGER)
 	@Fetch(value = FetchMode.SUBSELECT)
 	private List<Long> sharedDeckIds = new ArrayList<>();
 

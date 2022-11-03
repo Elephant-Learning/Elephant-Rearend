@@ -21,6 +21,17 @@ public class MiscRequest {
 	@AllArgsConstructor
 	@EqualsAndHashCode
 	@ToString
+	public static class InviteUser {
+		private final long userId;
+
+		private final String emailToInvite;
+	}
+
+
+	@Getter
+	@AllArgsConstructor
+	@EqualsAndHashCode
+	@ToString
 	public static class SetCountryCode {
 		private final long userId;
 
