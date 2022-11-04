@@ -57,20 +57,18 @@ public class RegistrationService {
 					LocalDateTime expiresAt = token.getExpiresAt();
 					if (LocalDateTime.now().isAfter(expiresAt)) {
 
-						if (!ElephantBackendApplication.ELEPHANT_CONFIG.getConfigOption("isDevelopment", Boolean::parseBoolean)) {
-							// reset expiration to be due in another 15 minutes
-							confirmationTokenService.addExpiredLimit(token, ElephantBackendApplication.ELEPHANT_CONFIG.getConfigOption("tokenExpiredLimitMinutes", Integer::parseInt));
+						// reset expiration to be due in another 15 minutes
+						confirmationTokenService.addExpiredLimit(token, ElephantBackendApplication.ELEPHANT_CONFIG.getConfigOption("tokenExpiredLimitMinutes", Integer::parseInt));
 
-							try {
-								emailSender.send(elephantUser.getEmail(), ElephantBackendApplication.ELEPHANT_CONFIG.getConfigOption("confirmationEmailHtmlFile").replace("[TOKEN]", token.getToken()), true);
-							} catch (IllegalStateException e) {
-								return ResponseBuilder
-									.create()
-									.addResponse(ResponseStatus.FAILURE, "Exception while emailing link to user!")
-									.addException(e)
-									.addObject("user", elephantUser)
-									.build();
-							}
+						try {
+							emailSender.send(elephantUser.getEmail(), ElephantBackendApplication.ELEPHANT_CONFIG.getConfigOption("confirmationEmailHtmlFile").replace("[TOKEN]", token.getToken()), true);
+						} catch (IllegalStateException e) {
+							return ResponseBuilder
+								.create()
+								.addResponse(ResponseStatus.FAILURE, "Exception while emailing link to user!")
+								.addException(e)
+								.addObject("user", elephantUser)
+								.build();
 						}
 
 						return ResponseBuilder
@@ -96,18 +94,16 @@ public class RegistrationService {
 
 			String link = ElephantBackendApplication.ELEPHANT_CONFIG.getConfigOption("elephantDomain") + "/registration/confirm?token=" + token.getToken();
 
-			if (!ElephantBackendApplication.ELEPHANT_CONFIG.getConfigOption("isDevelopment", Boolean::parseBoolean)) {
-				try {
-					String html = ElephantBackendApplication.ELEPHANT_CONFIG.getConfigOption("confirmationEmailHtmlFile").replace("[TOKEN]", token.getToken());
-					emailSender.send(elephantUser.getEmail(), html, true);
-				} catch (IllegalStateException e) {
-					return ResponseBuilder
-						.create()
-						.addResponse(ResponseStatus.FAILURE, "Exception while emailing link to user!")
-						.addException(e)
-						.addObject("user", elephantUser)
-						.build();
-				}
+			try {
+				String html = ElephantBackendApplication.ELEPHANT_CONFIG.getConfigOption("confirmationEmailHtmlFile").replace("[TOKEN]", token.getToken());
+				emailSender.send(elephantUser.getEmail(), html, true);
+			} catch (IllegalStateException e) {
+				return ResponseBuilder
+					.create()
+					.addResponse(ResponseStatus.FAILURE, "Exception while emailing link to user!")
+					.addException(e)
+					.addObject("user", elephantUser)
+					.build();
 			}
 			return ResponseBuilder
 				.create()
