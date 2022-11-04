@@ -20,7 +20,7 @@ public class ElephantLoginController {
 		return elephantLoginService.login(request, true);
 	}
 	// same as login but does not run login stuff
-	@PostMapping
+	@PostMapping("verifyUser")
 	public Response verifyUser(@RequestBody LoginRequest request) {
 		return elephantLoginService.login(request, false);
 	}
