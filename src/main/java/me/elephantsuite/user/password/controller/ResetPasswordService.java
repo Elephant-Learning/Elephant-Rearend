@@ -87,6 +87,16 @@ public class ResetPasswordService {
 
 		ElephantUser user = resetToken.getElephantUser();
 
+		if (encoder.matches(newPassword, user.getPassword())) {
+			service.delete(resetToken);
+
+			return ResponseBuilder
+				.create()
+				.addResponse(ResponseStatus.FAILURE, "Password was the same as your old one!")
+				.addObject("user", user)
+				.build();
+		}
+
 		user.setPassword(encodedPassword);
 
 		service.delete(resetToken);
