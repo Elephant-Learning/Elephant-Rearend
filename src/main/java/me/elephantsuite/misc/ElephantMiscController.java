@@ -21,6 +21,11 @@ public class ElephantMiscController {
 		return miscService.setNewUserFalse(userId);
 	}
 
+	@PostMapping(path = "inviteUser")
+	public Response inviteUser(@RequestBody MiscRequest.InviteUser request) {
+		return miscService.inviteUser(request);
+	}
+
 	@PostMapping(path = "countryCode")
 	public Response changeCountryCode(@RequestBody MiscRequest.SetCountryCode request) {
 		return miscService.setCountryCode(request);

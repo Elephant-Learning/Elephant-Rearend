@@ -101,29 +101,7 @@ public class PropertiesHandler {
 	}
 
 	public <T> T getConfigOption(String key, Function<String, T> parser) {
-		String value = configValues.get(key);
-
-		if (!value.endsWith(".html")) {
-			return parser.apply(value);
-		}
-
-		Path htmlPath = HTML_FILE_DIRECTORY.resolve(value);
-
-		if (!Files.exists(htmlPath)) {
-			return parser.apply(value);
-		}
-
-		String file;
-
-		try {
-			file = Files.readString(htmlPath);
-		} catch (IOException e) {
-			ElephantBackendApplication.LOGGER.error("Error while reading string for html file on path \"" + htmlPath + "\"!", e);
-			e.printStackTrace();
-			return null;
-		}
-
-		return parser.apply(file);
+		return parser.apply(getConfigOption(key));
 	}
 
 	public String getConfigOption(String key) {

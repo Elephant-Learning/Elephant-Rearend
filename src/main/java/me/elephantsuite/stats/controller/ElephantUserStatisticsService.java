@@ -9,6 +9,9 @@ import me.elephantsuite.deck.card.Card;
 import me.elephantsuite.deck.card.CardService;
 import me.elephantsuite.response.api.Response;
 import me.elephantsuite.response.api.ResponseBuilder;
+import me.elephantsuite.response.exception.InvalidIdException;
+import me.elephantsuite.response.exception.InvalidIdType;
+import me.elephantsuite.response.exception.UserNotEnabledException;
 import me.elephantsuite.response.util.ResponseStatus;
 import me.elephantsuite.response.util.ResponseUtil;
 import me.elephantsuite.stats.ElephantUserStatisticsRepositoryService;
@@ -37,11 +40,11 @@ public class ElephantUserStatisticsService {
 		ElephantUser user = userService.getUserById(id);
 
 		if (user == null) {
-			return ResponseUtil.getInvalidUserResponse(id);
+			throw new InvalidIdException(id, InvalidIdType.USER);
 		}
 
 		if (!user.isEnabled()) {
-			return ResponseUtil.getFailureResponse("User not enabled!", user);
+			throw new UserNotEnabledException(user);
 		}
 
 		user.getElephantUserStatistics().incrementDaysStreak();
@@ -65,11 +68,11 @@ public class ElephantUserStatisticsService {
 		ElephantUser user = userService.getUserById(userId);
 
 		if (user == null) {
-			return ResponseUtil.getInvalidUserResponse(userId);
+			throw new InvalidIdException(userId, InvalidIdType.USER);
 		}
 
 		if (!user.isEnabled()) {
-			return ResponseUtil.getFailureResponse("User not enabled!", user);
+			throw new UserNotEnabledException(user);
 		}
 
 		user.getElephantUserStatistics().increaseUsageTime(usageTime);
@@ -93,7 +96,7 @@ public class ElephantUserStatisticsService {
 		Card card = cardService.getCardById(cardId);
 
 		if (card == null || user == null) {
-			return ResponseUtil.getFailureResponse("Invalid User or Card IDs!", request);
+			throw new InvalidIdException(new Object[]{user, card}, InvalidIdType.CARD, InvalidIdType.USER);
 		}
 
 		if(!user.getElephantUserStatistics().getCardStatistics().containsKey(card)) {
@@ -121,7 +124,7 @@ public class ElephantUserStatisticsService {
 		Card card = cardService.getCardById(cardId);
 
 		if (card == null || user == null) {
-			return ResponseUtil.getFailureResponse("Invalid User or Card IDs!", request);
+			throw new InvalidIdException(new Object[]{user, card}, InvalidIdType.CARD, InvalidIdType.USER);
 		}
 
 		if(!user.getElephantUserStatistics().getCardStatistics().containsKey(card)) {
@@ -149,7 +152,7 @@ public class ElephantUserStatisticsService {
 		Deck deck = deckService.getDeckById(deckId);
 
 		if (user == null || deck == null) {
-			return ResponseUtil.getFailureResponse("Invalid User or Deck IDs!", request);
+			throw new InvalidIdException(new Object[]{user, deck}, InvalidIdType.DECK, InvalidIdType.USER);
 		}
 
 		user.getElephantUserStatistics().getRecentlyViewedDeckIds().remove(deckId);

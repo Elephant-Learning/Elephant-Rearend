@@ -45,4 +45,15 @@ public class CardService {
 		cardStatisticsRepository.deleteCardStatistics(id);
 		return repository.deleteCardByID(id);
 	}
+
+	public void deleteCardsNotBackpacked(List<Card> cards) {
+		cards.forEach(card -> {
+			List<Long> backpackIds = repository.backpackIdsMatchWithCard(card.getId());
+
+			if (backpackIds.isEmpty()) {
+				repository.deleteCardsFromDeckTable(card.getId());
+				deleteCardById(card.getId());
+			}
+		});
+	}
 }

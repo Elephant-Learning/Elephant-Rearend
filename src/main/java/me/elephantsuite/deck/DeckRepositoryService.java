@@ -48,6 +48,8 @@ public class DeckRepositoryService {
 
 	public void deleteDeck(Deck deck, CardService cardService) {
 
+		cardService.deleteCardsNotBackpacked(deck.getCards());
+
 		deck.setCards(new ArrayList<>());
 
 		deckRepository.deleteDeckById(deck.getId());

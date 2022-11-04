@@ -6,6 +6,9 @@ import me.elephantsuite.deck.card.Card;
 import me.elephantsuite.deck.card.CardService;
 import me.elephantsuite.response.api.Response;
 import me.elephantsuite.response.api.ResponseBuilder;
+import me.elephantsuite.response.exception.InvalidIdException;
+import me.elephantsuite.response.exception.InvalidIdType;
+import me.elephantsuite.response.exception.UserNotEnabledException;
 import me.elephantsuite.response.util.ResponseStatus;
 import me.elephantsuite.response.util.ResponseUtil;
 import me.elephantsuite.user.ElephantUser;
@@ -28,20 +31,16 @@ public class BackpackService {
 		long userId = request.getUserId();
 		long cardId = request.getCardId();
 
+		Card card = cardService.getCardById(cardId);
+
 		ElephantUser user = userService.getUserById(userId);
 
-		if (user == null) {
-			return ResponseUtil.getInvalidUserResponse(userId);
+		if (user == null || card == null) {
+			throw new InvalidIdException(request, InvalidIdType.CARD, InvalidIdType.USER);
 		}
 
 		if (!user.isEnabled()) {
-			return ResponseUtil.getFailureResponse("User not enabled!", request);
-		}
-
-		Card card = cardService.getCardById(cardId);
-
-		if (card == null) {
-			return ResponseUtil.getFailureResponse("Invalid Card ID Given!", request);
+			throw new UserNotEnabledException(user);
 		}
 
 		if (user.getBackpack().getCards().contains(card)) {
@@ -69,18 +68,14 @@ public class BackpackService {
 
 		ElephantUser user = userService.getUserById(userId);
 
-		if (user == null) {
-			return ResponseUtil.getInvalidUserResponse(userId);
+		Card card = cardService.getCardById(cardId);
+
+		if (user == null || card == null) {
+			throw new InvalidIdException(request, InvalidIdType.CARD, InvalidIdType.USER);
 		}
 
 		if (!user.isEnabled()) {
-			return ResponseUtil.getFailureResponse("User not enabled!", request);
-		}
-
-		Card card = cardService.getCardById(cardId);
-
-		if (card == null) {
-			return ResponseUtil.getFailureResponse("Invalid Card ID Given!", request);
+			throw new UserNotEnabledException(user);
 		}
 
 		if (!user.getBackpack().getCards().contains(card)) {

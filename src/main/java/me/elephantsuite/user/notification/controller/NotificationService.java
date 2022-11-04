@@ -4,10 +4,15 @@ import java.util.Objects;
 import java.util.Optional;
 
 import lombok.AllArgsConstructor;
+import me.elephantsuite.ElephantBackendApplication;
 import me.elephantsuite.deck.Deck;
 import me.elephantsuite.deck.DeckRepositoryService;
+import me.elephantsuite.email.EmailService;
 import me.elephantsuite.response.api.Response;
 import me.elephantsuite.response.api.ResponseBuilder;
+import me.elephantsuite.response.exception.InvalidIdException;
+import me.elephantsuite.response.exception.InvalidIdType;
+import me.elephantsuite.response.exception.UserNotEnabledException;
 import me.elephantsuite.response.util.ResponseStatus;
 import me.elephantsuite.response.util.ResponseUtil;
 import me.elephantsuite.user.ElephantUser;
@@ -29,6 +34,8 @@ public class NotificationService {
 
 	private final DeckRepositoryService deckService;
 
+	private final EmailService emailService;
+
 	public Response sendLikedDeck(NotificationRequest.LikedDeckRequest request) {
 
 		NotificationType type = request.getType();
@@ -37,7 +44,7 @@ public class NotificationService {
 		Deck deck = deckService.getDeckById(request.getDeckId());
 
 		if (recipient == null) {
-			return ResponseUtil.getInvalidUserResponse(request);
+			throw new InvalidIdException(request, InvalidIdType.USER);
 		}
 
 		if (message == null || type == null || deck == null) {
@@ -45,7 +52,7 @@ public class NotificationService {
 		}
 
 		if (!recipient.isEnabled()) {
-			return ResponseUtil.getFailureResponse("Recipient not enabled!", request);
+			throw new UserNotEnabledException(recipient);
 		}
 
 		if (!type.equals(NotificationType.LIKED_DECK)) {
@@ -76,7 +83,7 @@ public class NotificationService {
 		Deck deck = deckService.getDeckById(request.getDeckId());
 
 		if (recipient == null || sender == null) {
-			return ResponseUtil.getInvalidUserResponse(request);
+			throw new InvalidIdException(new ElephantUser[]{recipient, sender}, InvalidIdType.USER);
 		}
 
 		if (message == null || type == null || deck == null) {
@@ -84,7 +91,7 @@ public class NotificationService {
 		}
 
 		if (!recipient.isEnabled() || !sender.isEnabled()) {
-			return ResponseUtil.getFailureResponse("Recipient or Sender not enabled!", request);
+			throw new UserNotEnabledException(recipient, sender);
 		}
 
 		if (!type.equals(NotificationType.SHARED_DECK)) {
@@ -126,7 +133,7 @@ public class NotificationService {
 		ElephantUser sender = userService.getUserById(request.getSenderId());
 
 		if (sender == null || recipient == null) {
-			return ResponseUtil.getFailureResponse("Sender or Recipient IDs are Invalid!", request);
+			throw new InvalidIdException(new ElephantUser[]{sender, recipient}, InvalidIdType.USER);
 		}
 
 		if (message == null || type == null) {
@@ -134,7 +141,7 @@ public class NotificationService {
 		}
 
 		if (!recipient.isEnabled() || !sender.isEnabled()) {
-			return ResponseUtil.getFailureResponse("Recipient or Sender not enabled!", request);
+			throw new UserNotEnabledException(recipient, sender);
 		}
 
 		if (!type.equals(NotificationType.FRIEND_REQUEST)) {
@@ -153,6 +160,8 @@ public class NotificationService {
 		}
 
 		Notification notification = new Notification(type, message, recipient, request.getSenderId(), null);
+
+		emailService.send(recipient.getEmail(), ElephantBackendApplication.ELEPHANT_CONFIG.getConfigOption("friendEmailHtmlFile").replace("[NAME]", sender.getFullName()), true);
 
 		recipient.getNotifications().add(notification);
 
@@ -173,11 +182,7 @@ public class NotificationService {
 		Notification notification = notificationService.getById(id);
 
 		if (notification == null) {
-			return ResponseBuilder
-				.create()
-				.addResponse(ResponseStatus.FAILURE, "Invalid Notification ID!")
-				.addObject("notificationId", id)
-				.build();
+			throw new InvalidIdException(id, InvalidIdType.NOTIFICATION);
 		}
 
 		ElephantUser user = notification.getRecipient();

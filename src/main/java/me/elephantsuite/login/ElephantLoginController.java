@@ -17,7 +17,12 @@ public class ElephantLoginController {
 
 	@PostMapping
 	public Response login(@RequestBody LoginRequest request) {
-		return elephantLoginService.login(request);
+		return elephantLoginService.login(request, true);
+	}
+	// same as login but does not run login stuff
+	@PostMapping
+	public Response verifyUser(@RequestBody LoginRequest request) {
+		return elephantLoginService.login(request, false);
 	}
 
 	@GetMapping(path = "user")
@@ -33,5 +38,10 @@ public class ElephantLoginController {
 	@GetMapping(path = "userByName")
 	public Response getUserByName(@RequestParam("userId") long userId, @RequestParam("name") String name) {
 		return elephantLoginService.getUserByName(name, userId);
+	}
+
+	@GetMapping(path = "userByNameNoId")
+	public Response getUserByNameNoId(@RequestParam("name") String name) {
+		return elephantLoginService.getUserByNameNoId(name);
 	}
 }

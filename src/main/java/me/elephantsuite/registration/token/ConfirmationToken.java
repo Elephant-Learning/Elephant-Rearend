@@ -5,13 +5,10 @@ import java.time.LocalDateTime;
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
-import lombok.ToString;
 import me.elephantsuite.user.ElephantUser;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import org.hibernate.annotations.Fetch;
-import org.hibernate.annotations.FetchMode;
 
 @Getter
 @Setter
@@ -34,7 +31,7 @@ public class ConfirmationToken {
 	@Column(nullable = false)
 	private LocalDateTime expiresAt;
 
-	@OneToOne(fetch = FetchType.EAGER, mappedBy = "token")
+	@OneToOne(fetch = FetchType.EAGER, mappedBy = "confirmationToken")
 	@JoinColumn(nullable = false, name = "elephant_user_id", foreignKey = @ForeignKey(name = "elephant_user_id"))
 	@JsonBackReference
 	private ElephantUser elephantUser;

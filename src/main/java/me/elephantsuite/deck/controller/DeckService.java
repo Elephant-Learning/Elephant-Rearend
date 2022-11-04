@@ -13,6 +13,9 @@ import me.elephantsuite.deck.card.Card;
 import me.elephantsuite.deck.card.CardService;
 import me.elephantsuite.response.api.Response;
 import me.elephantsuite.response.api.ResponseBuilder;
+import me.elephantsuite.response.exception.InvalidIdException;
+import me.elephantsuite.response.exception.InvalidIdType;
+import me.elephantsuite.response.exception.UserNotEnabledException;
 import me.elephantsuite.response.util.ResponseStatus;
 import me.elephantsuite.response.util.ResponseUtil;
 import me.elephantsuite.user.ElephantUser;
@@ -41,11 +44,11 @@ public class DeckService {
 		ElephantUser user = userService.getUserById(authorId);
 
 		if (user == null) {
-			return ResponseUtil.getInvalidUserResponse(request);
+			throw new InvalidIdException(request, InvalidIdType.USER);
 		}
 
 		if (!user.isEnabled()) {
-			return ResponseUtil.getFailureResponse("User not enabled!", request);
+			throw new UserNotEnabledException(user);
 		}
 
 		Deck deck = new Deck(null, user, name, visibility);
@@ -86,11 +89,11 @@ public class DeckService {
 		ElephantUser user = userService.getUserById(likeDeck.getUserId());
 
 		if (deck == null || user == null) {
-			return ResponseUtil.getFailureResponse("Invalid Deck or User ID!", likeDeck);
+			throw new InvalidIdException(likeDeck, InvalidIdType.USER, InvalidIdType.DECK);
 		}
 
 		if (!user.isEnabled()) {
-			return ResponseUtil.getFailureResponse("User not enabled!", likeDeck);
+			throw new UserNotEnabledException(user);
 		}
 
 		deck.likeDeck();
@@ -121,7 +124,7 @@ public class DeckService {
 		Deck deck = service.getDeckById(renameDeck.getDeckId());
 
 		if (deck == null) {
-			return ResponseUtil.getFailureResponse("Invalid Deck ID!", renameDeck);
+			throw new InvalidIdException(renameDeck, InvalidIdType.DECK);
 		}
 
 		deck.setName(renameDeck.getNewName());
@@ -140,7 +143,7 @@ public class DeckService {
 		Deck deck = service.getDeckById(resetTerms.getDeckId());
 
 		if (deck == null) {
-			return ResponseUtil.getFailureResponse("Invalid Deck ID!", resetTerms);
+			throw new InvalidIdException(resetTerms, InvalidIdType.DECK);
 		}
 
 		deck.resetTerms(resetTerms.getNewTerms(), this.cardService);
@@ -158,7 +161,7 @@ public class DeckService {
 		Deck deck = service.getDeckById(id);
 
 		if (deck == null) {
-			return ResponseUtil.getFailureResponse("Invalid Deck ID!", id);
+			throw new InvalidIdException(id, InvalidIdType.DECK);
 		}
 
 		service.deleteDeck(deck, cardService);
@@ -176,7 +179,7 @@ public class DeckService {
 		Deck deck = service.getDeckById(id);
 
 		if (deck == null) {
-			return ResponseUtil.getFailureResponse("Invalid Deck ID!", changeVisiblity);
+			throw new InvalidIdException(changeVisiblity, InvalidIdType.DECK);
 		}
 
 		deck.setVisibility(visibility);
@@ -210,12 +213,8 @@ public class DeckService {
 		Deck deck = service.getDeckById(deckId);
 		ElephantUser user = userService.getUserById(userId);
 
-		if (deck == null) {
-			return ResponseUtil.getFailureResponse("Invalid Deck ID!", shareDeck);
-		}
-
-		if (user == null) {
-			return ResponseUtil.getInvalidUserResponse(userId);
+		if (deck == null || user == null) {
+			throw new InvalidIdException(shareDeck, InvalidIdType.DECK, InvalidIdType.USER);
 		}
 
 		if (!deck.getSharedUsersIds().contains(userId) || !user.getSharedDeckIds().contains(deckId)) {
@@ -243,12 +242,8 @@ public class DeckService {
 		Deck deck = service.getDeckById(deckId);
 		ElephantUser user = userService.getUserById(userId);
 
-		if (deck == null) {
-			return ResponseUtil.getFailureResponse("Invalid Deck ID!", shareDeck);
-		}
-
-		if (user == null) {
-			return ResponseUtil.getInvalidUserResponse(userId);
+		if (deck == null || user == null) {
+			throw new InvalidIdException(shareDeck, InvalidIdType.DECK, InvalidIdType.USER);
 		}
 
 		if (user.equals(deck.getAuthor())) {
@@ -281,7 +276,7 @@ public class DeckService {
 		Deck deck = service.getDeckById(id);
 
 		if (deck == null) {
-			return ResponseUtil.getFailureResponse("Invalid Deck ID!", id);
+			throw new InvalidIdException(id, InvalidIdType.DECK);
 		}
 
 		return ResponseBuilder
@@ -297,11 +292,11 @@ public class DeckService {
 		ElephantUser user = userService.getUserById(likeDeck.getUserId());
 
 		if (deck == null || user == null) {
-			return ResponseUtil.getFailureResponse("Invalid Deck or User ID!", likeDeck);
+			throw new InvalidIdException(likeDeck, InvalidIdType.USER, InvalidIdType.DECK);
 		}
 
 		if (!user.isEnabled()) {
-			return ResponseUtil.getFailureResponse("User not enabled!", likeDeck);
+			throw new UserNotEnabledException(user);
 		}
 
 		deck.unlikeDeck();
@@ -325,7 +320,7 @@ public class DeckService {
 		ElephantUser user = userService.getUserById(userId);
 
 		if (user == null) {
-			return ResponseUtil.getInvalidUserResponse(userId);
+			throw new InvalidIdException(new Object[]{userId, name}, InvalidIdType.USER);
 		}
 
 		List<Deck> filteredDecks = service
@@ -346,7 +341,7 @@ public class DeckService {
 		Card card = cardService.getCardById(cardId);
 
 		if (card == null) {
-			return ResponseUtil.getFailureResponse("Invalid Card ID!", cardId);
+			throw new InvalidIdException(cardId, InvalidIdType.CARD);
 		}
 
 		cardService.deleteCardById(cardId);
