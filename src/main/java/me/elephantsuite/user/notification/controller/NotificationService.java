@@ -161,7 +161,7 @@ public class NotificationService {
 
 		Notification notification = new Notification(type, message, recipient, request.getSenderId(), null);
 
-		emailService.send(recipient.getEmail(), ElephantBackendApplication.ELEPHANT_CONFIG.getConfigOption("friendEmailHtmlFile"), true);
+		emailService.send(recipient.getEmail(), ElephantBackendApplication.ELEPHANT_CONFIG.getConfigOption("friendEmailHtmlFile").replace("[NAME]", sender.getFullName()), true);
 
 		recipient.getNotifications().add(notification);
 
