@@ -15,6 +15,7 @@ import me.elephantsuite.response.util.ResponseUtil;
 import me.elephantsuite.user.ElephantUser;
 import me.elephantsuite.user.ElephantUserService;
 import lombok.AllArgsConstructor;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -31,8 +32,10 @@ public class RegistrationService {
 
 	private final EmailSender emailSender;
 
+	private final BCryptPasswordEncoder encoder;
+
 	// when given a request process it
-	public Response register(RegistrationRequest request) {
+	public Response register(RegistrationRequest.CreateAccount request) {
 
 		if (request.getPassword().isBlank() || request.getPassword().length() < 4) {
 			return ResponseUtil.getFailureResponse("Password cannot be blank or be less than 4 characters!", request);
@@ -57,20 +60,18 @@ public class RegistrationService {
 					LocalDateTime expiresAt = token.getExpiresAt();
 					if (LocalDateTime.now().isAfter(expiresAt)) {
 
-						if (!ElephantBackendApplication.ELEPHANT_CONFIG.getConfigOption("isDevelopment", Boolean::parseBoolean)) {
-							// reset expiration to be due in another 15 minutes
-							confirmationTokenService.addExpiredLimit(token, ElephantBackendApplication.ELEPHANT_CONFIG.getConfigOption("tokenExpiredLimitMinutes", Integer::parseInt));
+						// reset expiration to be due in another 15 minutes
+						confirmationTokenService.addExpiredLimit(token, ElephantBackendApplication.ELEPHANT_CONFIG.getConfigOption("tokenExpiredLimitMinutes", Integer::parseInt));
 
-							try {
-								emailSender.send(elephantUser.getEmail(), ElephantBackendApplication.ELEPHANT_CONFIG.getConfigOption("confirmationEmailHtmlFile").replace("[TOKEN]", token.getToken()), true);
-							} catch (IllegalStateException e) {
-								return ResponseBuilder
-									.create()
-									.addResponse(ResponseStatus.FAILURE, "Exception while emailing link to user!")
-									.addException(e)
-									.addObject("user", elephantUser)
-									.build();
-							}
+						try {
+							emailSender.send(elephantUser.getEmail(), ElephantBackendApplication.ELEPHANT_CONFIG.getConfigOption("confirmationEmailHtmlFile").replace("[TOKEN]", token.getToken()), true);
+						} catch (IllegalStateException e) {
+							return ResponseBuilder
+								.create()
+								.addResponse(ResponseStatus.FAILURE, "Exception while emailing link to user!")
+								.addException(e)
+								.addObject("user", elephantUser)
+								.build();
 						}
 
 						return ResponseBuilder
@@ -96,18 +97,16 @@ public class RegistrationService {
 
 			String link = ElephantBackendApplication.ELEPHANT_CONFIG.getConfigOption("elephantDomain") + "/registration/confirm?token=" + token.getToken();
 
-			if (!ElephantBackendApplication.ELEPHANT_CONFIG.getConfigOption("isDevelopment", Boolean::parseBoolean)) {
-				try {
-					String html = ElephantBackendApplication.ELEPHANT_CONFIG.getConfigOption("confirmationEmailHtmlFile").replace("[TOKEN]", token.getToken());
-					emailSender.send(elephantUser.getEmail(), html, true);
-				} catch (IllegalStateException e) {
-					return ResponseBuilder
-						.create()
-						.addResponse(ResponseStatus.FAILURE, "Exception while emailing link to user!")
-						.addException(e)
-						.addObject("user", elephantUser)
-						.build();
-				}
+			try {
+				String html = ElephantBackendApplication.ELEPHANT_CONFIG.getConfigOption("confirmationEmailHtmlFile").replace("[TOKEN]", token.getToken());
+				emailSender.send(elephantUser.getEmail(), html, true);
+			} catch (IllegalStateException e) {
+				return ResponseBuilder
+					.create()
+					.addResponse(ResponseStatus.FAILURE, "Exception while emailing link to user!")
+					.addException(e)
+					.addObject("user", elephantUser)
+					.build();
 			}
 			return ResponseBuilder
 				.create()
@@ -149,11 +148,22 @@ public class RegistrationService {
 			.build();
 	}
 
-	public Response deleteUser(long id) {
+	public Response deleteUser(RegistrationRequest.DeleteAccount request) {
+		long id = request.getId();
+		String password = request.getPassword();
+
 		ElephantUser user = elephantUserService.getUserById(id);
 
 		if (user == null) {
 			throw new InvalidIdException(id, InvalidIdType.USER);
+		}
+
+		if (!encoder.matches(password, user.getPassword())) {
+			return ResponseBuilder
+					.create()
+					.addResponse(ResponseStatus.FAILURE, "Invalid Password!")
+					.addObject("request", request)
+					.build();
 		}
 
 		elephantUserService.deleteUser(user);

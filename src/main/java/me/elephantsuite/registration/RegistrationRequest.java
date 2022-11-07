@@ -10,24 +10,36 @@ import lombok.Getter;
 import lombok.ToString;
 import me.elephantsuite.user.notification.Notification;
 
-@Getter
-@AllArgsConstructor
-@EqualsAndHashCode
-@ToString
+
 //format for a rq
 public class RegistrationRequest {
+	@Getter
+	@AllArgsConstructor
+	@EqualsAndHashCode
+	@ToString
+	public static class CreateAccount {
+		private final String firstName;
 
-	private final String firstName;
+		private final String lastName;
 
-	private final String lastName;
+		private final String password;
 
-	private final String password;
+		private final String email;
 
-	private final String email;
+		private final ElephantUserType type;
 
-	private final ElephantUserType type;
+		private final Integer pfpId;
 
-	private final Integer pfpId;
+		private final Integer countryCode;
+	}
 
-	private final Integer countryCode;
+	@Getter
+	@AllArgsConstructor
+	@EqualsAndHashCode
+	@ToString
+	public static class DeleteAccount {
+		private final long id;
+
+		private final String password;
+	}
 }
