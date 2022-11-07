@@ -30,4 +30,9 @@ public class ElephantMiscController {
 	public Response changeCountryCode(@RequestBody MiscRequest.SetCountryCode request) {
 		return miscService.setCountryCode(request);
 	}
+
+	@PostMapping(path = "agreeToTos")
+	public Response setUserToAgreeToTos(@RequestParam("id") long id) {
+		return miscService.setUserToAgreeToTos(id);
+	}
 }
