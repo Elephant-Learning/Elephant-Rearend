@@ -15,6 +15,7 @@ import me.elephantsuite.response.util.ResponseUtil;
 import me.elephantsuite.user.ElephantUser;
 import me.elephantsuite.user.ElephantUserService;
 import lombok.AllArgsConstructor;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -31,8 +32,10 @@ public class RegistrationService {
 
 	private final EmailSender emailSender;
 
+	private final BCryptPasswordEncoder encoder;
+
 	// when given a request process it
-	public Response register(RegistrationRequest request) {
+	public Response register(RegistrationRequest.CreateAccount request) {
 
 		if (request.getPassword().isBlank() || request.getPassword().length() < 4) {
 			return ResponseUtil.getFailureResponse("Password cannot be blank or be less than 4 characters!", request);
@@ -145,11 +148,22 @@ public class RegistrationService {
 			.build();
 	}
 
-	public Response deleteUser(long id) {
+	public Response deleteUser(RegistrationRequest.DeleteAccount request) {
+		long id = request.getId();
+		String password = request.getPassword();
+
 		ElephantUser user = elephantUserService.getUserById(id);
 
 		if (user == null) {
 			throw new InvalidIdException(id, InvalidIdType.USER);
+		}
+
+		if (!encoder.matches(password, user.getPassword())) {
+			return ResponseBuilder
+					.create()
+					.addResponse(ResponseStatus.FAILURE, "Invalid Password!")
+					.addObject("request", request)
+					.build();
 		}
 
 		elephantUserService.deleteUser(user);

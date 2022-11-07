@@ -19,7 +19,7 @@ public class ElephantUserRegistrationController {
 
 	// called on post rq
 	@PostMapping
-	public Response register(@RequestBody RegistrationRequest request) {
+	public Response register(@RequestBody RegistrationRequest.CreateAccount request) {
 		return registrationService.register(request);
 	}
 
@@ -29,8 +29,8 @@ public class ElephantUserRegistrationController {
 	}
 
 	@DeleteMapping("delete")
-	public Response delete(@RequestParam("id") long id) {
-		return registrationService.deleteUser(id);
+	public Response delete(@RequestBody RegistrationRequest.DeleteAccount request) {
+		return registrationService.deleteUser(request);
 	}
 
 }
