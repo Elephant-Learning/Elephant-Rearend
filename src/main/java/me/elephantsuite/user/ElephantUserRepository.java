@@ -40,9 +40,4 @@ public interface ElephantUserRepository extends JpaRepository<ElephantUser, Long
 	@Query(value = "DELETE FROM elephant_user_shared_deck_ids WHERE elephant_user_shared_deck_ids.shared_deck_ids = ?1", nativeQuery = true)
 	int deleteSharedDecksFromUser(long deckId);
 
-	@Transactional
-	@Modifying
-	@Query("UPDATE ElephantUser e SET e.agreedToTos = false WHERE e.id IS NOT NULL")
-	int resetTos();
-
 }

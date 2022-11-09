@@ -62,8 +62,6 @@ public class ElephantUser {
 	@Enumerated(EnumType.STRING)
 	private ElephantUserType type;
 
-	private boolean agreedToTos = false;
-
 	private boolean locked = false;
 
 	private boolean enabled = false;
