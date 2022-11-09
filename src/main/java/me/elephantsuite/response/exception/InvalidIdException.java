@@ -30,7 +30,7 @@ public class InvalidIdException extends RuntimeException {
 		return Arrays
 			.stream(types)
 			.map(InvalidIdType::getName)
-			.collect(Collectors.joining(","));
+			.collect(Collectors.joining(", "));
 	}
 
 }

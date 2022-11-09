@@ -124,4 +124,22 @@ public class MiscService {
 				.addObject("request", request)
 				.build();
 	}
+
+    public Response setUserToAgreeToTos(long id) {
+		ElephantUser user = userService.getUserById(id);
+
+		if (user == null) {
+			throw new InvalidIdException(id, InvalidIdType.USER);
+		}
+
+		user.setAgreedToTos(true);
+
+		user = userService.saveUser(user);
+
+		return ResponseBuilder
+				.create()
+				.addResponse(ResponseStatus.SUCCESS, "Agreed to TOS!")
+				.addObject("user", user)
+				.build();
+    }
 }
