@@ -102,10 +102,6 @@ public class ElephantUserService {
 		elephantUserRepository.delete(user);
 	}
 
-	public void resetTos() {
-		elephantUserRepository.resetTos();
-	}
-
 	public List<ElephantUser> getAllUsers() {
 		return elephantUserRepository.getAllUsers();
 	}
