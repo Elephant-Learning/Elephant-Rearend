@@ -64,6 +64,8 @@ public class ElephantUser {
 
 	private boolean agreedToTos = false;
 
+	private boolean locked = false;
+
 	private boolean enabled = false;
 
 	private boolean newUser = true;
