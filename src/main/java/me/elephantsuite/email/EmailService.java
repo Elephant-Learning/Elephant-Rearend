@@ -1,8 +1,5 @@
 package me.elephantsuite.email;
 
-import java.util.Objects;
-import java.util.function.Function;
-
 import jakarta.mail.MessagingException;
 import jakarta.mail.internet.MimeMessage;
 import lombok.AllArgsConstructor;
@@ -23,7 +20,7 @@ public class EmailService implements EmailSender {
 
 	@Override
 	@Async
-	public void send(String to, String email, boolean html) {
+	public void send(String to, String email, String subject, boolean html) {
 		try {
 			MimeMessage mimeMessage = mailSender.createMimeMessage();
 
@@ -31,7 +28,7 @@ public class EmailService implements EmailSender {
 
 			helper.setText(email, html);
 			helper.setTo(to);
-			helper.setSubject("Verify your email");
+			helper.setSubject(subject);
 			helper.setFrom(ElephantBackendApplication.ELEPHANT_CONFIG.getConfigOption("senderEmailAddress"));
 			mailSender.send(mimeMessage);
 		} catch (RuntimeException | MessagingException e) {

@@ -161,7 +161,7 @@ public class NotificationService {
 
 		Notification notification = new Notification(type, message, recipient, request.getSenderId(), null);
 
-		emailService.send(recipient.getEmail(), ElephantBackendApplication.ELEPHANT_CONFIG.getConfigOption("friendEmailHtmlFile").replace("[NAME]", sender.getFullName()), true);
+		emailService.send(recipient.getEmail(), ElephantBackendApplication.ELEPHANT_CONFIG.getConfigOption("friendEmailHtmlFile").replace("[NAME]", sender.getFullName()), "You have received a friend request!" ,true);
 
 		recipient.getNotifications().add(notification);
 

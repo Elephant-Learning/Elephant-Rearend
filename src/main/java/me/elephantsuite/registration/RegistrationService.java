@@ -64,7 +64,7 @@ public class RegistrationService {
 						confirmationTokenService.addExpiredLimit(token, ElephantBackendApplication.ELEPHANT_CONFIG.getConfigOption("tokenExpiredLimitMinutes", Integer::parseInt));
 
 						try {
-							emailSender.send(elephantUser.getEmail(), ElephantBackendApplication.ELEPHANT_CONFIG.getConfigOption("confirmationEmailHtmlFile").replace("[TOKEN]", token.getToken()), true);
+							emailSender.send(elephantUser.getEmail(), ElephantBackendApplication.ELEPHANT_CONFIG.getConfigOption("confirmationEmailHtmlFile").replace("[TOKEN]", token.getToken()), "Confirm your email", true);
 						} catch (IllegalStateException e) {
 							return ResponseBuilder
 								.create()
@@ -99,7 +99,7 @@ public class RegistrationService {
 
 			try {
 				String html = ElephantBackendApplication.ELEPHANT_CONFIG.getConfigOption("confirmationEmailHtmlFile").replace("[TOKEN]", token.getToken());
-				emailSender.send(elephantUser.getEmail(), html, true);
+				emailSender.send(elephantUser.getEmail(), html, "Confirm your email", true);
 			} catch (IllegalStateException e) {
 				return ResponseBuilder
 					.create()

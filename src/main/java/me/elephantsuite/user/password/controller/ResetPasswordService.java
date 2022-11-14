@@ -1,24 +1,22 @@
 package me.elephantsuite.user.password.controller;
 
-import java.time.LocalDateTime;
-import java.util.UUID;
-
 import lombok.AllArgsConstructor;
 import me.elephantsuite.ElephantBackendApplication;
-import me.elephantsuite.email.EmailSender;
 import me.elephantsuite.email.EmailService;
 import me.elephantsuite.response.api.Response;
 import me.elephantsuite.response.api.ResponseBuilder;
 import me.elephantsuite.response.exception.InvalidIdException;
 import me.elephantsuite.response.exception.InvalidIdType;
 import me.elephantsuite.response.util.ResponseStatus;
-import me.elephantsuite.response.util.ResponseUtil;
 import me.elephantsuite.user.ElephantUser;
 import me.elephantsuite.user.ElephantUserService;
 import me.elephantsuite.user.password.ResetPasswordToken;
 import me.elephantsuite.user.password.ResetPasswordTokenService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
+
+import java.time.LocalDateTime;
+import java.util.UUID;
 
 @Service
 @AllArgsConstructor
@@ -43,7 +41,7 @@ public class ResetPasswordService {
 
 		ResetPasswordToken token = new ResetPasswordToken(UUID.randomUUID().toString(), LocalDateTime.now().plusMinutes(ElephantBackendApplication.ELEPHANT_CONFIG.getConfigOption("tokenExpiredLimitMinutes", Long::parseLong)), user);
 
-		emailService.send(user.getEmail(), ElephantBackendApplication.ELEPHANT_CONFIG.getConfigOption("forgotPasswordEmailHtmlFile").replace("[UUID]", token.getToken()), true);
+		emailService.send(user.getEmail(), ElephantBackendApplication.ELEPHANT_CONFIG.getConfigOption("forgotPasswordEmailHtmlFile").replace("[UUID]", token.getToken()), "Reset Your Password" ,true);
 
 
 		user.setResetPasswordToken(token);
@@ -74,7 +72,7 @@ public class ResetPasswordService {
 
 			resetToken = service.save(resetToken);
 
-			emailService.send(resetToken.getElephantUser().getEmail(), ElephantBackendApplication.ELEPHANT_CONFIG.getConfigOption("forgotPasswordEmailHtmlFile").replace("[UUID]", resetToken.getToken()), true);
+			emailService.send(resetToken.getElephantUser().getEmail(), ElephantBackendApplication.ELEPHANT_CONFIG.getConfigOption("forgotPasswordEmailHtmlFile").replace("[UUID]", resetToken.getToken()), "Reset your password" ,true);
 
 			return ResponseBuilder
 				.create()
