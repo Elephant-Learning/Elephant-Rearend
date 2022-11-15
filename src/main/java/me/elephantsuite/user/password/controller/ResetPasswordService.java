@@ -86,7 +86,10 @@ public class ResetPasswordService {
 		ElephantUser user = resetToken.getElephantUser();
 
 		if (encoder.matches(newPassword, user.getPassword())) {
+			user.setResetPasswordToken(null);
 			service.delete(resetToken);
+
+			userService.saveUser(user);
 
 			return ResponseBuilder
 				.create()
@@ -96,6 +99,7 @@ public class ResetPasswordService {
 		}
 
 		user.setPassword(encodedPassword);
+		user.setResetPasswordToken(null);
 
 		service.delete(resetToken);
 

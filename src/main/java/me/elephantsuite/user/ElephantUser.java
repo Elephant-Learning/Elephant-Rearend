@@ -68,6 +68,8 @@ public class ElephantUser {
 
 	private boolean newUser = true;
 
+	private boolean agreedToTos = false;
+
 	private int pfpId;
 
 	private int countryCode;
