@@ -68,7 +68,7 @@ public class ElephantUser {
 
 	private boolean newUser = true;
 
-	private boolean agreedToTos = false;
+	private Boolean agreedToTos = false;
 
 	private int pfpId;
 
