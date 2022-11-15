@@ -116,7 +116,7 @@ public class MiscService {
 					.build();
 		}
 
-		emailService.send(email, ElephantBackendApplication.ELEPHANT_CONFIG.getConfigOption("inviteEmailHtmlFile"), true);
+		emailService.send(email, ElephantBackendApplication.ELEPHANT_CONFIG.getConfigOption("inviteEmailHtmlFile"), "You have been invited to Elephant!", true);
 
 		return ResponseBuilder
 				.create()

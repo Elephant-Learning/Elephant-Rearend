@@ -8,6 +8,6 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface ResetPasswordTokenRepository extends JpaRepository<ResetPasswordToken, Long> {
 	@Transactional
-	@Query("SELECT ResetPasswordToken FROM ResetPasswordToken t WHERE t.token = ?1")
+	@Query(value = "SELECT * FROM reset_password_token WHERE reset_password_token.token = ?1", nativeQuery = true)
 	ResetPasswordToken getByToken(String token);
 }
