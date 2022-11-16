@@ -1,7 +1,6 @@
-package me.elephantsuite.admin.controller;
+package me.elephantsuite.admin;
 
 import java.util.List;
-import java.util.stream.Collectors;
 
 import lombok.AllArgsConstructor;
 import me.elephantsuite.response.api.Response;
@@ -9,12 +8,13 @@ import me.elephantsuite.response.api.ResponseBuilder;
 import me.elephantsuite.response.exception.InvalidIdException;
 import me.elephantsuite.response.exception.InvalidIdType;
 import me.elephantsuite.response.exception.InvalidPasswordException;
+import me.elephantsuite.response.exception.InvalidUserAuthorizationException;
 import me.elephantsuite.response.util.ResponseStatus;
 import me.elephantsuite.user.ElephantUser;
 import me.elephantsuite.user.ElephantUserService;
+import me.elephantsuite.user.ElephantUserType;
 import me.elephantsuite.user.config.UserConfig;
 import me.elephantsuite.user.config.UserConfigRepositoryService;
-import me.elephantsuite.user.config.controller.UserConfigService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -30,18 +30,7 @@ public class AdminService {
 
 	private final UserConfigRepositoryService userConfigService;
 	public Response refreshUserConfigs(AdminRequest.AuthRequest request) {
-		long id = request.getId();
-		String password = request.getPassword();
-
-		ElephantUser user = userService.getUserById(id);
-
-		if (user == null) {
-			throw new InvalidIdException(request, InvalidIdType.USER);
-		}
-
-		if (!passwordMatches(password, user)) {
-			throw new InvalidPasswordException(password);
-		}
+		validateRequest(request);
 
 		List<ElephantUser> nullConfigs = userService
 			.getAllUsers()
@@ -64,5 +53,39 @@ public class AdminService {
 
 	private boolean passwordMatches(String password, ElephantUser user) {
 		return encoder.matches(password, user.getPassword());
+	}
+
+	public Response resetTos(AdminRequest.AuthRequest request) {
+		validateRequest(request);
+
+		userService.getAllUsers().forEach(elephantUser -> {
+			elephantUser.setAgreedToTos(false);
+			userService.saveUser(elephantUser);
+		});
+
+		return ResponseBuilder
+				.create()
+				.addResponse(ResponseStatus.SUCCESS, "Reset TOS for all users!")
+				.build();
+
+	}
+
+	private void validateRequest(AdminRequest.AuthRequest request) {
+		long id = request.getId();
+		String password = request.getPassword();
+
+		ElephantUser user = userService.getUserById(id);
+
+		if (user == null) {
+			throw new InvalidIdException(request, InvalidIdType.USER);
+		}
+
+		if (!passwordMatches(password, user)) {
+			throw new InvalidPasswordException(password);
+		}
+
+		if (!user.getType().equals(ElephantUserType.ADMIN)) {
+			throw new InvalidUserAuthorizationException(ElephantUserType.ADMIN);
+		}
 	}
 }

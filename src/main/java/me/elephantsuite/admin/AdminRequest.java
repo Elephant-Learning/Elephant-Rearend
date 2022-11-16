@@ -1,4 +1,4 @@
-package me.elephantsuite.admin.controller;
+package me.elephantsuite.admin;
 
 import lombok.AllArgsConstructor;
 import lombok.EqualsAndHashCode;
