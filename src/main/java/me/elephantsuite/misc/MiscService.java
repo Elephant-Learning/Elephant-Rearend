@@ -109,11 +109,13 @@ public class MiscService {
 		}
 
 		if (!emailValidator.test(email)) {
-			return ResponseBuilder
-					.create()
-					.addResponse(ResponseStatus.FAILURE, "Incorrect Email Format!")
-					.addObject("request", request)
-					.build();
+			return ResponseUtil.getFailureResponse("Invalid E-Mail!", request);
+		}
+
+		ElephantUser user1 = userService.getUserByEmail(email);
+
+		if (user1 != null) {
+			return ResponseUtil.getFailureResponse("Email already registered with elephant!", request);
 		}
 
 		emailService.send(email, ElephantBackendApplication.ELEPHANT_CONFIG.getConfigOption("inviteEmailHtmlFile"), "You have been invited to Elephant!", true);

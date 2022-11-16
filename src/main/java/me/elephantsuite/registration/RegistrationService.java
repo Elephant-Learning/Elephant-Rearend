@@ -159,11 +159,7 @@ public class RegistrationService {
 		}
 
 		if (!encoder.matches(password, user.getPassword())) {
-			return ResponseBuilder
-					.create()
-					.addResponse(ResponseStatus.FAILURE, "Invalid Password!")
-					.addObject("request", request)
-					.build();
+			return ResponseUtil.getFailureResponse("Invalid Password!", request);
 		}
 
 		elephantUserService.deleteUser(user);

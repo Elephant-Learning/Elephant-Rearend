@@ -188,11 +188,7 @@ public class NotificationService {
 		ElephantUser user = notification.getRecipient();
 
 		if (user == null) {
-			return ResponseBuilder
-				.create()
-				.addResponse(ResponseStatus.FAILURE, "Notification had no user!")
-				.addObject("notification", notification)
-				.build();
+			return ResponseUtil.getFailureResponse("Notification had no user!", id);
 		}
 
 		user.getNotifications().remove(notification);
