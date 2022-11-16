@@ -1,4 +1,4 @@
-package me.elephantsuite.admin.controller;
+package me.elephantsuite.admin;
 
 import lombok.AllArgsConstructor;
 import me.elephantsuite.response.api.Response;
@@ -18,5 +18,11 @@ public class AdminController {
 	@PostMapping(path = "refreshUserConfigs")
 	public Response refreshUserConfigs(@RequestBody AdminRequest.AuthRequest request) {
 		return service.refreshUserConfigs(request);
+	}
+
+	// resets tos to be false for everyone
+	@PostMapping(path = "resetTos")
+	public Response resetTos(@RequestBody AdminRequest.AuthRequest request) {
+		return service.resetTos(request);
 	}
 }
