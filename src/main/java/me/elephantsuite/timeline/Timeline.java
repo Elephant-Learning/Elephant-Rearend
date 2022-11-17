@@ -7,7 +7,14 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
+import me.elephantsuite.timeline.event.Event;
+import me.elephantsuite.timeline.marker.Marker;
 import me.elephantsuite.user.ElephantUser;
+import org.hibernate.annotations.Fetch;
+import org.hibernate.annotations.FetchMode;
+
+import java.util.ArrayList;
+import java.util.List;
 
 @Getter
 @Setter
@@ -22,15 +29,25 @@ public class Timeline {
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "timeline_sequence")
     private Long id;
 
-    @ManyToOne(cascade = {CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REFRESH})
-    @JsonBackReference
-    @JoinColumn(name = "elephant_user_id", foreignKey = @ForeignKey(name = "elephant_user_id"))
-    private ElephantUser user;
 
     private String name;
 
     private TimelineVisibility timelineVisibility;
 
     private int likes;
+
+    @ManyToOne(cascade = {CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REFRESH})
+    @JsonBackReference
+    @JoinColumn(name = "elephant_user_id", foreignKey = @ForeignKey(name = "elephant_user_id"))
+    private ElephantUser user;
+
+    @OneToMany(mappedBy = "timeline", fetch = FetchType.EAGER, cascade = CascadeType.ALL, orphanRemoval = true)
+    @Fetch(FetchMode.SUBSELECT)
+    private List<Event> events = new ArrayList<>();
+
+    @OneToMany(mappedBy = "timeline", fetch = FetchType.EAGER, cascade = CascadeType.ALL, orphanRemoval = true)
+    @Fetch(FetchMode.SUBSELECT)
+    private List<Marker> markers = new ArrayList<>();
+
 
 }
