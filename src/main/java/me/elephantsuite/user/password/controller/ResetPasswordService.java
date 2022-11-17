@@ -8,6 +8,7 @@ import me.elephantsuite.response.api.ResponseBuilder;
 import me.elephantsuite.response.exception.InvalidIdException;
 import me.elephantsuite.response.exception.InvalidIdType;
 import me.elephantsuite.response.util.ResponseStatus;
+import me.elephantsuite.response.util.ResponseUtil;
 import me.elephantsuite.user.ElephantUser;
 import me.elephantsuite.user.ElephantUserService;
 import me.elephantsuite.user.password.ResetPasswordToken;
@@ -91,11 +92,8 @@ public class ResetPasswordService {
 
 			userService.saveUser(user);
 
-			return ResponseBuilder
-				.create()
-				.addResponse(ResponseStatus.FAILURE, "Password was the same as your old one!")
-				.addObject("user", user)
-				.build();
+			return ResponseUtil.getFailureResponse("Password was the same as your old one!", request);
+
 		}
 
 		user.setPassword(encodedPassword);
