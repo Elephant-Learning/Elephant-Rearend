@@ -11,10 +11,12 @@ import me.elephantsuite.deck.DeckRepositoryService;
 import me.elephantsuite.deck.DeckVisibility;
 import me.elephantsuite.deck.card.Card;
 import me.elephantsuite.deck.card.CardService;
+import me.elephantsuite.registration.RegistrationService;
 import me.elephantsuite.response.api.Response;
 import me.elephantsuite.response.api.ResponseBuilder;
 import me.elephantsuite.response.exception.InvalidIdException;
 import me.elephantsuite.response.exception.InvalidIdType;
+import me.elephantsuite.response.exception.InvalidTagInputException;
 import me.elephantsuite.response.exception.UserNotEnabledException;
 import me.elephantsuite.response.util.ResponseStatus;
 import me.elephantsuite.response.util.ResponseUtil;
@@ -43,6 +45,16 @@ public class DeckService {
 
 		ElephantUser user = userService.getUserById(authorId);
 
+		if (RegistrationService.isInvalidName(name)) {
+			throw new InvalidTagInputException(name);
+		}
+
+		String error = hasInvalidTag(terms);
+
+		if (error != null) {
+			throw new InvalidTagInputException(error);
+		}
+
 		if (user == null) {
 			throw new InvalidIdException(request, InvalidIdType.USER);
 		}
@@ -69,6 +81,23 @@ public class DeckService {
 			.addObject("user", user)
 			.addObject("deck", deck)
 			.build();
+	}
+
+	private static String hasInvalidTag(Map<String, List<String>> map) {
+		for (Map.Entry<String, List<String>> stringListEntry : map.entrySet()) {
+			String entry = stringListEntry.getKey();
+			if (RegistrationService.isInvalidName(entry)) {
+				return entry;
+			}
+
+			for (String s : stringListEntry.getValue()) {
+				if (RegistrationService.isInvalidName(s)) {
+					return s;
+				}
+			}
+		}
+
+		return null;
 	}
 
 	public static List<Card> convertToCards(Map<String, List<String>> cardsMap, Deck deck, CardService cardService) {
@@ -127,6 +156,10 @@ public class DeckService {
 			throw new InvalidIdException(renameDeck, InvalidIdType.DECK);
 		}
 
+		if (RegistrationService.isInvalidName(renameDeck.getNewName())) {
+			throw new InvalidTagInputException(renameDeck.getNewName());
+		}
+
 		deck.setName(renameDeck.getNewName());
 
 		deck = service.saveDeck(deck);
@@ -144,6 +177,12 @@ public class DeckService {
 
 		if (deck == null) {
 			throw new InvalidIdException(resetTerms, InvalidIdType.DECK);
+		}
+
+		String error = hasInvalidTag(resetTerms.getNewTerms());
+
+		if (error != null) {
+			throw new InvalidTagInputException(error);
 		}
 
 		deck.resetTerms(resetTerms.getNewTerms(), this.cardService);

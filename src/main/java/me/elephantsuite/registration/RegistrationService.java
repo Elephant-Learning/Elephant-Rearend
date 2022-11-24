@@ -10,6 +10,7 @@ import me.elephantsuite.response.api.Response;
 import me.elephantsuite.response.api.ResponseBuilder;
 import me.elephantsuite.response.exception.InvalidIdException;
 import me.elephantsuite.response.exception.InvalidIdType;
+import me.elephantsuite.response.exception.InvalidTagInputException;
 import me.elephantsuite.response.util.ResponseStatus;
 import me.elephantsuite.response.util.ResponseUtil;
 import me.elephantsuite.user.ElephantUser;
@@ -39,6 +40,14 @@ public class RegistrationService {
 
 		if (request.getPassword().isBlank() || request.getPassword().length() < 4) {
 			return ResponseUtil.getFailureResponse("Password cannot be blank or be less than 4 characters!", request);
+		}
+
+		if (isInvalidName(request.getFirstName()) || isInvalidName(request.getLastName())) {
+			throw new InvalidTagInputException(request.getFirstName() + " " + request.getLastName());
+		}
+
+		if (isInvalidName(request.getEmail())) {
+			throw new InvalidTagInputException(request.getEmail());
 		}
 
 		if (emailValidator.test(request.getEmail())) {
@@ -168,5 +177,10 @@ public class RegistrationService {
 			.create()
 			.addResponse(ResponseStatus.SUCCESS, "Deleted User!")
 			.build();
+	}
+
+	public static boolean isInvalidName(String str) {
+		String trim = str.trim();
+		return trim.startsWith("<") && trim.endsWith(">");
 	}
 }

@@ -8,10 +8,12 @@ import me.elephantsuite.deck.Deck;
 import me.elephantsuite.deck.DeckRepositoryService;
 import me.elephantsuite.folder.Folder;
 import me.elephantsuite.folder.FolderRepositoryService;
+import me.elephantsuite.registration.RegistrationService;
 import me.elephantsuite.response.api.Response;
 import me.elephantsuite.response.api.ResponseBuilder;
 import me.elephantsuite.response.exception.InvalidIdException;
 import me.elephantsuite.response.exception.InvalidIdType;
+import me.elephantsuite.response.exception.InvalidTagInputException;
 import me.elephantsuite.response.util.ResponseStatus;
 import me.elephantsuite.response.util.ResponseUtil;
 import me.elephantsuite.user.ElephantUser;
@@ -39,6 +41,10 @@ public class FolderService {
 
 		if (user == null) {
 			throw new InvalidIdException(createFolder, InvalidIdType.USER);
+		}
+
+		if (RegistrationService.isInvalidName(name)) {
+			throw new InvalidTagInputException(name);
 		}
 
 		List<Deck> decks = deckIds
@@ -148,6 +154,10 @@ public class FolderService {
 
 		if (folder == null) {
 			throw new InvalidIdException(setName, InvalidIdType.FOLDER);
+		}
+
+		if (RegistrationService.isInvalidName(name)) {
+			throw new InvalidTagInputException(name);
 		}
 
 		folder.setName(name);
