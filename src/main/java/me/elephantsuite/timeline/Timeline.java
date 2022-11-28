@@ -36,6 +36,8 @@ public class Timeline {
 
     private int likes = 0;
 
+    private String description;
+
     @ManyToOne(cascade = {CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REFRESH})
     @JsonBackReference
     @JoinColumn(name = "elephant_user_id", foreignKey = @ForeignKey(name = "elephant_user_id"))
@@ -49,10 +51,11 @@ public class Timeline {
     @Fetch(FetchMode.SUBSELECT)
     private List<Marker> markers = new ArrayList<>();
 
-    public Timeline(ElephantUser user, String name, TimelineVisibility timelineVisibility) {
+    public Timeline(ElephantUser user, String name, TimelineVisibility visibility, String description) {
         this.user = user;
         this.name = name;
-        this.timelineVisibility = timelineVisibility;
+        this.timelineVisibility = visibility;
+        this.description = description;
     }
 
 

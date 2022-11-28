@@ -4,6 +4,7 @@ import me.elephantsuite.response.api.Response;
 import me.elephantsuite.response.api.ResponseBuilder;
 import me.elephantsuite.response.exception.InvalidIdException;
 import me.elephantsuite.response.exception.InvalidPasswordException;
+import me.elephantsuite.response.exception.InvalidTagInputException;
 import me.elephantsuite.response.exception.InvalidUserAuthorizationException;
 import me.elephantsuite.response.exception.UserNotEnabledException;
 import me.elephantsuite.response.util.ResponseStatus;
@@ -40,6 +41,11 @@ public class ElephantExceptionHandler {
 
     @ExceptionHandler(value = InvalidUserAuthorizationException.class)
     public Response handleInvalidUserAuthorizationException(InvalidUserAuthorizationException e) {
+        return e.toResponse();
+    }
+
+    @ExceptionHandler(value = InvalidTagInputException.class)
+    public Response handleInvalidTagInputException(InvalidTagInputException e) {
         return e.toResponse();
     }
 }

@@ -3,15 +3,18 @@ package me.elephantsuite.user.notification.controller;
 import java.util.Objects;
 import java.util.Optional;
 
+
 import lombok.AllArgsConstructor;
 import me.elephantsuite.ElephantBackendApplication;
 import me.elephantsuite.deck.Deck;
 import me.elephantsuite.deck.DeckRepositoryService;
 import me.elephantsuite.email.EmailService;
+import me.elephantsuite.registration.RegistrationService;
 import me.elephantsuite.response.api.Response;
 import me.elephantsuite.response.api.ResponseBuilder;
 import me.elephantsuite.response.exception.InvalidIdException;
 import me.elephantsuite.response.exception.InvalidIdType;
+import me.elephantsuite.response.exception.InvalidTagInputException;
 import me.elephantsuite.response.exception.UserNotEnabledException;
 import me.elephantsuite.response.util.ResponseStatus;
 import me.elephantsuite.response.util.ResponseUtil;
@@ -47,6 +50,14 @@ public class NotificationService {
 			return ResponseUtil.getFailureResponse("Notification type, message, and deck id cannot be null/invalid!", request);
 		}
 
+		if (RegistrationService.isInvalidName(message)) {
+			throw new InvalidTagInputException(message);
+		}
+
+		if (!recipient.isEnabled()) {
+			throw new UserNotEnabledException(recipient);
+		}
+
 		if (!type.equals(NotificationType.LIKED_DECK)) {
 			return ResponseUtil.getFailureResponse("Incorrect Notification Type Used! (Should Use LIKED_DECK)", request);
 		}
@@ -78,6 +89,13 @@ public class NotificationService {
 			return ResponseUtil.getFailureResponse("Notification type, message, and deck id cannot be null/invalid!", request);
 		}
 
+		if (RegistrationService.isInvalidName(message)) {
+			throw new InvalidTagInputException(message);
+		}
+
+		if (!recipient.isEnabled() || !sender.isEnabled()) {
+			throw new UserNotEnabledException(recipient, sender);
+		}
 
 		if (!type.equals(NotificationType.SHARED_DECK)) {
 			return ResponseUtil.getFailureResponse("Incorrect Notification Type Used! (Should Use SHARED_DECK)", request);
@@ -119,6 +137,14 @@ public class NotificationService {
 
 		if (message == null || type == null) {
 			return ResponseUtil.getFailureResponse("Notification type or message cannot be null!", request);
+		}
+
+		if (RegistrationService.isInvalidName(message)) {
+			throw new InvalidTagInputException(message);
+		}
+
+		if (!recipient.isEnabled() || !sender.isEnabled()) {
+			throw new UserNotEnabledException(recipient, sender);
 		}
 
 		if (!type.equals(NotificationType.FRIEND_REQUEST)) {
