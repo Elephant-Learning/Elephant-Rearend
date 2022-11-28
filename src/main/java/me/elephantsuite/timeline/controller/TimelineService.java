@@ -28,10 +28,11 @@ public class TimelineService {
         long userId = request.getUserId();
         String name = request.getName();
         TimelineVisibility visibility = request.getTimelineVisibility();
+        String details = request.getDescription();
 
         ElephantUser user = ResponseUtil.checkUserValid(userId, userService);
 
-        Timeline timeline = new Timeline(user, name, visibility);
+        Timeline timeline = new Timeline(user, name, visibility, details);
         user.getTimelines().add(timeline);
 
         timeline = timelineRepositoryService.save(timeline);
@@ -71,6 +72,7 @@ public class TimelineService {
         }
 
         timeline.setName(name);
-        tim
+
+        return null;
     }
 }

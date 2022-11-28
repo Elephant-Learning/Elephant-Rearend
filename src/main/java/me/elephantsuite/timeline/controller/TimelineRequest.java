@@ -15,6 +15,8 @@ public class TimelineRequest {
     public static class CreateTimeline {
         private final String name;
 
+        private final String description;
+
         private final TimelineVisibility timelineVisibility;
 
         private final long userId;
