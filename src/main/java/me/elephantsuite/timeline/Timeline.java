@@ -34,7 +34,7 @@ public class Timeline {
 
     private TimelineVisibility timelineVisibility;
 
-    private int likes;
+    private int likes = 0;
 
     @ManyToOne(cascade = {CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REFRESH})
     @JsonBackReference
@@ -48,6 +48,12 @@ public class Timeline {
     @OneToMany(mappedBy = "timeline", fetch = FetchType.EAGER, cascade = CascadeType.ALL, orphanRemoval = true)
     @Fetch(FetchMode.SUBSELECT)
     private List<Marker> markers = new ArrayList<>();
+
+    public Timeline(ElephantUser user, String name, TimelineVisibility timelineVisibility) {
+        this.user = user;
+        this.name = name;
+        this.timelineVisibility = timelineVisibility;
+    }
 
 
 }

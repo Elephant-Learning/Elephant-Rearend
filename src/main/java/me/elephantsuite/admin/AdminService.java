@@ -5,11 +5,10 @@ import java.util.List;
 import lombok.AllArgsConstructor;
 import me.elephantsuite.response.api.Response;
 import me.elephantsuite.response.api.ResponseBuilder;
-import me.elephantsuite.response.exception.InvalidIdException;
-import me.elephantsuite.response.exception.InvalidIdType;
 import me.elephantsuite.response.exception.InvalidPasswordException;
 import me.elephantsuite.response.exception.InvalidUserAuthorizationException;
 import me.elephantsuite.response.util.ResponseStatus;
+import me.elephantsuite.response.util.ResponseUtil;
 import me.elephantsuite.user.ElephantUser;
 import me.elephantsuite.user.ElephantUserService;
 import me.elephantsuite.user.ElephantUserType;
@@ -74,11 +73,7 @@ public class AdminService {
 		long id = request.getId();
 		String password = request.getPassword();
 
-		ElephantUser user = userService.getUserById(id);
-
-		if (user == null) {
-			throw new InvalidIdException(request, InvalidIdType.USER);
-		}
+		ElephantUser user = ResponseUtil.checkUserValid(id, userService);
 
 		if (!passwordMatches(password, user)) {
 			throw new InvalidPasswordException(password);

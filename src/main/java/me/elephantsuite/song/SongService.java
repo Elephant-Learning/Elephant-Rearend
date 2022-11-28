@@ -3,8 +3,6 @@ package me.elephantsuite.song;
 import lombok.AllArgsConstructor;
 import me.elephantsuite.response.api.Response;
 import me.elephantsuite.response.api.ResponseBuilder;
-import me.elephantsuite.response.exception.InvalidIdException;
-import me.elephantsuite.response.exception.InvalidIdType;
 import me.elephantsuite.response.exception.UserNotEnabledException;
 import me.elephantsuite.response.util.ResponseStatus;
 import me.elephantsuite.response.util.ResponseUtil;
@@ -24,15 +22,7 @@ public class SongService {
 		long userId = request.getUserId();
 		String songName = request.getSongName();
 
-		ElephantUser user = service.getUserById(userId);
-
-		if (user == null) {
-			throw new InvalidIdException(userId, InvalidIdType.USER);
-		}
-
-		if (!user.isEnabled()) {
-			throw new UserNotEnabledException(user);
-		}
+		ElephantUser user = ResponseUtil.checkUserValid(userId, service);
 
 		user.getLikedSongs().add(songName);
 
@@ -49,11 +39,7 @@ public class SongService {
 		long userId = request.getUserId();
 		String songName = request.getSongName();
 
-		ElephantUser user = service.getUserById(userId);
-
-		if (user == null) {
-			return ResponseUtil.getInvalidUserResponse(userId);
-		}
+		ElephantUser user = ResponseUtil.checkUserValid(userId, service);
 
 		if (!user.isEnabled()) {
 			return ResponseUtil.getFailureResponse("User not enabled!", request);

@@ -32,11 +32,7 @@ public class ResetPasswordService {
 	private final BCryptPasswordEncoder encoder;
 
 	public Response sendEmail(long userId) {
-		ElephantUser user = userService.getUserById(userId);
-
-		if (user == null) {
-			throw new InvalidIdException(userId, InvalidIdType.USER);
-		}
+		ElephantUser user = ResponseUtil.checkUserValid(userId, userService);
 
 		//TODO add replace values
 

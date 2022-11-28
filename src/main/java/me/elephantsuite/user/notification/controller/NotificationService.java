@@ -40,19 +40,11 @@ public class NotificationService {
 
 		NotificationType type = request.getType();
 		String message = request.getMessage();
-		ElephantUser recipient = userService.getUserById(request.getRecipientId());
+		ElephantUser recipient = ResponseUtil.checkUserValid(request.getRecipientId(), userService);
 		Deck deck = deckService.getDeckById(request.getDeckId());
-
-		if (recipient == null) {
-			throw new InvalidIdException(request, InvalidIdType.USER);
-		}
 
 		if (message == null || type == null || deck == null) {
 			return ResponseUtil.getFailureResponse("Notification type, message, and deck id cannot be null/invalid!", request);
-		}
-
-		if (!recipient.isEnabled()) {
-			throw new UserNotEnabledException(recipient);
 		}
 
 		if (!type.equals(NotificationType.LIKED_DECK)) {
@@ -78,21 +70,14 @@ public class NotificationService {
 
 		NotificationType type = request.getType();
 		String message = request.getMessage();
-		ElephantUser recipient = userService.getUserById(request.getRecipientId());
-		ElephantUser sender = userService.getUserById(request.getSenderId());
+		ElephantUser recipient = ResponseUtil.checkUserValid(request.getRecipientId(), userService);
+		ElephantUser sender = ResponseUtil.checkUserValid(request.getSenderId(), userService);
 		Deck deck = deckService.getDeckById(request.getDeckId());
-
-		if (recipient == null || sender == null) {
-			throw new InvalidIdException(new ElephantUser[]{recipient, sender}, InvalidIdType.USER);
-		}
 
 		if (message == null || type == null || deck == null) {
 			return ResponseUtil.getFailureResponse("Notification type, message, and deck id cannot be null/invalid!", request);
 		}
 
-		if (!recipient.isEnabled() || !sender.isEnabled()) {
-			throw new UserNotEnabledException(recipient, sender);
-		}
 
 		if (!type.equals(NotificationType.SHARED_DECK)) {
 			return ResponseUtil.getFailureResponse("Incorrect Notification Type Used! (Should Use SHARED_DECK)", request);
@@ -129,19 +114,11 @@ public class NotificationService {
 
 		NotificationType type = request.getType();
 		String message = request.getMessage();
-		ElephantUser recipient = userService.getUserById(request.getRecipientId());
-		ElephantUser sender = userService.getUserById(request.getSenderId());
-
-		if (sender == null || recipient == null) {
-			throw new InvalidIdException(new ElephantUser[]{sender, recipient}, InvalidIdType.USER);
-		}
+		ElephantUser recipient = ResponseUtil.checkUserValid(request.getRecipientId(), userService);
+		ElephantUser sender = ResponseUtil.checkUserValid(request.getSenderId(), userService);
 
 		if (message == null || type == null) {
 			return ResponseUtil.getFailureResponse("Notification type or message cannot be null!", request);
-		}
-
-		if (!recipient.isEnabled() || !sender.isEnabled()) {
-			throw new UserNotEnabledException(recipient, sender);
 		}
 
 		if (!type.equals(NotificationType.FRIEND_REQUEST)) {

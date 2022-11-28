@@ -35,11 +35,7 @@ public class FolderService {
 		List<Long> deckIds = createFolder.getDeckIds();
 		String name = createFolder.getName();
 
-		ElephantUser user = userService.getUserById(userId);
-
-		if (user == null) {
-			throw new InvalidIdException(createFolder, InvalidIdType.USER);
-		}
+		ElephantUser user = ResponseUtil.checkUserValid(userId, userService);
 
 		List<Deck> decks = deckIds
 			.stream()

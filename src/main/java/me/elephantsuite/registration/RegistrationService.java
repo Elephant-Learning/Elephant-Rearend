@@ -152,11 +152,7 @@ public class RegistrationService {
 		long id = request.getId();
 		String password = request.getPassword();
 
-		ElephantUser user = elephantUserService.getUserById(id);
-
-		if (user == null) {
-			throw new InvalidIdException(id, InvalidIdType.USER);
-		}
+		ElephantUser user = ResponseUtil.checkUserValid(id, elephantUserService);
 
 		if (!encoder.matches(password, user.getPassword())) {
 			return ResponseUtil.getFailureResponse("Invalid Password!", request);

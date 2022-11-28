@@ -19,11 +19,15 @@ public class InvalidIdException extends RuntimeException {
 	}
 
 	public Response toResponse() {
-		return ResponseBuilder
-			.create()
-			.addResponse(ResponseStatus.FAILURE, "Invalid " + typesToString(types) + " ID!")
-			.addObject(this.request.getClass().getName().toLowerCase().contains("long") ? "id" : "request", this.request)
-			.build();
+		ResponseBuilder builder = ResponseBuilder
+				.create()
+				.addResponse(ResponseStatus.FAILURE, "Invalid " + typesToString(types) + " ID!");
+
+		if (this.request != null) {
+			builder.addObject(this.request.getClass().getName().toLowerCase().contains("long") ? "id" : "request", this.request);
+		}
+
+		return builder.build();
 	}
 
 	private static String typesToString(InvalidIdType[] types) {

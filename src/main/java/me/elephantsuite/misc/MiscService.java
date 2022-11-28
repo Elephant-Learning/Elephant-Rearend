@@ -7,8 +7,6 @@ import me.elephantsuite.email.EmailService;
 import me.elephantsuite.registration.EmailValidator;
 import me.elephantsuite.response.api.Response;
 import me.elephantsuite.response.api.ResponseBuilder;
-import me.elephantsuite.response.exception.InvalidIdException;
-import me.elephantsuite.response.exception.InvalidIdType;
 import me.elephantsuite.response.exception.UserNotEnabledException;
 import me.elephantsuite.response.util.ResponseStatus;
 import me.elephantsuite.response.util.ResponseUtil;
@@ -32,15 +30,7 @@ public class MiscService {
 		long userId = request.getUserId();
 		int pfpid = request.getPfpId();
 
-		ElephantUser user = userService.getUserById(userId);
-
-		if (user == null) {
-			throw new InvalidIdException(request, InvalidIdType.USER);
-		}
-
-		if (!user.isEnabled()) {
-			throw new UserNotEnabledException(user);
-		}
+		ElephantUser user = ResponseUtil.checkUserValid(userId, userService);
 
 		PropertiesHandler handler = ElephantBackendApplication.ELEPHANT_CONFIG;
 
@@ -60,11 +50,7 @@ public class MiscService {
 	}
 
     public Response setNewUserFalse(long userId) {
-		ElephantUser user = userService.getUserById(userId);
-
-		if (user == null) {
-			throw new InvalidIdException(userId, InvalidIdType.USER);
-		}
+		ElephantUser user = ResponseUtil.checkUserValid(userId, userService);
 
 		user.setNewUser(false);
 
@@ -81,11 +67,7 @@ public class MiscService {
 		long userId = request.getUserId();
 		int countryCode = request.getCountryCode();
 
-		ElephantUser user = userService.getUserById(userId);
-
-		if (user == null) {
-			throw new InvalidIdException(request, InvalidIdType.USER);
-		}
+		ElephantUser user = ResponseUtil.checkUserValid(userId, userService);
 
 		user.setCountryCode(countryCode);
 
@@ -102,11 +84,7 @@ public class MiscService {
 		long userId = request.getUserId();
 		String email = request.getEmailToInvite();
 
-		ElephantUser user = userService.getUserById(userId);
-
-		if (user == null) {
-			throw new InvalidIdException(request, InvalidIdType.USER);
-		}
+		ResponseUtil.checkUserValid(userId, userService);
 
 		if (!emailValidator.test(email)) {
 			return ResponseUtil.getFailureResponse("Invalid E-Mail!", request);
