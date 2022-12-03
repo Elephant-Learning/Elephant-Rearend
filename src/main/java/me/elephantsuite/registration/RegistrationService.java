@@ -1,6 +1,7 @@
 package me.elephantsuite.registration;
 
 import java.time.LocalDateTime;
+import java.util.regex.Pattern;
 
 import me.elephantsuite.ElephantBackendApplication;
 import me.elephantsuite.email.EmailSender;
@@ -25,6 +26,8 @@ import org.springframework.transaction.annotation.Transactional;
 @AllArgsConstructor
 public class RegistrationService {
 
+	private static final Pattern HTML_PATTERN = Pattern.compile("(<\\w*)((\\s/>)|(.*</\\w*>))");
+
 	private final ElephantUserService elephantUserService;
 
 	private final EmailValidator emailValidator;
@@ -42,8 +45,10 @@ public class RegistrationService {
 			return ResponseUtil.getFailureResponse("Password cannot be blank or be less than 4 characters!", request);
 		}
 
-		if (isInvalidName(request.getFirstName()) || isInvalidName(request.getLastName())) {
-			throw new InvalidTagInputException(request.getFirstName() + " " + request.getLastName());
+		String fullName = request.getFirstName() + request.getLastName();
+
+		if (isInvalidName(request.getFirstName()) || isInvalidName(request.getLastName()) || isInvalidName(fullName)) {
+			throw new InvalidTagInputException(fullName);
 		}
 
 		if (isInvalidName(request.getEmail())) {
@@ -176,7 +181,6 @@ public class RegistrationService {
 	}
 
 	public static boolean isInvalidName(String str) {
-		String trim = str.trim();
-		return trim.startsWith("<") && trim.endsWith(">");
+		return HTML_PATTERN.matcher(str).matches();
 	}
 }
