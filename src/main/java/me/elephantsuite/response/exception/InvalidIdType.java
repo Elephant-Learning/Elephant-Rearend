@@ -7,7 +7,8 @@ public enum InvalidIdType {
 	RESET_TOKEN("Reset Password Token"),
 	NOTIFICATION("Notification"),
 	CONFIRMATION_TOKEN("Confirmation Token"),
-	FOLDER("Folder");
+	FOLDER("Folder"),
+	TIMELINE("Timeline");
 
 	final String name;
 

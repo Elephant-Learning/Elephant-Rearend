@@ -37,11 +37,7 @@ public class FolderService {
 		List<Long> deckIds = createFolder.getDeckIds();
 		String name = createFolder.getName();
 
-		ElephantUser user = userService.getUserById(userId);
-
-		if (user == null) {
-			throw new InvalidIdException(createFolder, InvalidIdType.USER);
-		}
+		ElephantUser user = ResponseUtil.checkUserValid(userId, userService);
 
 		if (RegistrationService.isInvalidName(name)) {
 			throw new InvalidTagInputException(name);

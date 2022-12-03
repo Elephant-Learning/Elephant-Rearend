@@ -31,17 +31,9 @@ public class BackpackService {
 		long userId = request.getUserId();
 		long cardId = request.getCardId();
 
-		Card card = cardService.getCardById(cardId);
+		Card card = checkCard(cardId);
 
-		ElephantUser user = userService.getUserById(userId);
-
-		if (user == null || card == null) {
-			throw new InvalidIdException(request, InvalidIdType.CARD, InvalidIdType.USER);
-		}
-
-		if (!user.isEnabled()) {
-			throw new UserNotEnabledException(user);
-		}
+		ElephantUser user = ResponseUtil.checkUserValid(userId, userService);
 
 		if (user.getBackpack().getCards().contains(card)) {
 			return ResponseUtil.getFailureResponse("Card already present in backpack!", request);
@@ -66,17 +58,9 @@ public class BackpackService {
 		long userId = request.getUserId();
 		long cardId = request.getCardId();
 
-		ElephantUser user = userService.getUserById(userId);
+		ElephantUser user = ResponseUtil.checkUserValid(userId, userService);
 
-		Card card = cardService.getCardById(cardId);
-
-		if (user == null || card == null) {
-			throw new InvalidIdException(request, InvalidIdType.CARD, InvalidIdType.USER);
-		}
-
-		if (!user.isEnabled()) {
-			throw new UserNotEnabledException(user);
-		}
+		Card card = checkCard(cardId);
 
 		if (!user.getBackpack().getCards().contains(card)) {
 			return ResponseUtil.getFailureResponse("Card not present in backpack!", request);
@@ -94,5 +78,15 @@ public class BackpackService {
 			.addResponse(ResponseStatus.SUCCESS, "Removed Card from Backpack!")
 			.addObject("user", user)
 			.build();
+	}
+
+	private Card checkCard(long cardId) {
+		Card card = cardService.getCardById(cardId);
+
+		if (card == null) {
+			throw new InvalidIdException(cardId, InvalidIdType.CARD);
+		}
+
+		return card;
 	}
 }

@@ -7,8 +7,6 @@ import lombok.AllArgsConstructor;
 import me.elephantsuite.registration.EmailValidator;
 import me.elephantsuite.response.api.Response;
 import me.elephantsuite.response.api.ResponseBuilder;
-import me.elephantsuite.response.exception.InvalidIdException;
-import me.elephantsuite.response.exception.InvalidIdType;
 import me.elephantsuite.response.util.ResponseStatus;
 import me.elephantsuite.response.util.ResponseUtil;
 import me.elephantsuite.stats.controller.ElephantUserStatisticsService;
@@ -65,11 +63,7 @@ public class ElephantLoginService {
 	}
 
 	public Response getUserById(long id) {
-		ElephantUser user = elephantUserService.getUserById(id);
-
-		if (user == null) {
-			throw new InvalidIdException(id, InvalidIdType.USER);
-		}
+		ElephantUser user = ResponseUtil.checkUserValid(id, elephantUserService);
 
 		return ResponseBuilder
 			.create()
@@ -92,11 +86,7 @@ public class ElephantLoginService {
 
 	public Response getUserByName(String name, long userId) {
 
-		ElephantUser user = elephantUserService.getUserById(userId);
-
-		if (user == null) {
-			throw new InvalidIdException(new Object[]{name, userId}, InvalidIdType.USER);
-		}
+		ElephantUser user = ResponseUtil.checkUserValid(userId, elephantUserService);
 
 		List<ElephantUser> filteredUsers = elephantUserService
 				.getAllUsers()

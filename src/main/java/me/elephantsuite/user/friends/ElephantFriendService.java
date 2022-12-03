@@ -27,17 +27,10 @@ public class ElephantFriendService {
 		long userId = request.getUserId();
 		long friendId = request.getFriendId();
 
-		ElephantUser user = this.userService.getUserById(userId);
+		ElephantUser user = ResponseUtil.checkUserValid(userId, userService);
 
-		ElephantUser friend = this.userService.getUserById(friendId);
+		ElephantUser friend = ResponseUtil.checkUserValid(friendId, userService);
 
-		if (user == null || friend == null) {
-			throw new InvalidIdException(new ElephantUser[]{user, friend}, InvalidIdType.USER);
-		}
-
-		if (!user.isEnabled() || !friend.isEnabled()) {
-			throw new UserNotEnabledException(user, friend);
-		}
 
 		if (user.getFriendIds().contains(friendId) || friend.getFriendIds().contains(userId)) {
 			return ResponseUtil.getFailureResponse("User already friended!", request);
@@ -68,17 +61,9 @@ public class ElephantFriendService {
 		long userId = request.getUserId();
 		long friendId = request.getFriendId();
 
-		ElephantUser user = this.userService.getUserById(userId);
+		ElephantUser user = ResponseUtil.checkUserValid(userId, userService);
 
-		ElephantUser friend = this.userService.getUserById(friendId);
-
-		if (user == null || friend == null) {
-			throw new InvalidIdException(new ElephantUser[]{user, friend}, InvalidIdType.USER);
-		}
-
-		if (!user.isEnabled() || !friend.isEnabled()) {
-			throw new UserNotEnabledException(friend, user);
-		}
+		ElephantUser friend = ResponseUtil.checkUserValid(friendId, userService);
 
 		if (!user.getFriendIds().contains(friendId) || !friend.getFriendIds().contains(userId)) {
 			return ResponseUtil.getFailureResponse("Cannot unfriend someone who is not friends already!", request);
