@@ -37,15 +37,7 @@ public class ElephantUserStatisticsService {
 	private DeckRepositoryService deckService;
 
 	public Response modifyStatsOnLogin(long id) {
-		ElephantUser user = userService.getUserById(id);
-
-		if (user == null) {
-			throw new InvalidIdException(id, InvalidIdType.USER);
-		}
-
-		if (!user.isEnabled()) {
-			throw new UserNotEnabledException(user);
-		}
+		ElephantUser user = ResponseUtil.checkUserValid(id, userService);
 
 		user.getElephantUserStatistics().incrementDaysStreak();
 		user.getElephantUserStatistics().resetLoginDate();
@@ -65,15 +57,7 @@ public class ElephantUserStatisticsService {
 		long userId = request.getUserId();
 		double usageTime = request.getUsageTime();
 
-		ElephantUser user = userService.getUserById(userId);
-
-		if (user == null) {
-			throw new InvalidIdException(userId, InvalidIdType.USER);
-		}
-
-		if (!user.isEnabled()) {
-			throw new UserNotEnabledException(user);
-		}
+		ElephantUser user = ResponseUtil.checkUserValid(userId, userService);
 
 		user.getElephantUserStatistics().increaseUsageTime(usageTime);
 
@@ -152,7 +136,7 @@ public class ElephantUserStatisticsService {
 		Deck deck = deckService.getDeckById(deckId);
 
 		if (user == null || deck == null) {
-			throw new InvalidIdException(new Object[]{user, deck}, InvalidIdType.DECK, InvalidIdType.USER);
+			throw new InvalidIdException(request, InvalidIdType.DECK, InvalidIdType.USER);
 		}
 
 		user.getElephantUserStatistics().getRecentlyViewedDeckIds().remove(deckId);

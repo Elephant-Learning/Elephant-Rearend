@@ -1,6 +1,5 @@
 package me.elephantsuite.user.config.controller;
 
-import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.Arrays;
@@ -8,8 +7,6 @@ import java.util.Arrays;
 import lombok.AllArgsConstructor;
 import me.elephantsuite.response.api.Response;
 import me.elephantsuite.response.api.ResponseBuilder;
-import me.elephantsuite.response.exception.InvalidIdException;
-import me.elephantsuite.response.exception.InvalidIdType;
 import me.elephantsuite.response.util.ResponseStatus;
 import me.elephantsuite.response.util.ResponseUtil;
 import me.elephantsuite.user.ElephantUser;
@@ -31,11 +28,7 @@ public class UserConfigService {
 		String term = request.getTerm();
 		boolean value = request.isValue();
 
-		ElephantUser user = userService.getUserById(userId);
-
-		if (user == null) {
-			throw new InvalidIdException(userId, InvalidIdType.USER);
-		}
+		ElephantUser user = ResponseUtil.checkUserValid(userId, userService);
 
 		Method configMethod = Arrays.stream(UserConfig.class
 			.getMethods())

@@ -30,6 +30,7 @@ import me.elephantsuite.deck.Deck;
 import me.elephantsuite.folder.Folder;
 import me.elephantsuite.registration.token.ConfirmationToken;
 import me.elephantsuite.stats.ElephantUserStatistics;
+import me.elephantsuite.timeline.Timeline;
 import me.elephantsuite.user.config.UserConfig;
 import me.elephantsuite.user.notification.Notification;
 import me.elephantsuite.user.password.ResetPasswordToken;
@@ -108,6 +109,10 @@ public class ElephantUser {
 	@OneToMany(mappedBy = "user", fetch = FetchType.EAGER, cascade = CascadeType.ALL, orphanRemoval = true)
 	@Fetch(FetchMode.SUBSELECT)
 	private List<Folder> folders = new ArrayList<>();
+
+	@OneToMany(mappedBy = "user", fetch = FetchType.EAGER, cascade = CascadeType.ALL, orphanRemoval = true)
+	@Fetch(FetchMode.SUBSELECT)
+	private List<Timeline> timelines = new ArrayList<>();
 
 	@OneToOne(cascade = CascadeType.ALL, orphanRemoval = true)
 	@JoinColumn(name = "elephant_user_statistics_id")
