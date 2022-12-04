@@ -25,6 +25,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
 import me.elephantsuite.ElephantBackendApplication;
+import me.elephantsuite.answers.ElephantAnswer;
 import me.elephantsuite.backpack.Backpack;
 import me.elephantsuite.deck.Deck;
 import me.elephantsuite.folder.Folder;
@@ -113,6 +114,10 @@ public class ElephantUser {
 	@OneToMany(mappedBy = "user", fetch = FetchType.EAGER, cascade = CascadeType.ALL, orphanRemoval = true)
 	@Fetch(FetchMode.SUBSELECT)
 	private List<Timeline> timelines = new ArrayList<>();
+
+	@OneToMany(mappedBy = "user", fetch = FetchType.EAGER, cascade = CascadeType.ALL, orphanRemoval = true)
+	@Fetch(FetchMode.SUBSELECT)
+	private List<ElephantAnswer> answers = new ArrayList<>();
 
 	@OneToOne(cascade = CascadeType.ALL, orphanRemoval = true)
 	@JoinColumn(name = "elephant_user_statistics_id")
