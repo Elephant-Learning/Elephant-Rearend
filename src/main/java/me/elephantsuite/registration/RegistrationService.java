@@ -26,8 +26,7 @@ import org.springframework.transaction.annotation.Transactional;
 @AllArgsConstructor
 public class RegistrationService {
 
-	private static final Pattern HTML_PATTERN = Pattern.compile("(<\\w*)((\\s/>)|(.*</\\w*>))");
-
+	private static final Pattern HTML_PATTERN = Pattern.compile("(.*</\\w*>)");
 	private final ElephantUserService elephantUserService;
 
 	private final EmailValidator emailValidator;
