@@ -7,10 +7,10 @@ import me.elephantsuite.response.util.ResponseUtil;
 
 public class InvalidTagInputException extends RuntimeException {
 
-	private final String str;
+	private final String[] str;
 
-	public InvalidTagInputException(String str) {
-		this.str = str;
+	public InvalidTagInputException(String... strings) {
+		str = strings;
 	}
 
 	public Response toResponse() {

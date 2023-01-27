@@ -5,6 +5,7 @@ import java.util.List;
 import lombok.AllArgsConstructor;
 import me.elephantsuite.deck.Deck;
 import me.elephantsuite.stats.card.CardStatisticsRepository;
+import me.elephantsuite.user.ElephantUser;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -55,5 +56,9 @@ public class CardService {
 				deleteCardById(card.getId());
 			}
 		});
+	}
+
+	public List<Card> getAllCards() {
+		return repository.getAllCards();
 	}
 }

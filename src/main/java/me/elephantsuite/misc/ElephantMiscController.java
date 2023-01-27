@@ -30,4 +30,9 @@ public class ElephantMiscController {
 	public Response changeCountryCode(@RequestBody MiscRequest.SetCountryCode request) {
 		return miscService.setCountryCode(request);
 	}
+
+	@GetMapping(path = "totalUsersAndCards")
+	public Response getTotalUsersAndCards() {
+		return miscService.getTotalUsersAndCards();
+	}
 }
