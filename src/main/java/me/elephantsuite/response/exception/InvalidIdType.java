@@ -8,7 +8,10 @@ public enum InvalidIdType {
 	NOTIFICATION("Notification"),
 	CONFIRMATION_TOKEN("Confirmation Token"),
 	FOLDER("Folder"),
-	TIMELINE("Timeline");
+	TIMELINE("Timeline"),
+	ANSWER("Elephant Answer"),
+	COMMENT("Comment"),
+	REPLY("Reply");
 
 	final String name;
 

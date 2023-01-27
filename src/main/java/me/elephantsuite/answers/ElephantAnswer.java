@@ -1,5 +1,6 @@
 package me.elephantsuite.answers;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -59,10 +60,23 @@ public class ElephantAnswer {
 	@JsonBackReference
 	private ElephantUser user;
 
+	private LocalDateTime lastUpdated = LocalDateTime.now();
+
 	public ElephantAnswer(String title, String description, ElephantUser user) {
 		this.title = title;
 		this.description = description;
 		this.user = user;
 	}
 
+	public void incrementLikes() {
+		numberOfLikes++;
+	}
+
+	public void updateLastUpdatedTime() {
+		LocalDateTime.now();
+	}
+
+	public void decrementLikes() {
+		numberOfLikes--;
+	}
 }

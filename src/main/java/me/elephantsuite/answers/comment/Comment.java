@@ -39,17 +39,13 @@ public class Comment {
 
 	private Long commenterId;
 
-	private String authorName;
+	private String commenterName;
 
-	private int authorPfpId;
-
-	private String title;
+	private int commenterPfpId;
 
 	private String description;
 
 	private int numberOfLikes = 0;
-
-	private boolean isAnswer = false;
 
 	@ManyToOne(cascade = {CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REFRESH})
 	@JsonBackReference
@@ -59,13 +55,20 @@ public class Comment {
 	@Fetch(value = FetchMode.SUBSELECT)
 	private List<Reply> replies = new ArrayList<>();
 
-	public Comment(String title, String description, ElephantAnswer answer, ElephantUser commenter) {
-		this.title = title;
+	public Comment(String description, ElephantAnswer answer, ElephantUser commenter) {
 		this.description = description;
 		this.answer = answer;
 		this.commenterId = commenter.getId();
-		this.authorName = commenter.getFullName();
-		this.authorPfpId = commenter.getPfpId();
+		this.commenterName = commenter.getFullName();
+		this.commenterPfpId = commenter.getPfpId();
+	}
+
+	public void incrementLikes() {
+		numberOfLikes++;
+	}
+
+	public void decrementLikes() {
+		numberOfLikes--;
 	}
 
 }

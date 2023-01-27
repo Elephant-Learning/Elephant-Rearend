@@ -76,6 +76,12 @@ public class ElephantUser {
 
 	private int countryCode;
 
+	private int elephantAnswersScore;
+
+	@ElementCollection
+	@Fetch(FetchMode.SUBSELECT)
+	private List<Integer> elephantAnswersTags = new ArrayList<>();
+
 	@ElementCollection(fetch = FetchType.EAGER)
 	@JoinColumn(nullable = false, name = "elephant_user_id")
 	@Fetch(value = FetchMode.SUBSELECT)
