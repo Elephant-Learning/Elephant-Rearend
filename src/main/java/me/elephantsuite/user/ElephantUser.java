@@ -76,7 +76,7 @@ public class ElephantUser {
 
 	private int countryCode;
 
-	private int elephantAnswersScore;
+	private Integer elephantAnswersScore = 0;
 
 	@ElementCollection
 	@Fetch(FetchMode.SUBSELECT)

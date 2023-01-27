@@ -3,6 +3,7 @@ package me.elephantsuite.misc;
 import lombok.AllArgsConstructor;
 import me.elephantsuite.ElephantBackendApplication;
 import me.elephantsuite.config.PropertiesHandler;
+import me.elephantsuite.deck.card.CardService;
 import me.elephantsuite.email.EmailService;
 import me.elephantsuite.registration.EmailValidator;
 import me.elephantsuite.response.api.Response;
@@ -25,6 +26,8 @@ public class MiscService {
 	private final EmailValidator emailValidator;
 
 	private final EmailService emailService;
+
+	private final CardService cardService;
 
 	public Response setPfpId(MiscRequest.SetPfpId request) {
 		long userId = request.getUserId();
@@ -103,5 +106,17 @@ public class MiscService {
 				.addResponse(ResponseStatus.SUCCESS, "Invited " + email + " to Elephant!")
 				.addObject("request", request)
 				.build();
+	}
+
+	public Response getTotalUsersAndCards() {
+		int users = userService.getAllUsers().size();
+		int cards = cardService.getAllCards().size();
+
+		return ResponseBuilder
+			.create()
+			.addResponse(ResponseStatus.SUCCESS, "Retrieved number of users and cards!")
+			.addObject("users", users)
+			.addObject("cards", cards)
+			.build();
 	}
 }

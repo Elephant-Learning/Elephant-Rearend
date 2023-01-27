@@ -2,6 +2,7 @@ package me.elephantsuite.deck.card;
 
 import java.util.List;
 
+import me.elephantsuite.user.ElephantUser;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
@@ -29,4 +30,7 @@ public interface CardRepository extends JpaRepository<Card, Long> {
 	@Transactional
 	@Query(value = "DELETE FROM deck_cards WHERE deck_cards.cards_id = ?1", nativeQuery = true)
 	int deleteCardsFromDeckTable(long cardId);
+
+	@Query(value = "SELECT * FROM card", nativeQuery = true)
+	List<Card> getAllCards();
 }
