@@ -47,13 +47,13 @@ public class ElephantAnswersController {
 	}
 
 	@PostMapping(path = "like")
-	public Response likeAnswer(@RequestParam("id") long answerId) {
-		return service.likeAnswer(answerId, true);
+	public Response likeAnswer(@RequestBody ElephantAnswersRequest.LikeAnswer request) {
+		return service.likeAnswer(request, true);
 	}
 
 	@PostMapping(path = "unlike")
-	public Response unlikeAnswer(@RequestParam("id") long answerId) {
-		return service.likeAnswer(answerId, false);
+	public Response unlikeAnswer(@RequestBody ElephantAnswersRequest.LikeAnswer request) {
+		return service.likeAnswer(request, false);
 	}
 
 	@DeleteMapping(path = "deleteAnswer")
@@ -64,11 +64,6 @@ public class ElephantAnswersController {
 	@PostMapping(path = "searchByName")
 	public Response searchByName(@RequestParam("name") String name) {
 		return service.searchByName(name);
-	}
-
-	@PostMapping(path = "editAnswer")
-	public Response editAnswer(@RequestBody ElephantAnswersRequest.EditAnswer request) {
-		return service.editAnswer(request);
 	}
 
 	@PostMapping(path = "createComment")
@@ -84,6 +79,11 @@ public class ElephantAnswersController {
 	@PostMapping(path = "likeComment")
 	public Response likeComment(@RequestParam("id") long commentId) {
 		return service.likeComment(commentId, true);
+	}
+
+	@PostMapping(path = "unlikeComment")
+	public Response unlikeComment(@RequestParam("id") long commentId) {
+		return service.likeComment(commentId, false);
 	}
 
 	@DeleteMapping(path = "deleteComment")
@@ -111,5 +111,15 @@ public class ElephantAnswersController {
 		return service.increaseScore(request);
 	}
 
+	// first 100 index by recency
+	// take ones with highest in common
+	// take user id
+	// return 25 with integer as offset
 
+	// [a1, a2  ..., a100]
+	// [a1, a2 ..., a25]
+	@PostMapping(path = "getAnswersForUser")
+	public Response getAnswersForUser(@RequestBody ElephantAnswersRequest.AnswersForUser request) {
+		return service.getAnswersForUser(request);
+	}
 }

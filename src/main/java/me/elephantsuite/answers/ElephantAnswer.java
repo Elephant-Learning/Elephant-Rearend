@@ -35,6 +35,8 @@ import org.hibernate.annotations.FetchMode;
 @ToString
 public class ElephantAnswer {
 
+
+
 	@Id
 	@SequenceGenerator(name = "elephant_answer_sequence", sequenceName = "elephant_answer_sequence", allocationSize = 1)
 	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "elephant_answer_sequence")
@@ -61,6 +63,8 @@ public class ElephantAnswer {
 	private ElephantUser user;
 
 	private LocalDateTime lastUpdated = LocalDateTime.now();
+
+	private LocalDateTime created = LocalDateTime.now();
 
 	public ElephantAnswer(String title, String description, ElephantUser user) {
 		this.title = title;

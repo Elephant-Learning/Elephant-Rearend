@@ -55,6 +55,26 @@ public class ElephantAnswersRequest {
 	@AllArgsConstructor
 	@EqualsAndHashCode
 	@ToString
+	public static class LikeAnswer {
+		private final long userId;
+
+		private final long answerId;
+	}
+
+	@Getter
+	@AllArgsConstructor
+	@EqualsAndHashCode
+	@ToString
+	public static class AnswersForUser {
+		private final long userId;
+
+		private final int offset;
+	}
+
+	@Getter
+	@AllArgsConstructor
+	@EqualsAndHashCode
+	@ToString
 	public static class EditAnswer {
 		private final long answerId;
 
