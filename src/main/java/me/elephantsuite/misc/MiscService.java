@@ -37,6 +37,8 @@ public class MiscService {
 
 	private final ElephantAnswerRepositoryService elephantAnswerService;
 
+	private final CardService cardService;
+
 	public Response setPfpId(MiscRequest.SetPfpId request) {
 		long userId = request.getUserId();
 		int pfpid = request.getPfpId();
@@ -119,6 +121,7 @@ public class MiscService {
 	public Response getNumericalInformation() {
 		int users = userService.getAllUsers().size();
 		int decks = deckService.getAllDecks().size();
+		int cards = cardService.getAllCards().size();
 		List<ElephantAnswer> answers = elephantAnswerService.getAllAnswers();
 
 		int answersAsked = answers.size();
@@ -129,6 +132,7 @@ public class MiscService {
 			.addResponse(ResponseStatus.SUCCESS, "Retrieved number of users and cards!")
 			.addObject("users", users)
 			.addObject("decks", decks)
+			.addObject("cards", cards)
 			.addObject("questions", answersAsked)
 			.addObject("answeredQuestions", answersAnswered)
 			.build();
