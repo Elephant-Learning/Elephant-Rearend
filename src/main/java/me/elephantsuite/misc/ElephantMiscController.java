@@ -31,8 +31,8 @@ public class ElephantMiscController {
 		return miscService.setCountryCode(request);
 	}
 
-	@GetMapping(path = "totalUsersAndCards")
-	public Response getTotalUsersAndCards() {
-		return miscService.getTotalUsersAndCards();
+	@GetMapping(path = "numericalInformation")
+	public Response getNumericalInformation() {
+		return miscService.getNumericalInformation();
 	}
 }
