@@ -80,6 +80,10 @@ public class ElephantUser {
 
 	@ElementCollection
 	@Fetch(FetchMode.SUBSELECT)
+	private List<Long> elephantAnswersLiked = new ArrayList<>();
+
+	@ElementCollection
+	@Fetch(FetchMode.SUBSELECT)
 	private List<Integer> elephantAnswersTags = new ArrayList<>();
 
 	@ElementCollection(fetch = FetchType.EAGER)

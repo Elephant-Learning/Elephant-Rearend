@@ -1,9 +1,15 @@
 package me.elephantsuite.misc;
 
+import java.util.List;
+
 import lombok.AllArgsConstructor;
 import me.elephantsuite.ElephantBackendApplication;
+import me.elephantsuite.answers.ElephantAnswer;
+import me.elephantsuite.answers.ElephantAnswerRepositoryService;
 import me.elephantsuite.config.PropertiesHandler;
+import me.elephantsuite.deck.DeckRepositoryService;
 import me.elephantsuite.deck.card.CardService;
+import me.elephantsuite.deck.controller.DeckService;
 import me.elephantsuite.email.EmailService;
 import me.elephantsuite.registration.EmailValidator;
 import me.elephantsuite.response.api.Response;
@@ -27,7 +33,9 @@ public class MiscService {
 
 	private final EmailService emailService;
 
-	private final CardService cardService;
+	private final DeckRepositoryService deckService;
+
+	private final ElephantAnswerRepositoryService elephantAnswerService;
 
 	public Response setPfpId(MiscRequest.SetPfpId request) {
 		long userId = request.getUserId();
@@ -108,15 +116,21 @@ public class MiscService {
 				.build();
 	}
 
-	public Response getTotalUsersAndCards() {
+	public Response getNumericalInformation() {
 		int users = userService.getAllUsers().size();
-		int cards = cardService.getAllCards().size();
+		int decks = deckService.getAllDecks().size();
+		List<ElephantAnswer> answers = elephantAnswerService.getAllAnswers();
+
+		int answersAsked = answers.size();
+		int answersAnswered = answers.stream().filter(ElephantAnswer::isAnswered).toList().size();
 
 		return ResponseBuilder
 			.create()
 			.addResponse(ResponseStatus.SUCCESS, "Retrieved number of users and cards!")
 			.addObject("users", users)
-			.addObject("cards", cards)
+			.addObject("decks", decks)
+			.addObject("questions", answersAsked)
+			.addObject("answeredQuestions", answersAnswered)
 			.build();
 	}
 }

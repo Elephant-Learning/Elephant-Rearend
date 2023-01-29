@@ -1,5 +1,7 @@
 package me.elephantsuite.answers.controller;
 
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -138,11 +140,15 @@ public class ElephantAnswersService {
 			.build();
 	}
 
-	public Response likeAnswer(long answerId, boolean like) {
-		ElephantAnswer answer = service.getAnswerById(answerId);
+	public Response likeAnswer(ElephantAnswersRequest.LikeAnswer request, boolean like) {
+		long answerId = request.getAnswerId();
+		long userId = request.getUserId();
 
-		if (answer == null) {
-			throw new InvalidIdException(answerId, InvalidIdType.ANSWER);
+		ElephantAnswer answer = service.getAnswerById(answerId);
+		ElephantUser user = userService.getUserById(userId);
+
+		if (answer == null || user == null) {
+			throw new InvalidIdException(request, InvalidIdType.ANSWER, InvalidIdType.USER);
 		}
 
 		if (like) {
@@ -154,6 +160,14 @@ public class ElephantAnswersService {
 		answer.updateLastUpdatedTime();
 
 		answer = service.save(answer);
+
+		if (like) {
+			user.getElephantAnswersLiked().add(answerId);
+		} else {
+			user.getElephantAnswersLiked().remove(answerId);
+		}
+
+		user = userService.saveUser(user);
 
 		return ResponseBuilder
 			.create()
@@ -223,28 +237,6 @@ public class ElephantAnswersService {
 			.create()
 			.addResponse(ResponseStatus.SUCCESS, "Created Comment!")
 			.addObject("comment", comment)
-			.build();
-	}
-
-	public Response editAnswer(ElephantAnswersRequest.EditAnswer request) {
-		long answerId = request.getAnswerId();
-		String description = request.getDescription();
-
-		ElephantAnswer answer = service.getAnswerById(answerId);
-
-		if (answer == null) {
-			throw new InvalidIdException(request, InvalidIdType.ANSWER);
-		}
-
-		answer.setDescription(description);
-		answer.updateLastUpdatedTime();
-
-		answer = service.save(answer);
-
-		return ResponseBuilder
-			.create()
-			.addResponse(ResponseStatus.SUCCESS, "Edited Answer!")
-			.addObject("answer", answer)
 			.build();
 	}
 
@@ -422,5 +414,42 @@ public class ElephantAnswersService {
 			.addResponse(ResponseStatus.SUCCESS, "Set User Tags!")
 			.addObject("user", user)
 			.build();
+	}
+
+	public Response getAnswersForUser(ElephantAnswersRequest.AnswersForUser request) {
+		long userId = request.getUserId();
+		int offset = request.getOffset();
+
+		ElephantUser user = userService.getUserById(userId);
+
+		if (user == null) {
+			throw new InvalidIdException(request, InvalidIdType.USER);
+		}
+
+		if (offset > 4) {
+			return ResponseUtil.getFailureResponse("Offset Out Of Bounds!", offset);
+		}
+
+		List<ElephantAnswer> sorted = sortAnswersOnDate(service.getAllAnswers().subList(0, 101));
+
+		return ResponseBuilder
+			.create()
+			.addResponse(ResponseStatus.SUCCESS, "Retrieved Answers For User!")
+			.addObject("answers", sorted.subList(25 * offset, (25 * offset) + 25))
+			.build();
+	}
+
+	private static List<ElephantAnswer> sortAnswersOnDate(List<ElephantAnswer> answers) {
+		answers.sort((o1, o2) -> {
+			if (o1.getLastUpdated().isBefore(o2.getLastUpdated())) {
+				return -1;
+			} else if (o1.getLastUpdated().isAfter(o2.getLastUpdated())) {
+				return 1;
+			}
+
+			return 0;
+		});
+
+		return answers;
 	}
 }
