@@ -45,7 +45,7 @@ public class ElephantAnswersService {
 
 		ElephantUser user = ResponseUtil.checkUserValid(userId, userService);
 
-		if (RegistrationService.isInvalidName(description) || RegistrationService.isInvalidName(title)) {
+		if (RegistrationService.isInvalidName(title)) {
 			throw new InvalidTagInputException(description, title);
 		}
 
