@@ -15,7 +15,6 @@ import me.elephantsuite.answers.comment.Comment;
 import me.elephantsuite.user.ElephantUser;
 import org.hibernate.annotations.Fetch;
 import org.hibernate.annotations.FetchMode;
-import org.hibernate.annotations.Type;
 
 @Getter
 @Setter
@@ -34,7 +33,7 @@ public class ElephantAnswer {
 
 	private String title;
 
-	@Lob
+	@Column(length = Integer.MAX_VALUE)
 	private String description;
 
 	private boolean answered = false;
