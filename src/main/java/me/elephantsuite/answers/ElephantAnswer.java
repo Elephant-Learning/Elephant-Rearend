@@ -33,7 +33,7 @@ public class ElephantAnswer {
 
 	private String title;
 
-	@Column(length = Integer.MAX_VALUE)
+	@Column(length = 10485760) // max value for column
 	private String description;
 
 	private boolean answered = false;
