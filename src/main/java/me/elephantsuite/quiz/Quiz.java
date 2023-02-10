@@ -2,10 +2,9 @@ package me.elephantsuite.quiz;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import jakarta.persistence.*;
 import lombok.*;
-import me.elephantsuite.response.json.DeckSerializer;
+import me.elephantsuite.quiz.card.QuizCard;
 import me.elephantsuite.user.ElephantUser;
 import org.hibernate.annotations.Fetch;
 import org.hibernate.annotations.FetchMode;

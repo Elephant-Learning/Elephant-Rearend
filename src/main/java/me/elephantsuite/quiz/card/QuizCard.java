@@ -1,9 +1,10 @@
-package me.elephantsuite.quiz;
+package me.elephantsuite.quiz.card;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
 import lombok.*;
+import me.elephantsuite.quiz.Quiz;
 import org.hibernate.annotations.Fetch;
 import org.hibernate.annotations.FetchMode;
 
