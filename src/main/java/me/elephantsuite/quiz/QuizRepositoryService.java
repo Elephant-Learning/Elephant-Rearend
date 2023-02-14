@@ -12,4 +12,12 @@ public class QuizRepositoryService {
     public Quiz save(Quiz quiz) {
         return repository.save(quiz);
     }
+
+    public Quiz getById(long id) {
+        if (repository.existsById(id)) {
+            return repository.getReferenceById(id);
+        }
+
+        return null;
+    }
 }

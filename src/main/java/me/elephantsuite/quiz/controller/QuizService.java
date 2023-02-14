@@ -2,10 +2,12 @@ package me.elephantsuite.quiz.controller;
 
 import lombok.AllArgsConstructor;
 import me.elephantsuite.quiz.Quiz;
+import me.elephantsuite.quiz.QuizRepository;
 import me.elephantsuite.quiz.QuizRepositoryService;
 import me.elephantsuite.registration.RegistrationService;
 import me.elephantsuite.response.api.Response;
 import me.elephantsuite.response.api.ResponseBuilder;
+import me.elephantsuite.response.exception.InvalidIdType;
 import me.elephantsuite.response.exception.InvalidTagInputException;
 import me.elephantsuite.response.util.ResponseStatus;
 import me.elephantsuite.response.util.ResponseUtil;
@@ -23,6 +25,30 @@ public class QuizService {
 
     private QuizRepositoryService quizService;
 
+    private QuizRepository repository;
+
+    public Response editQuiz(QuizRequest.EditNameAndDescription req) {
+        String name = req.getName();
+        String desc = req.getDescription();
+        long id = req.getQuizId();
+
+        Quiz quiz = ResponseUtil.checkEntityValid(id, repository, InvalidIdType.QUIZ);
+
+        quiz.setDescription(desc);
+        quiz.setName(name);
+
+        quiz = quizService.save(quiz);
+
+        return ResponseBuilder
+                .create()
+                .addResponse(ResponseStatus.SUCCESS, "Edited Quiz!")
+                .addObject("quiz", quiz)
+                .build();
+
+
+
+
+    }
 
     public Response createQuiz(QuizRequest.CreateQuiz req) {
         String name = req.getName();

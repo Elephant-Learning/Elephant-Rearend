@@ -18,4 +18,16 @@ public class QuizRequest {
 
         private long userId;
     }
+
+    @Getter
+    @AllArgsConstructor
+    @EqualsAndHashCode
+    @ToString
+    public static class EditNameAndDescription {
+        private String name;
+
+        private String description;
+
+        private long quizId;
+    }
 }

@@ -18,4 +18,9 @@ public class QuizController {
     public Response createQuiz(@RequestBody QuizRequest.CreateQuiz req) {
         return quizService.createQuiz(req);
     }
+
+    @PostMapping(path = "editDetails")
+    public Response editDetails(@RequestBody QuizRequest.EditNameAndDescription req) {
+        return quizService.editQuiz(req);
+    }
 }
