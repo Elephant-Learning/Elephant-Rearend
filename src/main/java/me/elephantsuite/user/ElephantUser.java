@@ -29,6 +29,7 @@ import me.elephantsuite.answers.ElephantAnswer;
 import me.elephantsuite.backpack.Backpack;
 import me.elephantsuite.deck.Deck;
 import me.elephantsuite.folder.Folder;
+import me.elephantsuite.quiz.Quiz;
 import me.elephantsuite.registration.token.ConfirmationToken;
 import me.elephantsuite.stats.ElephantUserStatistics;
 import me.elephantsuite.timeline.Timeline;
@@ -44,7 +45,6 @@ import org.hibernate.annotations.FetchMode;
 @NoArgsConstructor
 @Entity
 @ToString
-//eventually what we want to create based on a registration request
 public class ElephantUser {
 
 	@Id
@@ -128,6 +128,10 @@ public class ElephantUser {
 	@OneToMany(mappedBy = "user", fetch = FetchType.EAGER, cascade = CascadeType.ALL, orphanRemoval = true)
 	@Fetch(FetchMode.SUBSELECT)
 	private List<ElephantAnswer> answers = new ArrayList<>();
+
+	@OneToMany(mappedBy = "user", fetch = FetchType.EAGER, cascade = CascadeType.ALL, orphanRemoval = true)
+	@Fetch(FetchMode.SUBSELECT)
+	private List<Quiz> quizzes = new ArrayList<>();
 
 	@OneToOne(cascade = CascadeType.ALL, orphanRemoval = true)
 	@JoinColumn(name = "elephant_user_statistics_id")
