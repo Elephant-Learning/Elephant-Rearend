@@ -11,7 +11,8 @@ public enum InvalidIdType {
 	TIMELINE("Timeline"),
 	ANSWER("Elephant Answer"),
 	COMMENT("Comment"),
-	REPLY("Reply");
+	REPLY("Reply"),
+	QUIZ("Quiz");
 
 	final String name;
 
