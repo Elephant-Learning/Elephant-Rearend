@@ -121,4 +121,17 @@ public class QuizService {
 
         return cards;
     }
+
+    public Response deleteQuiz(long quizId) {
+        Quiz quiz = ResponseUtil.checkEntityValid(quizId, repository, InvalidIdType.QUIZ);
+
+        quiz.getUser().getQuizzes().remove(quiz);
+        quiz.setCards(null);
+        repository.delete(quiz);
+
+        return ResponseBuilder
+                .create()
+                .addResponse(ResponseStatus.SUCCESS, "Deleted Quiz!")
+                .build();
+    }
 }

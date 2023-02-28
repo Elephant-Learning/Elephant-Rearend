@@ -2,10 +2,7 @@ package me.elephantsuite.quiz.controller;
 
 import lombok.AllArgsConstructor;
 import me.elephantsuite.response.api.Response;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping(path = "quiz")
@@ -27,5 +24,10 @@ public class QuizController {
     @PostMapping(path = "setQuizCards")
     public Response setQuizCards(@RequestBody QuizRequest.SetQuizCards req) {
         return quizService.setQuizCards(req);
+    }
+
+    @DeleteMapping(path = "delete")
+    public Response deleteQuiz(@RequestParam("id") long quizId) {
+        return quizService.deleteQuiz(quizId);
     }
 }

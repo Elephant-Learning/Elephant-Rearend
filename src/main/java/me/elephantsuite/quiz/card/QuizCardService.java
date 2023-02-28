@@ -14,4 +14,7 @@ public class QuizCardService {
     }
 
 
+    public void delete(QuizCard quizCard) {
+        repository.delete(quizCard);
+    }
 }
