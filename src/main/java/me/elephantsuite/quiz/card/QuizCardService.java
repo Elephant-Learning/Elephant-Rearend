@@ -7,4 +7,11 @@ import org.springframework.transaction.annotation.Transactional;
 @Service
 @Transactional
 public class QuizCardService {
+    private QuizCardRepository repository;
+
+    public QuizCard save(QuizCard card) {
+        return repository.save(card);
+    }
+
+
 }

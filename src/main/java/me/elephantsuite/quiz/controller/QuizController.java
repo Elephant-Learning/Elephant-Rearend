@@ -23,4 +23,9 @@ public class QuizController {
     public Response editDetails(@RequestBody QuizRequest.EditNameAndDescription req) {
         return quizService.editQuiz(req);
     }
+
+    @PostMapping(path = "setQuizCards")
+    public Response setQuizCards(@RequestBody QuizRequest.SetQuizCards req) {
+        return quizService.setQuizCards(req);
+    }
 }
