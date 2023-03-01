@@ -30,4 +30,9 @@ public class QuizController {
     public Response deleteQuiz(@RequestParam("id") long quizId) {
         return quizService.deleteQuiz(quizId);
     }
+
+    @DeleteMapping(path = "deleteCard")
+    public Response deleteQuizCard(@RequestParam("id") long cardId) {
+        return quizService.deleteQuizCard(cardId);
+    }
 }

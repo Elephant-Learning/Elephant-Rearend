@@ -6,6 +6,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 @Service
 @Transactional
+@AllArgsConstructor
 public class QuizCardService {
     private QuizCardRepository repository;
 

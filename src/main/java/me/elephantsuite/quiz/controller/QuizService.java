@@ -9,6 +9,7 @@ import me.elephantsuite.quiz.Quiz;
 import me.elephantsuite.quiz.QuizRepository;
 import me.elephantsuite.quiz.QuizRepositoryService;
 import me.elephantsuite.quiz.card.QuizCard;
+import me.elephantsuite.quiz.card.QuizCardRepository;
 import me.elephantsuite.quiz.card.QuizCardService;
 import me.elephantsuite.registration.RegistrationService;
 import me.elephantsuite.response.api.Response;
@@ -38,6 +39,8 @@ public class QuizService {
     private QuizCardService quizCardService;
 
     private QuizRepository repository;
+
+    private QuizCardRepository cardRepository;
 
     public Response editQuiz(QuizRequest.EditNameAndDescription req) {
         String name = req.getName();
@@ -97,8 +100,10 @@ public class QuizService {
         long id = req.getQuizId();
 
         Quiz quiz = ResponseUtil.checkEntityValid(id, repository, InvalidIdType.QUIZ);
+        quiz.getCards().clear();
         List<QuizCard> cards = convertToCards(req.getNewTerms(), quiz, quizCardService);
-        quiz.setCards(cards);
+        quiz.getCards().addAll(cards);
+
 
         quiz = quizService.save(quiz);
 
@@ -132,6 +137,17 @@ public class QuizService {
         return ResponseBuilder
                 .create()
                 .addResponse(ResponseStatus.SUCCESS, "Deleted Quiz!")
+                .build();
+    }
+
+    public Response deleteQuizCard(long cardId) {
+        QuizCard card = ResponseUtil.checkEntityValid(cardId, cardRepository, InvalidIdType.QUIZ_CARD);
+        card.setQuiz(null);
+        cardRepository.delete(card);
+
+        return ResponseBuilder
+                .create()
+                .addResponse(ResponseStatus.SUCCESS, "Deleted Card!")
                 .build();
     }
 }
