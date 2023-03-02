@@ -1,9 +1,6 @@
 package me.elephantsuite.quiz.controller;
 
 import lombok.AllArgsConstructor;
-import me.elephantsuite.deck.Deck;
-import me.elephantsuite.deck.card.Card;
-import me.elephantsuite.deck.card.CardService;
 import me.elephantsuite.deck.controller.DeckService;
 import me.elephantsuite.quiz.Quiz;
 import me.elephantsuite.quiz.QuizRepository;
@@ -131,7 +128,7 @@ public class QuizService {
         Quiz quiz = ResponseUtil.checkEntityValid(quizId, repository, InvalidIdType.QUIZ);
 
         quiz.getUser().getQuizzes().remove(quiz);
-        quiz.setCards(null);
+        quiz.getCards().clear();
         repository.delete(quiz);
 
         return ResponseBuilder
@@ -143,6 +140,7 @@ public class QuizService {
     public Response deleteQuizCard(long cardId) {
         QuizCard card = ResponseUtil.checkEntityValid(cardId, cardRepository, InvalidIdType.QUIZ_CARD);
         card.setQuiz(null);
+        cardRepository.deleteCardRelation(card.getId());
         cardRepository.delete(card);
 
         return ResponseBuilder
