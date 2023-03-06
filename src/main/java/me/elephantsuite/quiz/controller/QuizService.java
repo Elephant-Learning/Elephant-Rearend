@@ -1,7 +1,11 @@
 package me.elephantsuite.quiz.controller;
 
 import lombok.AllArgsConstructor;
+import me.elephantsuite.deck.Deck;
+import me.elephantsuite.deck.DeckRepository;
+import me.elephantsuite.deck.card.Card;
 import me.elephantsuite.deck.controller.DeckService;
+import me.elephantsuite.quiz.QuestionType;
 import me.elephantsuite.quiz.Quiz;
 import me.elephantsuite.quiz.QuizRepository;
 import me.elephantsuite.quiz.QuizRepositoryService;
@@ -20,9 +24,7 @@ import me.elephantsuite.user.ElephantUserService;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 @Service
 @Transactional
@@ -38,6 +40,10 @@ public class QuizService {
     private QuizRepository repository;
 
     private QuizCardRepository cardRepository;
+
+    private DeckRepository deckRepository;
+
+    private static Random RANDOM = new Random();
 
     public Response editQuiz(QuizRequest.EditNameAndDescription req) {
         String name = req.getName();
@@ -116,7 +122,7 @@ public class QuizService {
         List<QuizCard> cards = new ArrayList<>();
 
         cardsMap.forEach((s, strings) -> {
-            QuizCard card = new QuizCard(s, strings, quiz);
+            QuizCard card = new QuizCard(s, new ArrayList<>(strings), quiz, QuestionType.values()[(RANDOM.nextInt(QuestionType.values().length))]); // Create a new ArrayList for the "definitions" collection
             cards.add(card);
             cardService.save(card);
         });
@@ -146,6 +152,49 @@ public class QuizService {
         return ResponseBuilder
                 .create()
                 .addResponse(ResponseStatus.SUCCESS, "Deleted Card!")
+                .build();
+    }
+
+    public Response importDeck(QuizRequest.ImportDeck req) {
+        Quiz quiz = ResponseUtil.checkEntityValid(req.getQuizId(), repository, InvalidIdType.QUIZ_CARD);
+        Deck deck = ResponseUtil.checkEntityValid(req.getDeckId(), deckRepository, InvalidIdType.DECK);
+
+
+
+        List<QuizCard> quizCards = convertToCards(convertCardsToMap(deck.getCards()), quiz, quizCardService);
+
+        quiz.getCards().addAll(quizCards);
+        quizService.save(quiz);
+
+        return ResponseBuilder
+                .create()
+                .addResponse(ResponseStatus.SUCCESS, "Imported Cards from Deck!")
+                .addObject("quiz", quiz)
+                .build();
+    }
+
+    private static Map<String, List<String>> convertCardsToMap(List<Card> cards) {
+        Map<String, List<String>> map = new HashMap<>();
+
+        cards.forEach(card -> {
+            map.put(card.getTerm(), card.getDefinitions());
+        });
+
+        return map;
+    }
+
+    public Response setTimeLimit(QuizRequest.SetTimeLimit req) {
+        Quiz quiz = ResponseUtil.checkEntityValid(req.getQuizId(), repository, InvalidIdType.QUIZ);
+        double timeLimit = req.getNewTimeLimit();
+
+        quiz.setTimeLimit(timeLimit);
+
+        quiz = quizService.save(quiz);
+
+        return ResponseBuilder
+                .create()
+                .addResponse(ResponseStatus.SUCCESS, "Set Time Limit!")
+                .addObject("quiz", quiz)
                 .build();
     }
 }

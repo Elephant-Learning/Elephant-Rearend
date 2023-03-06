@@ -30,6 +30,8 @@ public class Quiz {
 
     private String description;
 
+    private double timeLimit = -1;
+
     @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.EAGER)
     @Fetch(value = FetchMode.SUBSELECT)
     private List<QuizCard> cards = new ArrayList<>();

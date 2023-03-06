@@ -4,6 +4,8 @@ import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
+
 @Service
 @Transactional
 @AllArgsConstructor
@@ -17,5 +19,9 @@ public class QuizCardService {
 
     public void delete(QuizCard quizCard) {
         repository.delete(quizCard);
+    }
+
+    public void saveAll(List<QuizCard> quizCards) {
+        repository.saveAll(quizCards);
     }
 }

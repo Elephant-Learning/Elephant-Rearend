@@ -35,4 +35,14 @@ public class QuizController {
     public Response deleteQuizCard(@RequestParam("id") long cardId) {
         return quizService.deleteQuizCard(cardId);
     }
+
+    @PostMapping(path = "importDeck")
+    public Response importDeck(@RequestBody QuizRequest.ImportDeck req) {
+        return quizService.importDeck(req);
+    }
+
+    @PostMapping(path = "setTimeLimit")
+    public Response setTimeLimit(@RequestBody QuizRequest.SetTimeLimit req) {
+        return quizService.setTimeLimit(req);
+    }
 }

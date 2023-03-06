@@ -45,4 +45,24 @@ public class QuizRequest {
 
         private final long quizId;
     }
+
+    @Getter
+    @AllArgsConstructor
+    @EqualsAndHashCode
+    @ToString
+    public  static class ImportDeck {
+        private final long deckId;
+
+        private final long quizId;
+    }
+
+    @Getter
+    @AllArgsConstructor
+    @EqualsAndHashCode
+    @ToString
+    public static class SetTimeLimit {
+        private final long quizId;
+
+        private final double newTimeLimit;
+    }
 }
