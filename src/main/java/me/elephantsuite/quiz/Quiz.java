@@ -30,7 +30,7 @@ public class Quiz {
 
     private String description;
 
-    private double timeLimit = -1;
+    private Double timeLimit = -1.0;
 
     @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.EAGER)
     @Fetch(value = FetchMode.SUBSELECT)

@@ -43,7 +43,7 @@ public class QuizService {
 
     private DeckRepository deckRepository;
 
-    private static Random RANDOM = new Random();
+    private static final Random RANDOM = new Random();
 
     public Response editQuiz(QuizRequest.EditNameAndDescription req) {
         String name = req.getName();
