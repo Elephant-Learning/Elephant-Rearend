@@ -45,4 +45,9 @@ public class QuizController {
     public Response setTimeLimit(@RequestBody QuizRequest.SetTimeLimit req) {
         return quizService.setTimeLimit(req);
     }
+
+    @PostMapping(path = "setCardAsIncorrect")
+    public Response setCardAsIncorrect(@RequestBody QuizRequest.SetCardAsIncorrect req) {
+        return quizService.setCardAsIncorrect(req);
+    }
 }

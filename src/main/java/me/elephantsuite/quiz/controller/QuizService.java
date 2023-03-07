@@ -197,4 +197,11 @@ public class QuizService {
                 .addObject("quiz", quiz)
                 .build();
     }
+
+    public Response setCardAsIncorrect(QuizRequest.SetCardAsIncorrect req) {
+        ElephantUser user = ResponseUtil.checkUserValid(req.getUserId(), userService);
+        QuizCard card = ResponseUtil.checkEntityValid(req.getQuizCardId(), cardRepository, InvalidIdType.QUIZ_CARD);
+
+        user.getElephantUserStatistics().getQuizCardStatistics().replace()
+    }
 }

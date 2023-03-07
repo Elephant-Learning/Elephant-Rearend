@@ -15,6 +15,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
 import me.elephantsuite.deck.card.Card;
+import me.elephantsuite.quiz.card.QuizCard;
 import me.elephantsuite.stats.card.CardStatistics;
 import me.elephantsuite.stats.quiz_card.QuizCardStatistics;
 import me.elephantsuite.user.ElephantUser;
@@ -57,7 +58,7 @@ public class ElephantUserStatistics {
 	@OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
 	@JoinTable(name = "elephant_user_statistics_quiz_card_statistics_mapping", joinColumns = {@JoinColumn(name = "elephant_user_statistics_id", referencedColumnName = "id")}, inverseJoinColumns = {@JoinColumn(name = "quiz_card_statistics_id")})
 	@MapKeyJoinColumn(name = "quiz_card_id")
-	private Map<Card, QuizCardStatistics> quizCardStatistics = new HashMap<>();
+	private Map<QuizCard, QuizCardStatistics> quizCardStatistics = new HashMap<>();
 
 	public ElephantUserStatistics(ElephantUser user) {
 		this.user = user;

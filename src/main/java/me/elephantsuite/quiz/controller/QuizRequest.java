@@ -14,6 +14,16 @@ public class QuizRequest {
     @AllArgsConstructor
     @EqualsAndHashCode
     @ToString
+    public static class SetCardAsIncorrect {
+        private long userId;
+
+        private long quizCardId;
+    }
+
+    @Getter
+    @AllArgsConstructor
+    @EqualsAndHashCode
+    @ToString
     public static class CreateQuiz {
         private String name;
 
