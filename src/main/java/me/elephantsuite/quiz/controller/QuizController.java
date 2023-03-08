@@ -48,6 +48,16 @@ public class QuizController {
 
     @PostMapping(path = "setCardAsIncorrect")
     public Response setCardAsIncorrect(@RequestBody QuizRequest.SetCardAsIncorrect req) {
-        return quizService.setCardAsIncorrect(req);
+        return quizService.setCardAsIncorrect(req, false);
+    }
+
+    @GetMapping(path = "getQuestions")
+    public Response getQuestions(@RequestParam("userId") long userId, @RequestParam("quizId") long quizId) {
+        return quizService.getQuestions(userId, quizId);
+    }
+
+    @PostMapping(path = "setCardAsCorrect")
+    public Response setCardAsCorrect(@RequestBody QuizRequest.SetCardAsIncorrect req) {
+        return quizService.setCardAsIncorrect(req, true);
     }
 }

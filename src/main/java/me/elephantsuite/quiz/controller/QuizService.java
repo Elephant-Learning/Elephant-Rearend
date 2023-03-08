@@ -19,6 +19,9 @@ import me.elephantsuite.response.exception.InvalidIdType;
 import me.elephantsuite.response.exception.InvalidTagInputException;
 import me.elephantsuite.response.util.ResponseStatus;
 import me.elephantsuite.response.util.ResponseUtil;
+import me.elephantsuite.stats.ElephantUserStatisticsRepositoryService;
+import me.elephantsuite.stats.quiz_card.QuizCardStatistics;
+import me.elephantsuite.stats.quiz_card.QuizCardStatisticsService;
 import me.elephantsuite.user.ElephantUser;
 import me.elephantsuite.user.ElephantUserService;
 import org.springframework.stereotype.Service;
@@ -42,6 +45,10 @@ public class QuizService {
     private QuizCardRepository cardRepository;
 
     private DeckRepository deckRepository;
+
+    private ElephantUserStatisticsRepositoryService statisticsService;
+
+    private QuizCardStatisticsService quizCardStatisticsService;
 
     private static final Random RANDOM = new Random();
 
@@ -84,7 +91,7 @@ public class QuizService {
 
         Quiz quiz = new Quiz(name, desc, user);
 
-        List<QuizCard> cards = convertToCards(terms, quiz, quizCardService);
+        List<QuizCard> cards = convertToCards(terms, quiz);
         quiz.setCards(cards);
 
         user.getQuizzes().add(quiz);
@@ -104,7 +111,7 @@ public class QuizService {
 
         Quiz quiz = ResponseUtil.checkEntityValid(id, repository, InvalidIdType.QUIZ);
         quiz.getCards().clear();
-        List<QuizCard> cards = convertToCards(req.getNewTerms(), quiz, quizCardService);
+        List<QuizCard> cards = convertToCards(req.getNewTerms(), quiz);
         quiz.getCards().addAll(cards);
 
 
@@ -118,13 +125,20 @@ public class QuizService {
 
     }
 
-    public static List<QuizCard> convertToCards(Map<String, List<String>> cardsMap, Quiz quiz, QuizCardService cardService) {
+    public List<QuizCard> convertToCards(Map<String, List<String>> cardsMap, Quiz quiz) {
         List<QuizCard> cards = new ArrayList<>();
 
         cardsMap.forEach((s, strings) -> {
             QuizCard card = new QuizCard(s, new ArrayList<>(strings), quiz, QuestionType.values()[(RANDOM.nextInt(QuestionType.values().length))]); // Create a new ArrayList for the "definitions" collection
+            ElephantUser user = quiz.getUser();
+            if (!user.getElephantUserStatistics().getQuizCardStatistics().containsKey(card)) {
+                QuizCardStatistics statistics = new QuizCardStatistics(card.getId());
+                statistics = quizCardStatisticsService.save(statistics);
+                user.getElephantUserStatistics().getQuizCardStatistics().put(card, statistics);
+                statisticsService.save(user.getElephantUserStatistics());
+            }
             cards.add(card);
-            cardService.save(card);
+            quizCardService.save(card);
         });
 
         return cards;
@@ -161,7 +175,7 @@ public class QuizService {
 
 
 
-        List<QuizCard> quizCards = convertToCards(convertCardsToMap(deck.getCards()), quiz, quizCardService);
+        List<QuizCard> quizCards = convertToCards(convertCardsToMap(deck.getCards()), quiz);
 
         quiz.getCards().addAll(quizCards);
         quizService.save(quiz);
@@ -198,10 +212,66 @@ public class QuizService {
                 .build();
     }
 
-    public Response setCardAsIncorrect(QuizRequest.SetCardAsIncorrect req) {
+    public Response setCardAsIncorrect(QuizRequest.SetCardAsIncorrect req, boolean b) {
         ElephantUser user = ResponseUtil.checkUserValid(req.getUserId(), userService);
         QuizCard card = ResponseUtil.checkEntityValid(req.getQuizCardId(), cardRepository, InvalidIdType.QUIZ_CARD);
 
-        user.getElephantUserStatistics().getQuizCardStatistics().replace()
+        if (!user.getElephantUserStatistics().getQuizCardStatistics().containsKey(card)) {
+            QuizCardStatistics statistics = new QuizCardStatistics(card.getId());
+            statistics = quizCardStatisticsService.save(statistics);
+            user.getElephantUserStatistics().getQuizCardStatistics().put(card, statistics);
+        }
+
+        user.getElephantUserStatistics().getQuizCardStatistics().get(card).setAnsweredCorrectly(b);
+
+        statisticsService.save(user.getElephantUserStatistics());
+
+        user = userService.saveUser(user);
+
+        return ResponseBuilder
+                .create()
+                .addResponse(ResponseStatus.SUCCESS, "Set Card as Incorrect!")
+                .addObject("user", user)
+                .build();
+    }
+
+    public Response getQuestions(long userId, long quizId) {
+        Quiz quiz = ResponseUtil.checkEntityValid(quizId, repository, InvalidIdType.QUIZ);
+        ElephantUser user = ResponseUtil.checkUserValid(userId, userService);
+
+        List<QuizCard> cards = new ArrayList<>(quiz.getCards());
+
+        List<QuizCard> finalCards = new ArrayList<>();
+
+        List<QuizCard> rightCards = new ArrayList<>();
+
+        cards.forEach(quizCard -> {
+            quizCard.setType(QuestionType.values()[(RANDOM.nextInt(QuestionType.values().length))]);
+            quizCard = quizCardService.save(quizCard);
+            Map<QuizCard, QuizCardStatistics> statMap = user.getElephantUserStatistics().getQuizCardStatistics();
+            QuizCardStatistics statistics = statMap.get(quizCard);
+
+            if (statistics != null) {
+                if (!statistics.isAnsweredCorrectly()) {
+                    finalCards.add(quizCard);
+                } else {
+                    rightCards.add(quizCard);
+                }
+            } else {
+                rightCards.add(quizCard);
+            }
+        });
+
+        Collections.shuffle(rightCards);
+
+        finalCards.addAll(rightCards);
+
+
+        return ResponseBuilder
+                .create()
+                .addResponse(ResponseStatus.SUCCESS, "Retrieved Questions!")
+                .addObject("question", finalCards)
+                .build();
+
     }
 }
