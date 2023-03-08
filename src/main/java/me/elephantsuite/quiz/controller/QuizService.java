@@ -130,16 +130,12 @@ public class QuizService {
 
         cardsMap.forEach((s, strings) -> {
             QuizCard card = new QuizCard(s, new ArrayList<>(strings), quiz, QuestionType.values()[(RANDOM.nextInt(QuestionType.values().length))]); // Create a new ArrayList for the "definitions" collection
-            ElephantUser user = quiz.getUser();
-            if (!user.getElephantUserStatistics().getQuizCardStatistics().containsKey(card)) {
-                QuizCardStatistics statistics = new QuizCardStatistics(card.getId());
-                statistics = quizCardStatisticsService.save(statistics);
-                user.getElephantUserStatistics().getQuizCardStatistics().put(card, statistics);
-                statisticsService.save(user.getElephantUserStatistics());
-            }
             cards.add(card);
-            quizCardService.save(card);
+            card = quizCardService.save(card);
+
         });
+
+        registerCardStatistics(cards, quiz.getUser());
 
         return cards;
     }
@@ -230,8 +226,8 @@ public class QuizService {
 
         return ResponseBuilder
                 .create()
-                .addResponse(ResponseStatus.SUCCESS, "Set Card as Incorrect!")
-                .addObject("user", user)
+                .addResponse(ResponseStatus.SUCCESS, "Set Card as " + (b ? "Correct" : "Incorrect") + "!")
+                .addObject("stats", user.getElephantUserStatistics().getQuizCardStatistics().get(card))
                 .build();
     }
 
@@ -239,7 +235,7 @@ public class QuizService {
         Quiz quiz = ResponseUtil.checkEntityValid(quizId, repository, InvalidIdType.QUIZ);
         ElephantUser user = ResponseUtil.checkUserValid(userId, userService);
 
-        List<QuizCard> cards = new ArrayList<>(quiz.getCards());
+        List<QuizCard> cards = new ArrayList<>(cardRepository.retrieveCardsByQuizId(quizId));
 
         List<QuizCard> finalCards = new ArrayList<>();
 
@@ -273,5 +269,16 @@ public class QuizService {
                 .addObject("question", finalCards)
                 .build();
 
+    }
+
+    private void registerCardStatistics(List<QuizCard> cards, ElephantUser user) {
+        for (QuizCard card : cards) {
+            if (!user.getElephantUserStatistics().getQuizCardStatistics().containsKey(card)) {
+                QuizCardStatistics cardStatistics = new QuizCardStatistics(card.getId());
+                cardStatistics = quizCardStatisticsService.save(cardStatistics);
+                user.getElephantUserStatistics().getQuizCardStatistics().put(card, cardStatistics);
+                statisticsService.save(user.getElephantUserStatistics());
+            }
+        }
     }
 }
