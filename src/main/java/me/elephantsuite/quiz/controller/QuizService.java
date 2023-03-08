@@ -220,6 +220,8 @@ public class QuizService {
 
         user.getElephantUserStatistics().getQuizCardStatistics().get(card).setAnsweredCorrectly(b);
 
+        quizCardStatisticsService.save(user.getElephantUserStatistics().getQuizCardStatistics().get(card));
+
         statisticsService.save(user.getElephantUserStatistics());
 
         user = userService.saveUser(user);
