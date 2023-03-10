@@ -58,7 +58,7 @@ public class QuizService {
         String desc = req.getDescription();
         long id = req.getQuizId();
 
-        Quiz quiz = ResponseUtil.checkEntityValid(id, repository, InvalidIdType.QUIZ);
+        Quiz quiz = getQuizById(req.getQuizId());
 
         quiz.setDescription(desc);
         quiz.setName(name);
@@ -110,7 +110,7 @@ public class QuizService {
     public Response setQuizCards(QuizRequest.SetQuizCards req) {
         long id = req.getQuizId();
 
-        Quiz quiz = ResponseUtil.checkEntityValid(id, repository, InvalidIdType.QUIZ);
+        Quiz quiz = getQuizById(req.getQuizId());
         quiz.getQuizCards().forEach(quizCard -> quizCardStatisticsService.deleteCardData(quizCard.getId()));
         quiz.getQuizCards().clear();
         List<QuizCard> cards = convertToCards(req.getNewTerms(), quiz);
@@ -143,7 +143,7 @@ public class QuizService {
     }
 
     public Response deleteQuiz(long quizId) {
-        Quiz quiz = ResponseUtil.checkEntityValid(quizId, repository, InvalidIdType.QUIZ);
+        Quiz quiz = getQuizById(quizId);
         quiz.getQuizCards().forEach(quizCard -> quizCardStatisticsService.deleteCardData(quizCard.getId()));
         quiz.getUser().getQuizzes().remove(quiz);
         quiz.getQuizCards().clear();
@@ -169,7 +169,7 @@ public class QuizService {
     }
 
     public Response importDeck(QuizRequest.ImportDeck req) {
-        Quiz quiz = ResponseUtil.checkEntityValid(req.getQuizId(), repository, InvalidIdType.QUIZ_CARD);
+        Quiz quiz = getQuizById(req.getQuizId());
         Deck deck = ResponseUtil.checkEntityValid(req.getDeckId(), deckRepository, InvalidIdType.DECK);
 
 
@@ -197,7 +197,7 @@ public class QuizService {
     }
 
     public Response setTimeLimit(QuizRequest.SetTimeLimit req) {
-        Quiz quiz = ResponseUtil.checkEntityValid(req.getQuizId(), repository, InvalidIdType.QUIZ);
+        Quiz quiz = getQuizById(req.getQuizId());
         double timeLimit = req.getNewTimeLimit();
 
         quiz.setTimeLimit(timeLimit);
@@ -237,7 +237,7 @@ public class QuizService {
     }
 
     public Response getQuestions(long userId, long quizId) {
-        Quiz quiz = ResponseUtil.checkEntityValid(quizId, repository, InvalidIdType.QUIZ);
+        Quiz quiz = getQuizById(quizId);
         ElephantUser user = ResponseUtil.checkUserValid(userId, userService);
 
         List<QuizCard> cards = new ArrayList<>(cardRepository.retrieveCardsByQuizId(quizId));
@@ -287,13 +287,15 @@ public class QuizService {
         }
     }
 
-    private Quiz getQuizById(long id) {
+    @Transactional
+    public Quiz getQuizById(long id) {
         if (repository.existsById(id)) {
             Quiz quiz = repository.getReferenceById(id);
             List<QuizCard> cards = repository.getCards(id);
 
             if (!cards.equals(quiz.getQuizCards())) {
-                quiz.setQuizCards(cards);
+                quiz.getQuizCards().clear();
+                quiz.getQuizCards().addAll(cards);
                 quiz = quizService.save(quiz);
             }
             return quiz;

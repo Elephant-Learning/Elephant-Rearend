@@ -11,7 +11,7 @@ import org.springframework.transaction.annotation.Transactional;
 @Repository
 public interface QuizRepository extends JpaRepository<Quiz, Long> {
 
-    @Query(value = "SELECT * FROM quiz_card WHERE quiz_id = ?1", nativeQuery = true)
+    @Query(value = "SELECT q FROM QuizCard q WHERE q.quiz.id = ?1")
     @Transactional
     List<QuizCard> getCards(long quizId);
 }

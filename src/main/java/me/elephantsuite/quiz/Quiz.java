@@ -16,7 +16,7 @@ import java.util.List;
 @Entity
 @Getter
 @Setter
-@EqualsAndHashCode(exclude = {"cards", "user"})
+@EqualsAndHashCode(exclude = {"quizCards", "user"})
 @ToString
 @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
 @NoArgsConstructor

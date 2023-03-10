@@ -11,6 +11,7 @@ public class QuizRepositoryService {
 
     private QuizRepository repository;
 
+    @Transactional
     public Quiz save(Quiz quiz) {
         return repository.save(quiz);
     }
