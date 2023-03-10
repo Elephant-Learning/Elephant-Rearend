@@ -60,4 +60,9 @@ public class QuizController {
     public Response setCardAsCorrect(@RequestBody QuizRequest.SetCardAsIncorrect req) {
         return quizService.setCardAsIncorrect(req, true);
     }
+
+    @GetMapping(path = "getById")
+    public Response getById(@RequestParam("id") long id) {
+        return quizService.getById(id);
+    }
 }

@@ -1,8 +1,6 @@
 package me.elephantsuite.stats.quiz_card;
 
 import lombok.AllArgsConstructor;
-import me.elephantsuite.stats.card.CardStatistics;
-import me.elephantsuite.stats.card.CardStatisticsRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -15,5 +13,14 @@ public class QuizCardStatisticsService {
 
 	public QuizCardStatistics save(QuizCardStatistics cardStatistics) {
 		return quizCardStatisticsRepository.save(cardStatistics);
+	}
+
+	public int deleteCardData(long cardId) {
+		quizCardStatisticsRepository.deleteCardStats(cardId);
+		return quizCardStatisticsRepository.deleteCardMappings(cardId);
+	}
+
+	public int deleteCardStats(long cardId) {
+		return quizCardStatisticsRepository.deleteCardStats(cardId);
 	}
 }

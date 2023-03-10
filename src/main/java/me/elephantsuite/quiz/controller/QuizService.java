@@ -15,6 +15,7 @@ import me.elephantsuite.quiz.card.QuizCardService;
 import me.elephantsuite.registration.RegistrationService;
 import me.elephantsuite.response.api.Response;
 import me.elephantsuite.response.api.ResponseBuilder;
+import me.elephantsuite.response.exception.InvalidIdException;
 import me.elephantsuite.response.exception.InvalidIdType;
 import me.elephantsuite.response.exception.InvalidTagInputException;
 import me.elephantsuite.response.util.ResponseStatus;
@@ -92,7 +93,7 @@ public class QuizService {
         Quiz quiz = new Quiz(name, desc, user);
 
         List<QuizCard> cards = convertToCards(terms, quiz);
-        quiz.setCards(cards);
+        quiz.setQuizCards(cards);
 
         user.getQuizzes().add(quiz);
 
@@ -110,9 +111,10 @@ public class QuizService {
         long id = req.getQuizId();
 
         Quiz quiz = ResponseUtil.checkEntityValid(id, repository, InvalidIdType.QUIZ);
-        quiz.getCards().clear();
+        quiz.getQuizCards().forEach(quizCard -> quizCardStatisticsService.deleteCardData(quizCard.getId()));
+        quiz.getQuizCards().clear();
         List<QuizCard> cards = convertToCards(req.getNewTerms(), quiz);
-        quiz.getCards().addAll(cards);
+        quiz.getQuizCards().addAll(cards);
 
 
         quiz = quizService.save(quiz);
@@ -142,9 +144,9 @@ public class QuizService {
 
     public Response deleteQuiz(long quizId) {
         Quiz quiz = ResponseUtil.checkEntityValid(quizId, repository, InvalidIdType.QUIZ);
-
+        quiz.getQuizCards().forEach(quizCard -> quizCardStatisticsService.deleteCardData(quizCard.getId()));
         quiz.getUser().getQuizzes().remove(quiz);
-        quiz.getCards().clear();
+        quiz.getQuizCards().clear();
         repository.delete(quiz);
 
         return ResponseBuilder
@@ -156,6 +158,7 @@ public class QuizService {
     public Response deleteQuizCard(long cardId) {
         QuizCard card = ResponseUtil.checkEntityValid(cardId, cardRepository, InvalidIdType.QUIZ_CARD);
         card.setQuiz(null);
+        quizCardStatisticsService.deleteCardData(cardId);
         cardRepository.deleteCardRelation(card.getId());
         cardRepository.delete(card);
 
@@ -173,7 +176,7 @@ public class QuizService {
 
         List<QuizCard> quizCards = convertToCards(convertCardsToMap(deck.getCards()), quiz);
 
-        quiz.getCards().addAll(quizCards);
+        quiz.getQuizCards().addAll(quizCards);
         quizService.save(quiz);
 
         return ResponseBuilder
@@ -282,5 +285,30 @@ public class QuizService {
                 statisticsService.save(user.getElephantUserStatistics());
             }
         }
+    }
+
+    private Quiz getQuizById(long id) {
+        if (repository.existsById(id)) {
+            Quiz quiz = repository.getReferenceById(id);
+            List<QuizCard> cards = repository.getCards(id);
+
+            if (!cards.equals(quiz.getQuizCards())) {
+                quiz.setQuizCards(cards);
+                quiz = quizService.save(quiz);
+            }
+            return quiz;
+        }
+
+        throw new InvalidIdException(id, InvalidIdType.QUIZ);
+    }
+
+    public Response getById(long id) {
+        Quiz quiz = getQuizById(id);
+
+        return ResponseBuilder
+                .create()
+                .addResponse(ResponseStatus.SUCCESS, "Retrieved Quiz!")
+                .addObject("quiz", quiz)
+                .build();
     }
 }
