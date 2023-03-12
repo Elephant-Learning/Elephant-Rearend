@@ -17,7 +17,7 @@ import java.util.List;
 @Getter
 @Setter
 @EqualsAndHashCode
-@ToString
+//@ToString(exclude = "quiz")
 @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
 @NoArgsConstructor
 public class QuizCard {
@@ -46,5 +46,10 @@ public class QuizCard {
         this.definitions = definitions;
         this.quiz = quiz;
         this.type = type;
+    }
+
+    @Override
+    public String toString() {
+        return String.valueOf(this.id);
     }
 }
