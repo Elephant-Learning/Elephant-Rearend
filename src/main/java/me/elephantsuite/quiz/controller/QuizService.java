@@ -1,6 +1,7 @@
 package me.elephantsuite.quiz.controller;
 
 import lombok.AllArgsConstructor;
+import me.elephantsuite.ElephantBackendApplication;
 import me.elephantsuite.deck.Deck;
 import me.elephantsuite.deck.DeckRepository;
 import me.elephantsuite.deck.card.Card;
@@ -236,11 +237,56 @@ public class QuizService {
                 .build();
     }
 
+    private QuizCardStatistics randomizeQuestionTypesAndGetStatistics(QuizCard iCard, ElephantUser user, boolean randomize) {
+        if (randomize) {
+            iCard.setType(QuestionType.values()[(RANDOM.nextInt(QuestionType.values().length))]);
+            iCard = quizCardService.save(iCard);
+        }
+        Map<QuizCard, QuizCardStatistics> statMap = user.getElephantUserStatistics().getQuizCardStatistics();
+        QuizCardStatistics statistics = statMap.get(iCard);
+
+        return statistics;
+    }
+
+    private static <T> void swap(List<T> list, int i1, int i2) {
+        T temp = list.get(i1);
+        list.set(i1, list.get(i2));
+        list.set(i2, temp);
+    }
+
     public Response getQuestions(long userId, long quizId) {
         Quiz quiz = getQuizById(quizId);
         ElephantUser user = ResponseUtil.checkUserValid(userId, userService);
 
         List<QuizCard> cards = new ArrayList<>(cardRepository.retrieveCardsByQuizId(quizId));
+
+        Collections.shuffle(cards);
+
+        List<Long> alrSortedNums = new ArrayList<>();
+
+        for (int i = 0; i < cards.size(); i++) {
+            QuizCardStatistics statistics = randomizeQuestionTypesAndGetStatistics(cards.get(i), user, true);
+            if (alrSortedNums.contains(statistics.getQuizCardId())) {
+                continue;
+            }
+            if (statistics.isAnsweredCorrectly()) {
+                for (int j = cards.size() - 1; j >= 0; j--) {
+                    QuizCardStatistics jStats = randomizeQuestionTypesAndGetStatistics(cards.get(j), user, false);
+                    if (jStats.getQuizCardId().equals(statistics.getQuizCardId())) {
+                        continue;
+                    }
+                    if (!jStats.isAnsweredCorrectly()) {
+                        //ElephantBackendApplication.LOGGER.info("Cards Before: " + cards);
+                        swap(cards, i, j);
+                        //ElephantBackendApplication.LOGGER.info("Cards After: " + cards);
+                        break;
+                    }
+                }
+
+                alrSortedNums.add(statistics.getQuizCardId());
+            }
+        }
+        /*
 
         List<QuizCard> finalCards = new ArrayList<>();
 
@@ -263,15 +309,17 @@ public class QuizService {
             }
         });
 
-        Collections.shuffle(rightCards);
+
 
         finalCards.addAll(rightCards);
+
+         */
 
 
         return ResponseBuilder
                 .create()
                 .addResponse(ResponseStatus.SUCCESS, "Retrieved Questions!")
-                .addObject("question", finalCards)
+                .addObject("questions", cards)
                 .build();
 
     }
