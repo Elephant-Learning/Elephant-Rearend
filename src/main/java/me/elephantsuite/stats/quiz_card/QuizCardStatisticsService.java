@@ -15,9 +15,9 @@ public class QuizCardStatisticsService {
 		return quizCardStatisticsRepository.save(cardStatistics);
 	}
 
-	public int deleteCardData(long cardId) {
+	public void deleteCardData(long cardId) {
+		quizCardStatisticsRepository.deleteCardMappings(cardId);
 		quizCardStatisticsRepository.deleteCardStats(cardId);
-		return quizCardStatisticsRepository.deleteCardMappings(cardId);
 	}
 
 	public int deleteCardStats(long cardId) {

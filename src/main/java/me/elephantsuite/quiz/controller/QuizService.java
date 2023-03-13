@@ -158,8 +158,8 @@ public class QuizService {
     public Response deleteQuizCard(long cardId) {
         QuizCard card = ResponseUtil.checkEntityValid(cardId, cardRepository, InvalidIdType.QUIZ_CARD);
         card.setQuiz(null);
-        quizCardStatisticsService.deleteCardData(cardId);
         cardRepository.deleteCardRelation(card.getId());
+        quizCardStatisticsService.deleteCardData(cardId);
         cardRepository.delete(card);
 
         return ResponseBuilder
