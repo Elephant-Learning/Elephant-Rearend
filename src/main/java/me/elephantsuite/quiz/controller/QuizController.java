@@ -61,6 +61,11 @@ public class QuizController {
         return quizService.setCardAsIncorrect(req, true);
     }
 
+    @GetMapping(path = "getStatistics")
+    public Response getStatistics(@RequestParam("quizCardId") long quizCardId, @RequestParam("userId") long userId) {
+        return quizService.getStatistics(quizCardId, userId);
+    }
+
     @GetMapping(path = "getById")
     public Response getById(@RequestParam("id") long id) {
         return quizService.getById(id);

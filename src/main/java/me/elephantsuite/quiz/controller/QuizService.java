@@ -112,7 +112,13 @@ public class QuizService {
         long id = req.getQuizId();
 
         Quiz quiz = getQuizById(req.getQuizId());
-        quiz.getQuizCards().forEach(quizCard -> quizCardStatisticsService.deleteCardData(quizCard.getId()));
+        List<QuizCard> quizCards = quiz.getQuizCards();
+
+        for (int i = 0; i < quizCards.size(); i++) {
+            QuizCard quizCard = quizCards.get(i);
+            quizCardStatisticsService.deleteCardData(quizCard.getId());
+        }
+
         quiz.getQuizCards().clear();
         List<QuizCard> cards = convertToCards(req.getNewTerms(), quiz);
         quiz.getQuizCards().addAll(cards);
@@ -132,7 +138,7 @@ public class QuizService {
         List<QuizCard> cards = new ArrayList<>();
 
         cardsMap.forEach((s, strings) -> {
-            QuizCard card = new QuizCard(s, new ArrayList<>(strings), quiz, QuestionType.values()[(RANDOM.nextInt(QuestionType.values().length))]); // Create a new ArrayList for the "definitions" collection
+            QuizCard card = new QuizCard(s, new ArrayList<>(strings), quiz, QuestionType.values()[(RANDOM.nextInt(QuestionType.values().length))]);
             cards.add(card);
             card = quizCardService.save(card);
 
@@ -276,9 +282,7 @@ public class QuizService {
                         continue;
                     }
                     if (!jStats.isAnsweredCorrectly()) {
-                        //ElephantBackendApplication.LOGGER.info("Cards Before: " + cards);
                         swap(cards, i, j);
-                        //ElephantBackendApplication.LOGGER.info("Cards After: " + cards);
                         break;
                     }
                 }
@@ -324,7 +328,7 @@ public class QuizService {
 
     }
 
-    private void registerCardStatistics(List<QuizCard> cards, ElephantUser user) {
+    private ElephantUser registerCardStatistics(List<QuizCard> cards, ElephantUser user) {
         for (QuizCard card : cards) {
             if (!user.getElephantUserStatistics().getQuizCardStatistics().containsKey(card)) {
                 QuizCardStatistics cardStatistics = new QuizCardStatistics(card.getId());
@@ -333,6 +337,8 @@ public class QuizService {
                 statisticsService.save(user.getElephantUserStatistics());
             }
         }
+
+        return userService.saveUser(user);
     }
 
     @Transactional
@@ -360,5 +366,20 @@ public class QuizService {
                 .addResponse(ResponseStatus.SUCCESS, "Retrieved Quiz!")
                 .addObject("quiz", quiz)
                 .build();
+    }
+
+    public Response getStatistics(long quizCardId, long userId) {
+        ElephantUser user = ResponseUtil.checkUserValid(userId, userService);
+        QuizCard card = ResponseUtil.checkEntityValid(quizCardId, cardRepository, InvalidIdType.QUIZ_CARD);
+
+        user = registerCardStatistics(card.getQuiz().getQuizCards(), user);
+
+        QuizCardStatistics statistics = user.getElephantUserStatistics().getQuizCardStatistics().get(card);
+
+        return ResponseBuilder
+            .create()
+            .addResponse(ResponseStatus.SUCCESS, "Retrieved Statistics!")
+            .addObject("statistics", statistics)
+            .build();
     }
 }
