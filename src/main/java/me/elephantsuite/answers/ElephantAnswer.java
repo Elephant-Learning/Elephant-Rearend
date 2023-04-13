@@ -6,12 +6,14 @@ import java.util.List;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
 import me.elephantsuite.answers.comment.Comment;
+import me.elephantsuite.response.json.AnswerSerializer;
 import me.elephantsuite.user.ElephantUser;
 import org.hibernate.annotations.Fetch;
 import org.hibernate.annotations.FetchMode;
@@ -22,6 +24,7 @@ import org.hibernate.annotations.FetchMode;
 @NoArgsConstructor
 @Entity
 @ToString
+@JsonSerialize(using = AnswerSerializer.class)
 public class ElephantAnswer {
 
 
