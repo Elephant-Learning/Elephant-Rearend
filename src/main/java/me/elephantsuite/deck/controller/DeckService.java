@@ -77,7 +77,7 @@ public class DeckService {
 			.build();
 	}
 
-	private static String hasInvalidTag(Map<String, List<String>> map) {
+	public static String hasInvalidTag(Map<String, List<String>> map) {
 		for (Map.Entry<String, List<String>> stringListEntry : map.entrySet()) {
 			String entry = stringListEntry.getKey();
 			if (RegistrationService.isInvalidName(entry)) {

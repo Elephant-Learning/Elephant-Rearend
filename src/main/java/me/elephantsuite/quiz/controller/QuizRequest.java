@@ -5,7 +5,20 @@ import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.ToString;
 
+import java.util.List;
+import java.util.Map;
+
 public class QuizRequest {
+
+    @Getter
+    @AllArgsConstructor
+    @EqualsAndHashCode
+    @ToString
+    public static class SetCardAsIncorrect {
+        private long userId;
+
+        private long quizCardId;
+    }
 
     @Getter
     @AllArgsConstructor
@@ -15,6 +28,8 @@ public class QuizRequest {
         private String name;
 
         private String description;
+
+        private final Map<String, List<String>> cards;
 
         private long userId;
     }
@@ -29,5 +44,35 @@ public class QuizRequest {
         private String description;
 
         private long quizId;
+    }
+
+    @Getter
+    @AllArgsConstructor
+    @EqualsAndHashCode
+    @ToString
+    public static class SetQuizCards {
+        private final Map<String, List<String>> newTerms;
+
+        private final long quizId;
+    }
+
+    @Getter
+    @AllArgsConstructor
+    @EqualsAndHashCode
+    @ToString
+    public  static class ImportDeck {
+        private final long deckId;
+
+        private final long quizId;
+    }
+
+    @Getter
+    @AllArgsConstructor
+    @EqualsAndHashCode
+    @ToString
+    public static class SetTimeLimit {
+        private final long quizId;
+
+        private final double newTimeLimit;
     }
 }

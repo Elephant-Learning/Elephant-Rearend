@@ -134,7 +134,6 @@ public class ElephantUser {
 	private List<Quiz> quizzes = new ArrayList<>();
 
 	@OneToOne(cascade = CascadeType.ALL, orphanRemoval = true)
-	@JoinColumn(name = "elephant_user_statistics_id")
 	private ElephantUserStatistics elephantUserStatistics = new ElephantUserStatistics(this);
 
 	@OneToOne(cascade = CascadeType.ALL, orphanRemoval = true)

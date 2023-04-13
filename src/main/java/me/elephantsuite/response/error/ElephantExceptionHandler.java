@@ -1,5 +1,6 @@
 package me.elephantsuite.response.error;
 
+import me.elephantsuite.ElephantBackendApplication;
 import me.elephantsuite.response.api.Response;
 import me.elephantsuite.response.api.ResponseBuilder;
 import me.elephantsuite.response.exception.InvalidIdException;
@@ -17,6 +18,7 @@ public class ElephantExceptionHandler {
 
     @ExceptionHandler(value = NullPointerException.class)
     public Response handleNpe(NullPointerException e) {
+        ElephantBackendApplication.LOGGER.error("NPE while processing request!", e);
         return ResponseBuilder
                 .create()
                 .addResponse(ResponseStatus.FAILURE, "NPE while processing request!")

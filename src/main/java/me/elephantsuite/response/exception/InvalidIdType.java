@@ -12,7 +12,8 @@ public enum InvalidIdType {
 	ANSWER("Elephant Answer"),
 	COMMENT("Comment"),
 	REPLY("Reply"),
-	QUIZ("Quiz");
+	QUIZ("Quiz"),
+	QUIZ_CARD("Quiz Card");
 
 	final String name;
 

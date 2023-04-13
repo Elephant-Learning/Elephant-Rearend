@@ -1,9 +1,12 @@
 package me.elephantsuite.quiz.card;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import jakarta.persistence.*;
 import lombok.*;
+import me.elephantsuite.quiz.QuestionType;
 import me.elephantsuite.quiz.Quiz;
 import org.hibernate.annotations.Fetch;
 import org.hibernate.annotations.FetchMode;
@@ -14,7 +17,7 @@ import java.util.List;
 @Getter
 @Setter
 @EqualsAndHashCode
-@ToString
+//@ToString(exclude = "quiz")
 @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
 @NoArgsConstructor
 public class QuizCard {
@@ -28,15 +31,25 @@ public class QuizCard {
 
     @ElementCollection(fetch = FetchType.EAGER)
     @Fetch(FetchMode.SUBSELECT)
+    @JoinColumn(name = "quiz_card_id")
     private List<String> definitions;
+
+    @Enumerated(EnumType.STRING)
+    private QuestionType type;
 
     @ManyToOne(fetch = FetchType.EAGER, cascade = {CascadeType.PERSIST, CascadeType.REFRESH, CascadeType.MERGE})
     @JsonBackReference
     private Quiz quiz;
 
-    public QuizCard(String term, List<String> definitions, Quiz quiz) {
+    public QuizCard(String term, List<String> definitions, Quiz quiz, QuestionType type) {
         this.term = term;
         this.definitions = definitions;
         this.quiz = quiz;
+        this.type = type;
+    }
+
+    @Override
+    public String toString() {
+        return String.valueOf(this.id);
     }
 }
