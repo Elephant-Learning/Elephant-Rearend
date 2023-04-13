@@ -416,12 +416,11 @@ public class ElephantAnswersService {
 			.build();
 	}
 
-	public Response getAnswersForUser(ElephantAnswersRequest.AnswersForUser request) {
-		long userId = request.getUserId();
+	public Response getAnswersForUser(long userId) {
 		ElephantUser user = userService.getUserById(userId);
 
 		if (user == null) {
-			throw new InvalidIdException(request, InvalidIdType.USER);
+			throw new InvalidIdException(userId, InvalidIdType.USER);
 		}
 
 		List<ElephantAnswer> sorted = sortAnswersOnDate(service.getAllAnswers().subList(0, service.getAllAnswers().size() >= 100 ? 101 : service.getAllAnswers().size()));

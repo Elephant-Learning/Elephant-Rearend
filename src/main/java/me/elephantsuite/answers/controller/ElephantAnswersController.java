@@ -3,6 +3,7 @@ package me.elephantsuite.answers.controller;
 import lombok.AllArgsConstructor;
 import me.elephantsuite.response.api.Response;
 import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -118,8 +119,8 @@ public class ElephantAnswersController {
 
 	// [a1, a2  ..., a100]
 	// [a1, a2 ..., a25]
-	@PostMapping(path = "getAnswersForUser")
-	public Response getAnswersForUser(@RequestBody ElephantAnswersRequest.AnswersForUser request) {
-		return service.getAnswersForUser(request);
+	@GetMapping(path = "getAnswersForUser")
+	public Response getAnswersForUser(@RequestParam("userId") long userId) {
+		return service.getAnswersForUser(userId);
 	}
 }
