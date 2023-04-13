@@ -418,24 +418,18 @@ public class ElephantAnswersService {
 
 	public Response getAnswersForUser(ElephantAnswersRequest.AnswersForUser request) {
 		long userId = request.getUserId();
-		int offset = request.getOffset();
-
 		ElephantUser user = userService.getUserById(userId);
 
 		if (user == null) {
 			throw new InvalidIdException(request, InvalidIdType.USER);
 		}
 
-		if (offset > 4) {
-			return ResponseUtil.getFailureResponse("Offset Out Of Bounds!", offset);
-		}
-
-		List<ElephantAnswer> sorted = sortAnswersOnDate(service.getAllAnswers().subList(0, 101));
+		List<ElephantAnswer> sorted = sortAnswersOnDate(service.getAllAnswers().subList(0, service.getAllAnswers().size() >= 100 ? 101 : service.getAllAnswers().size()));
 
 		return ResponseBuilder
 			.create()
 			.addResponse(ResponseStatus.SUCCESS, "Retrieved Answers For User!")
-			.addObject("answers", sorted.subList(25 * offset, (25 * offset) + 25))
+			.addObject("answers", sorted)
 			.build();
 	}
 

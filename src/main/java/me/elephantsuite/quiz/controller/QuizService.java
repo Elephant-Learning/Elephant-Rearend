@@ -290,34 +290,6 @@ public class QuizService {
                 alrSortedNums.add(statistics.getQuizCardId());
             }
         }
-        /*
-
-        List<QuizCard> finalCards = new ArrayList<>();
-
-        List<QuizCard> rightCards = new ArrayList<>();
-
-        cards.forEach(quizCard -> {
-            quizCard.setType(QuestionType.values()[(RANDOM.nextInt(QuestionType.values().length))]);
-            quizCard = quizCardService.save(quizCard);
-            Map<QuizCard, QuizCardStatistics> statMap = user.getElephantUserStatistics().getQuizCardStatistics();
-            QuizCardStatistics statistics = statMap.get(quizCard);
-
-            if (statistics != null) {
-                if (!statistics.isAnsweredCorrectly()) {
-                    finalCards.add(quizCard);
-                } else {
-                    rightCards.add(quizCard);
-                }
-            } else {
-                rightCards.add(quizCard);
-            }
-        });
-
-
-
-        finalCards.addAll(rightCards);
-
-         */
 
 
         return ResponseBuilder

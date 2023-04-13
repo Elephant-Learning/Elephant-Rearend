@@ -68,7 +68,6 @@ public class ElephantAnswersRequest {
 	public static class AnswersForUser {
 		private final long userId;
 
-		private final int offset;
 	}
 
 	@Getter
