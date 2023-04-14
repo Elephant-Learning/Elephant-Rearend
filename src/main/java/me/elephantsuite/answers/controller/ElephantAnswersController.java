@@ -112,6 +112,11 @@ public class ElephantAnswersController {
 		return service.increaseScore(request);
 	}
 
+	@GetMapping(path = "getById")
+	public Response getById(@RequestParam("id") long id) {
+		return service.getById(id);
+	}
+
 	// first 100 index by recency
 	// take ones with highest in common
 	// take user id
