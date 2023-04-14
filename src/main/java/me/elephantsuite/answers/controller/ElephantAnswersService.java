@@ -445,4 +445,14 @@ public class ElephantAnswersService {
 
 		return answers;
 	}
+
+	public Response getById(long id) {
+		ElephantAnswer answer = ResponseUtil.checkEntityValid(id, service.getRepository(), InvalidIdType.ANSWER);
+
+		return ResponseBuilder
+			.create()
+			.addResponse(ResponseStatus.SUCCESS, "Retrieved Answer!")
+			.addObject("answer", answer)
+			.build();
+	}
 }

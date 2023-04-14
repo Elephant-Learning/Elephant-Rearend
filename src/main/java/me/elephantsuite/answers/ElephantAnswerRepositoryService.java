@@ -23,6 +23,10 @@ public class ElephantAnswerRepositoryService {
 		return null;
 	}
 
+	public ElephantAnswerRepository getRepository() {
+		return repository;
+	}
+
 	public void delete(ElephantAnswer answer) {
 		repository.delete(answer);
 	}
