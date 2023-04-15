@@ -117,13 +117,6 @@ public class ElephantAnswersController {
 		return service.getById(id);
 	}
 
-	// first 100 index by recency
-	// take ones with highest in common
-	// take user id
-	// return 25 with integer as offset
-
-	// [a1, a2  ..., a100]
-	// [a1, a2 ..., a25]
 	@GetMapping(path = "getAnswersForUser")
 	public Response getAnswersForUser(@RequestParam("userId") long userId) {
 		return service.getAnswersForUser(userId);
