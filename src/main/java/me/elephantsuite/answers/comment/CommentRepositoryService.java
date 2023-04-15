@@ -25,4 +25,8 @@ public class CommentRepositoryService {
 	public void delete(Comment comment) {
 		commentRepository.delete(comment);
 	}
+
+	public CommentRepository getRepository() {
+		return commentRepository;
+	}
 }

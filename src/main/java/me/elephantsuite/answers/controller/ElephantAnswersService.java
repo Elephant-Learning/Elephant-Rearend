@@ -503,4 +503,14 @@ public class ElephantAnswersService {
 			.addObject("answer", answer)
 			.build();
 	}
+
+	public Response getCommentById(long id) {
+		Comment comment = ResponseUtil.checkEntityValid(id, commentService.getRepository(), InvalidIdType.COMMENT);
+
+		return ResponseBuilder
+			.create()
+			.addResponse(ResponseStatus.SUCCESS, "Retrieved Comment!")
+			.addObject("comment", comment)
+			.build();
+	}
 }

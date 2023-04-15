@@ -117,6 +117,11 @@ public class ElephantAnswersController {
 		return service.getById(id);
 	}
 
+	@GetMapping(path = "getCommentById")
+	public Response getCommentById(@RequestParam("id") long id) {
+		return service.getCommentById(id);
+	}
+
 	@GetMapping(path = "getAnswersForUser")
 	public Response getAnswersForUser(@RequestParam("userId") long userId) {
 		return service.getAnswersForUser(userId);
