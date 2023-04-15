@@ -1,17 +1,13 @@
 package me.elephantsuite.answers.controller;
 
-import java.util.Collections;
-import java.util.Comparator;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
-import java.util.stream.Collectors;
 
 import lombok.AllArgsConstructor;
 import me.elephantsuite.answers.ElephantAnswer;
-import me.elephantsuite.answers.ElephantAnswerRepository;
 import me.elephantsuite.answers.ElephantAnswerRepositoryService;
 import me.elephantsuite.answers.comment.Comment;
 import me.elephantsuite.answers.comment.CommentRepositoryService;
@@ -265,8 +261,9 @@ public class ElephantAnswersService {
 			.build();
 	}
 
-	public Response likeComment(long commentId, boolean like) {
-		Comment comment = commentService.getCommentById(commentId);
+	public Response likeComment(ElephantAnswersRequest.LikeComment request, boolean like) {
+		Comment comment = commentService.getCommentById(request.getCommentId());
+		ElephantUser user = ResponseUtil.checkUserValid(request.getUserId(), userService);
 
 		if (comment == null) {
 			throw new InvalidIdException(comment, InvalidIdType.COMMENT);
@@ -274,16 +271,20 @@ public class ElephantAnswersService {
 
 		if (like) {
 			comment.incrementLikes();
+			user.getCommentsLiked().add(comment.getId());
 		} else {
 			comment.decrementLikes();
+			user.getCommentsLiked().remove(comment.getId());
 		}
 
 		comment = commentService.save(comment);
+		user = userService.saveUser(user);
 
 		return ResponseBuilder
 			.create()
 			.addResponse(ResponseStatus.SUCCESS, (like ? "Liked" : "Disliked") + " Comment!")
 			.addObject("comment", comment)
+			.addObject("user", user)
 			.build();
 	}
 
@@ -501,6 +502,16 @@ public class ElephantAnswersService {
 			.create()
 			.addResponse(ResponseStatus.SUCCESS, "Retrieved Answer!")
 			.addObject("answer", answer)
+			.build();
+	}
+
+	public Response getCommentById(long id) {
+		Comment comment = ResponseUtil.checkEntityValid(id, commentService.getRepository(), InvalidIdType.COMMENT);
+
+		return ResponseBuilder
+			.create()
+			.addResponse(ResponseStatus.SUCCESS, "Retrieved Comment!")
+			.addObject("comment", comment)
 			.build();
 	}
 }

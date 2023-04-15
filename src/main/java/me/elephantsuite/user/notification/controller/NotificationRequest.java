@@ -68,5 +68,7 @@ public class NotificationRequest {
 		private final long senderId;
 
 		private final long answerId;
+
+		private final long commentId;
 	}
 }

@@ -84,6 +84,10 @@ public class ElephantUser {
 
 	@ElementCollection
 	@Fetch(FetchMode.SUBSELECT)
+	private List<Long> commentsLiked = new ArrayList<>();
+
+	@ElementCollection
+	@Fetch(FetchMode.SUBSELECT)
 	private List<Integer> elephantAnswersTags = new ArrayList<>();
 
 	@ElementCollection(fetch = FetchType.EAGER)
