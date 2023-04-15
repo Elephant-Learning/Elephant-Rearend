@@ -2,7 +2,11 @@ package me.elephantsuite.answers.controller;
 
 import java.util.Collections;
 import java.util.Comparator;
+import java.util.HashMap;
+import java.util.LinkedHashMap;
+import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 import lombok.AllArgsConstructor;
@@ -423,13 +427,53 @@ public class ElephantAnswersService {
 			throw new InvalidIdException(userId, InvalidIdType.USER);
 		}
 
-		List<ElephantAnswer> sorted = sortAnswersOnDate(service.getAllAnswers().subList(0, service.getAllAnswers().size() >= 100 ? 101 : service.getAllAnswers().size()));
+		List<ElephantAnswer> selection = service.getAllAnswers().subList(0, service.getAllAnswers().size() >= 100 ? 101 : service.getAllAnswers().size());
+
+		List<ElephantAnswer> sorted = sortAnswersByTag(selection, user);
 
 		return ResponseBuilder
 			.create()
 			.addResponse(ResponseStatus.SUCCESS, "Retrieved Answers For User!")
 			.addObject("answers", sorted)
 			.build();
+	}
+
+	private static List<ElephantAnswer> sortAnswersByTag(List<ElephantAnswer> answers, ElephantUser user) {
+		Map<ElephantAnswer, Integer> map = new HashMap<>();
+
+		answers.forEach(answer -> {
+			int similar = 0;
+			for (Integer integer : answer.getTags()) {
+				if (user.getElephantAnswersTags().contains(integer)) {
+					similar++;
+				}
+			}
+
+			map.put(answer, similar);
+		});
+
+		List<ElephantAnswer> answers1 = new LinkedList<>();
+
+		sortMap(map).forEach((elephantAnswer, integer) -> {
+			answers1.add(elephantAnswer);
+		});
+
+		return answers1;
+	}
+
+
+	private static <T> Map<T, Integer> sortMap(Map<T, Integer> map) {
+		List<Map.Entry<T, Integer>> list = new LinkedList<>(map.entrySet());
+
+		list.sort(Map.Entry.comparingByValue((o1, o2) -> -Integer.compare(o1, o2)));
+
+		Map<T, Integer> map2 = new LinkedHashMap<>();
+
+		for (Map.Entry<T, Integer> tIntegerEntry : list) {
+			map2.put(tIntegerEntry.getKey(), tIntegerEntry.getValue());
+		}
+
+		return map2;
 	}
 
 	private static List<ElephantAnswer> sortAnswersOnDate(List<ElephantAnswer> answers) {
