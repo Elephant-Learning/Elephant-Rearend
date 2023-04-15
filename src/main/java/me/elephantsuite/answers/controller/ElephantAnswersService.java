@@ -427,7 +427,10 @@ public class ElephantAnswersService {
 			throw new InvalidIdException(userId, InvalidIdType.USER);
 		}
 
-		List<ElephantAnswer> selection = service.getAllAnswers().subList(0, service.getAllAnswers().size() >= 100 ? 101 : service.getAllAnswers().size());
+		List<ElephantAnswer> selection = service.getAllAnswers().subList(0, service.getAllAnswers().size() >= 100 ? 101 : service.getAllAnswers().size())
+			.stream()
+			.filter(elephantAnswer -> elephantAnswer.getUser().getId() != userId)
+			.toList();
 
 		List<ElephantAnswer> sorted = sortAnswersByTag(selection, user);
 
