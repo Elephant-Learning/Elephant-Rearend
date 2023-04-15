@@ -133,4 +133,14 @@ public class ElephantAnswersRequest {
 
 		private final long replyId;
 	}
+
+	@Getter
+	@AllArgsConstructor
+	@EqualsAndHashCode
+	@ToString
+	public static class LikeComment {
+		private final long commentId;
+
+		private final long userId;
+	}
 }

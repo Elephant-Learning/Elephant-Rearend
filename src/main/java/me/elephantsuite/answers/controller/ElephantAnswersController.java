@@ -78,13 +78,13 @@ public class ElephantAnswersController {
 	}
 
 	@PostMapping(path = "likeComment")
-	public Response likeComment(@RequestParam("id") long commentId) {
-		return service.likeComment(commentId, true);
+	public Response likeComment(@RequestBody ElephantAnswersRequest.LikeComment request) {
+		return service.likeComment(request, true);
 	}
 
 	@PostMapping(path = "unlikeComment")
-	public Response unlikeComment(@RequestParam("id") long commentId) {
-		return service.likeComment(commentId, false);
+	public Response unlikeComment(@RequestBody ElephantAnswersRequest.LikeComment request) {
+		return service.likeComment(request, false);
 	}
 
 	@DeleteMapping(path = "deleteComment")
