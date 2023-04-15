@@ -47,6 +47,8 @@ public class Comment {
 
 	private int numberOfLikes = 0;
 
+	private boolean finalAnswer = false;
+
 	@ManyToOne(cascade = {CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REFRESH})
 	@JsonBackReference
 	private ElephantAnswer answer;
