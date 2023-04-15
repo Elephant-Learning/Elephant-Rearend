@@ -33,8 +33,8 @@ public class ElephantAnswersController {
 	}
 
 	@PostMapping(path = "setAnswered")
-	public Response setAnswered(@RequestParam("id") long answerId) {
-		return service.setAnswered(answerId);
+	public Response setAnswered(@RequestBody ElephantAnswersRequest.SetAnswerAnswered request) {
+		return service.setAnswered(request);
 	}
 
 	@PostMapping(path = "setTags")

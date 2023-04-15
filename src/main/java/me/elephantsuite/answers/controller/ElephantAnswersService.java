@@ -95,13 +95,18 @@ public class ElephantAnswersService {
 			.build();
 	}
 
-	public Response setAnswered(long answerId) {
+	public Response setAnswered(ElephantAnswersRequest.SetAnswerAnswered request) {
 
-		ElephantAnswer answer = service.getAnswerById(answerId);
+		ElephantAnswer answer = service.getAnswerById(request.getAnswerId());
+		Comment comment = ResponseUtil.checkEntityValid(request.getCommentId(), commentService.getRepository(), InvalidIdType.COMMENT);
 
 		if (answer == null) {
-			throw new InvalidIdException(answerId, InvalidIdType.ANSWER);
+			throw new InvalidIdException(request.getAnswerId(), InvalidIdType.ANSWER);
 		}
+
+		comment.setFinalAnswer(true);
+
+		comment = commentService.save(comment);
 
 		answer.setAnswered(true);
 
