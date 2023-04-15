@@ -6,6 +6,8 @@ import java.util.Optional;
 
 import lombok.AllArgsConstructor;
 import me.elephantsuite.ElephantBackendApplication;
+import me.elephantsuite.answers.ElephantAnswer;
+import me.elephantsuite.answers.ElephantAnswerRepositoryService;
 import me.elephantsuite.deck.Deck;
 import me.elephantsuite.deck.DeckRepositoryService;
 import me.elephantsuite.email.EmailService;
@@ -39,6 +41,8 @@ public class NotificationService {
 
 	private final EmailService emailService;
 
+	private final ElephantAnswerRepositoryService answerRepositoryService;
+
 	public Response sendLikedDeck(NotificationRequest.LikedDeckRequest request) {
 
 		NotificationType type = request.getType();
@@ -62,7 +66,7 @@ public class NotificationService {
 			return ResponseUtil.getFailureResponse("Incorrect Notification Type Used! (Should Use LIKED_DECK)", request);
 		}
 
-		Notification notification = new Notification(type, message, recipient, null, deck.getId());
+		Notification notification = new Notification(type, message, recipient, null, deck.getId(), null);
 
 		recipient.getNotifications().add(notification);
 
@@ -113,7 +117,7 @@ public class NotificationService {
 		}
 
 
-		Notification notification = new Notification(type, message, recipient, request.getSenderId(), deck.getId());
+		Notification notification = new Notification(type, message, recipient, request.getSenderId(), deck.getId(), null);
 
 		recipient.getNotifications().add(notification);
 
@@ -162,7 +166,7 @@ public class NotificationService {
 			return ResponseUtil.getFailureResponse("Friend Request Notification already sent!", request);
 		}
 
-		Notification notification = new Notification(type, message, recipient, request.getSenderId(), null);
+		Notification notification = new Notification(type, message, recipient, request.getSenderId(), null, null);
 
 		emailService.send(recipient.getEmail(), ElephantBackendApplication.ELEPHANT_CONFIG.getConfigOption("friendEmailHtmlFile").replace("[NAME]", sender.getFullName()), "You have received a friend request!" ,true);
 
@@ -205,6 +209,41 @@ public class NotificationService {
 			.addResponse(ResponseStatus.SUCCESS, "Deleted Notification!")
 			.addObject("user", user)
 			.addObject("notification", notification)
+			.build();
+	}
+
+	public Response sendAnsweredAnswer(NotificationRequest.AnswerAnswerRequest request) {
+		NotificationType type = request.getType();
+		String message = request.getMessage();
+		ElephantUser recipient = ResponseUtil.checkUserValid(request.getRecipientId(), userService);
+		ElephantUser sender = ResponseUtil.checkUserValid(request.getSenderId(), userService);
+		ElephantAnswer answer = ResponseUtil.checkEntityValid(request.getAnswerId(), answerRepositoryService.getRepository(), InvalidIdType.ANSWER);
+
+		if (message == null || type == null) {
+			return ResponseUtil.getFailureResponse("Notification type or message cannot be null!", request);
+		}
+
+		if (RegistrationService.isInvalidName(message)) {
+			throw new InvalidTagInputException(message);
+		}
+
+		if (!type.equals(NotificationType.ANSWER_ANSWER)) {
+			return ResponseUtil.getFailureResponse("Incorrect Notification Type Used! (Should use ANSWER_ANSWER)", request);
+		}
+
+		Notification notification = new Notification(type, message, recipient, sender.getId(), null, answer.getId());
+
+		recipient.getNotifications().add(notification);
+
+		notification = notificationService.save(notification);
+		recipient = userService.saveUser(recipient);
+
+		return ResponseBuilder
+			.create()
+			.addResponse(ResponseStatus.SUCCESS, "Notification sent to user!")
+			.addObject("notification", notification)
+			.addObject("recipient", recipient)
+			.addObject("sender", sender)
 			.build();
 	}
 }

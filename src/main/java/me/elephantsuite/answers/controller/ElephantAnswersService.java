@@ -430,6 +430,7 @@ public class ElephantAnswersService {
 		List<ElephantAnswer> selection = service.getAllAnswers().subList(0, service.getAllAnswers().size() >= 100 ? 101 : service.getAllAnswers().size())
 			.stream()
 			.filter(elephantAnswer -> elephantAnswer.getUser().getId() != userId)
+			.filter(elephantAnswer -> !elephantAnswer.isAnswered())
 			.toList();
 
 		List<ElephantAnswer> sorted = sortAnswersByTag(selection, user);
