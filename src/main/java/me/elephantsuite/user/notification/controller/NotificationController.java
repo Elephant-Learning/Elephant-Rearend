@@ -31,6 +31,11 @@ public class NotificationController {
 		return notificationService.sendSharedDeck(request);
 	}
 
+	@PostMapping(path = "sendAnsweredAnswer")
+	public Response sendAnsweredAnswer(@RequestBody NotificationRequest.AnswerAnswerRequest request) {
+		return notificationService.sendAnsweredAnswer(request);
+	}
+
 	@DeleteMapping(path = "delete")
 	public Response deleteNotification(@RequestParam("id") long id) {
 		return notificationService.deleteNotification(id);

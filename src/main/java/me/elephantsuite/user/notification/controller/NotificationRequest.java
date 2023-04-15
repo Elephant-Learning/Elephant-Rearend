@@ -53,4 +53,20 @@ public class NotificationRequest {
 
 		private final long senderId;
 	}
+
+	@Getter
+	@AllArgsConstructor
+	@EqualsAndHashCode
+	@ToString
+	public static class AnswerAnswerRequest {
+		private final NotificationType type;
+
+		private final String message;
+
+		private final long recipientId;
+
+		private final long senderId;
+
+		private final long answerId;
+	}
 }

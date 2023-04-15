@@ -56,12 +56,15 @@ public class Notification {
 
 	private Long deckId;
 
-	public Notification(NotificationType type, String message, ElephantUser recipient, Long senderId, Long deckId) {
+	private Long answerId;
+
+	public Notification(NotificationType type, String message, ElephantUser recipient, Long senderId, Long deckId, Long answerId) {
 		this.type = type;
 		this.message = message;
 		this.recipient = recipient;
 		this.senderId = senderId;
 		this.deckId = deckId;
+		this.answerId = answerId;
 	}
 
 
