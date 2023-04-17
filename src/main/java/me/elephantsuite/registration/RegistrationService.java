@@ -167,9 +167,9 @@ public class RegistrationService {
 
 		ElephantUser user = ResponseUtil.checkUserValid(id, elephantUserService);
 
-		if (!encoder.matches(password, user.getPassword())) {
-			return ResponseUtil.getFailureResponse("Invalid Password!", request);
-		}
+		//if (!encoder.matches(password, user.getPassword())) {
+		//	return ResponseUtil.getFailureResponse("Invalid Password!", request);
+		//}
 
 		elephantUserService.deleteUser(user);
 
