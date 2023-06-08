@@ -17,7 +17,7 @@ public class ElephantBackendApplication {
 	public static final PropertiesHandler ELEPHANT_CONFIG = PropertiesHandler
 		.builder()
 		.addConfigOption("isDevelopment", true)
-		.addConfigOption("senderEmailAddress", "no-reply@elephantsuite.me")
+		.addConfigOption("senderEmailAddress", "no-reply@elephantsuite.net")
 		.addConfigOption("elephantDomain", "localhost:8080")
 		.addConfigOption("pfpIdMax", 47)
 		.addConfigOption("recentlyViewedDecksMax", 50)
