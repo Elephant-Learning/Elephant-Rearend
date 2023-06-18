@@ -10,6 +10,7 @@ import lombok.ToString;
 import me.elephantsuite.timeline.Timeline;
 import me.elephantsuite.user.ElephantUser;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 @Getter
@@ -30,8 +31,20 @@ public class Event {
     @JsonBackReference
     private Timeline timeline;
 
-    private LocalDateTime localDateTime;
+    private LocalDateTime localDate;
+
+    private String name;
+
+    private String description;
 
     @Enumerated(EnumType.STRING)
     private Importance importance;
+
+    public Event(Timeline timeline, LocalDateTime date, String name, String description, Importance importance) {
+        this.timeline = timeline;
+        this.localDate = date;
+        this.name = name;
+        this.description = description;
+        this.importance = importance;
+    }
 }
