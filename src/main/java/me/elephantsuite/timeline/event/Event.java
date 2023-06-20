@@ -33,6 +33,8 @@ public class Event {
 
     private LocalDateTime localDate;
 
+    private LocalDateTime endDate;
+
     private String name;
 
     private String description;
@@ -40,11 +42,12 @@ public class Event {
     @Enumerated(EnumType.STRING)
     private Importance importance;
 
-    public Event(Timeline timeline, LocalDateTime date, String name, String description, Importance importance) {
+    public Event(Timeline timeline, LocalDateTime date, String name, String description, Importance importance, LocalDateTime endDate) {
         this.timeline = timeline;
         this.localDate = date;
         this.name = name;
         this.description = description;
         this.importance = importance;
+        this.endDate = endDate;
     }
 }

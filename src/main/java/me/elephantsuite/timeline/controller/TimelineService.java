@@ -161,11 +161,12 @@ public class TimelineService {
         String name = request.getName();
         String description = request.getDescription();
         LocalDateTime date = request.getDate();
+        LocalDateTime endDate = request.getEndDate();
         Importance importance = request.getImportance();
 
         Timeline timeline = getTimelineById(timelineId);
 
-        Event event = new Event(timeline, date, name, description, importance);
+        Event event = new Event(timeline, date, name, description, importance, endDate);
 
         timeline.getEvents().add(event);
 
@@ -352,6 +353,23 @@ public class TimelineService {
             .create()
             .addResponse(ResponseStatus.SUCCESS, "Set Marker Date!")
             .addObject("marker", marker)
+            .build();
+    }
+
+    public Response setEventEndDate(TimelineRequest.SetEventDate request) {
+        long eventId = request.getEventId();
+        LocalDateTime date = request.getDate();
+
+        Event event = getEventById(eventId);
+
+        event.setEndDate(date);
+
+        event = eventRepositoryService.save(event);
+
+        return ResponseBuilder
+            .create()
+            .addResponse(ResponseStatus.SUCCESS, "Set Event Date!")
+            .addObject("event", event)
             .build();
     }
 }
