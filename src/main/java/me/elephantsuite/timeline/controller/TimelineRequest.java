@@ -117,6 +117,8 @@ public class TimelineRequest {
 
         private final LocalDateTime date;
 
+        private final LocalDateTime endDate;
+
         private final String description;
 
         private final Importance importance;

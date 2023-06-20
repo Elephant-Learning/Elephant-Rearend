@@ -56,6 +56,11 @@ public class TimelineController {
         return service.setEventDate(request);
     }
 
+    @PostMapping("setEventEndDate")
+    public Response setEventEndDate(@RequestBody TimelineRequest.SetEventDate request) {
+        return service.setEventEndDate(request);
+    }
+
     @PostMapping("setEventName")
     public Response setEventName(@RequestBody TimelineRequest.SetEventName request) {
         return service.setEventName(request);
