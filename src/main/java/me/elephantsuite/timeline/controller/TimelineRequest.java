@@ -64,7 +64,7 @@ public class TimelineRequest {
     public static class SetEventDate {
         private final long eventId;
 
-        private final LocalDateTime date;
+        private final String date;
     }
 
     @Getter
@@ -75,6 +75,16 @@ public class TimelineRequest {
         private final long eventId;
 
         private final String name;
+    }
+
+    @Getter
+    @AllArgsConstructor
+    @ToString
+    @EqualsAndHashCode
+    public static class ShareTimeline {
+        private final long timelineId;
+
+        private final long userId;
     }
 
     @Getter
@@ -104,7 +114,7 @@ public class TimelineRequest {
     public static class SetMarkerDate {
         private final long markerId;
 
-        private final LocalDateTime localDateTime;
+        private final String date;
     }
 
 
@@ -115,9 +125,9 @@ public class TimelineRequest {
     public static class CreateEvent {
         private final String name;
 
-        private final LocalDateTime date;
+        private final String date;
 
-        private final LocalDateTime endDate;
+        private final String endDate;
 
         private final String description;
 
@@ -133,7 +143,7 @@ public class TimelineRequest {
     public static class CreateMarker {
         private final String name;
 
-        private final LocalDateTime date;
+        private final String date;
 
         private final long timelineId;
     }

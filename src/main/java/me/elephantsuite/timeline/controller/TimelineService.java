@@ -2,6 +2,7 @@ package me.elephantsuite.timeline.controller;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.List;
 
 import lombok.AllArgsConstructor;
 import me.elephantsuite.response.api.Response;
@@ -160,8 +161,8 @@ public class TimelineService {
         long timelineId = request.getTimelineId();
         String name = request.getName();
         String description = request.getDescription();
-        LocalDateTime date = request.getDate();
-        LocalDateTime endDate = request.getEndDate();
+        String date = request.getDate();
+        String endDate = request.getEndDate();
         Importance importance = request.getImportance();
 
         Timeline timeline = getTimelineById(timelineId);
@@ -209,11 +210,11 @@ public class TimelineService {
 
     public Response setEventDate(TimelineRequest.SetEventDate request) {
         long eventId = request.getEventId();
-        LocalDateTime date = request.getDate();
+        String date = request.getDate();
 
         Event event = getEventById(eventId);
 
-        event.setLocalDate(date);
+        event.setStartDate(date);
 
         event = eventRepositoryService.save(event);
 
@@ -279,7 +280,7 @@ public class TimelineService {
     public Response createMarker(TimelineRequest.CreateMarker request) {
         long timelineId = request.getTimelineId();
         String name = request.getName();
-        LocalDateTime date = request.getDate();
+        String date = request.getDate();
 
         Timeline timeline = getTimelineById(timelineId);
 
@@ -341,7 +342,7 @@ public class TimelineService {
 
     public Response setMarkerDate(TimelineRequest.SetMarkerDate request) {
         long markerId = request.getMarkerId();
-        LocalDateTime date = request.getLocalDateTime();
+        String date = request.getDate();
 
         Marker marker = getMarkerById(markerId);
 
@@ -358,7 +359,7 @@ public class TimelineService {
 
     public Response setEventEndDate(TimelineRequest.SetEventDate request) {
         long eventId = request.getEventId();
-        LocalDateTime date = request.getDate();
+        String date = request.getDate();
 
         Event event = getEventById(eventId);
 
@@ -370,6 +371,65 @@ public class TimelineService {
             .create()
             .addResponse(ResponseStatus.SUCCESS, "Set Event Date!")
             .addObject("event", event)
+            .build();
+    }
+
+    public Response getNumberOfTimelines() {
+        List<Timeline> timelines = this.timelineRepositoryService.getTimelines();
+
+        return ResponseBuilder
+            .create()
+            .addResponse(ResponseStatus.SUCCESS, "Retrieved Timeline Number!")
+            .addObject("timelines", timelines.size())
+            .build();
+    }
+
+    public Response shareTimeline(TimelineRequest.ShareTimeline request) {
+        long userId = request.getUserId();
+        long timelineId = request.getTimelineId();
+
+        Timeline timeline = getTimelineById(timelineId);
+
+        ElephantUser user = ResponseUtil.checkUserValid(userId, userService);
+
+        if (!timeline.getTimelineVisibility().equals(TimelineVisibility.SHARED)) {
+            return ResponseBuilder
+                .create()
+                .addResponse(ResponseStatus.FAILURE, "Timeline Visibility must be set to SHARED to share Timelines with other users!")
+                .addObject("timeline", timeline)
+                .build();
+        }
+
+        timeline.getSharedUsers().add(userId);
+        user.getSharedTimelineIds().add(timelineId);
+
+        userService.saveUser(user);
+        timelineRepositoryService.save(timeline);
+
+        return ResponseBuilder
+            .create()
+            .addResponse(ResponseStatus.SUCCESS, "Shared Timeline!")
+            .addObject("timeline", timeline)
+            .build();
+    }
+
+    public Response getAllTimelines(long userId) {
+        List<Timeline> timelines = timelineRepositoryService.getTimelines()
+            .stream()
+            .filter(timeline -> timeline.getTimelineVisibility().equals(TimelineVisibility.SHARED) || timeline.getTimelineVisibility().equals(TimelineVisibility.PUBLIC))
+            .filter(timeline -> {
+                if (timeline.getTimelineVisibility().equals(TimelineVisibility.SHARED)) {
+                    return timeline.getSharedUsers().contains(userId);
+                }
+
+                return true;
+            })
+            .toList();
+
+        return ResponseBuilder
+            .create()
+            .addResponse(ResponseStatus.SUCCESS, "Retrieved Timelines!")
+            .addObject("timelines", timelines)
             .build();
     }
 }

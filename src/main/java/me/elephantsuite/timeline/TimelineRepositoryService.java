@@ -5,6 +5,7 @@ import me.elephantsuite.deck.Deck;
 import org.springframework.stereotype.Service;
 
 import java.sql.Time;
+import java.util.List;
 
 @AllArgsConstructor
 @Service
@@ -27,4 +28,8 @@ public class TimelineRepositoryService {
     public void deleteTimeline(Timeline tl) {
         repository.delete(tl);
     }
+
+	public List<Timeline> getTimelines() {
+        return repository.findAll();
+	}
 }
