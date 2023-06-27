@@ -51,6 +51,10 @@ public class Timeline {
     @Fetch(FetchMode.SUBSELECT)
     private List<Marker> markers = new ArrayList<>();
 
+    @ElementCollection
+    @Fetch(FetchMode.SUBSELECT)
+    private List<Long> sharedUsers = new ArrayList<>();
+
     public Timeline(ElephantUser user, String name, TimelineVisibility visibility, String description) {
         this.user = user;
         this.name = name;

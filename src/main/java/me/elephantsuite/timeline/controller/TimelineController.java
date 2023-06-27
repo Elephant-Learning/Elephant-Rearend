@@ -95,4 +95,19 @@ public class TimelineController {
     public Response setMarkerDate(@RequestBody TimelineRequest.SetMarkerDate request) {
         return service.setMarkerDate(request);
     }
+
+    @GetMapping("number")
+    public Response getNumberOfTimelines() {
+        return service.getNumberOfTimelines();
+    }
+
+    @GetMapping("all")
+    public Response getAllTimelines(@RequestParam("userId") long userId) {
+        return service.getAllTimelines(userId);
+    }
+
+    @PostMapping("share")
+    public Response shareTimeline(@RequestBody TimelineRequest.ShareTimeline request) {
+        return service.shareTimeline(request);
+    }
 }

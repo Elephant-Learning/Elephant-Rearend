@@ -95,6 +95,10 @@ public class ElephantUser {
 	@Fetch(value = FetchMode.SUBSELECT)
 	private List<Long> friendIds = new ArrayList<>();
 
+	@ElementCollection
+	@Fetch(FetchMode.SUBSELECT)
+	private List<Long> sharedTimelineIds = new ArrayList<>();
+
 	@OneToMany(mappedBy = "recipient",  cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.EAGER)
 	@Fetch(value = FetchMode.SUBSELECT)
 	private List<Notification> notifications = new ArrayList<>();

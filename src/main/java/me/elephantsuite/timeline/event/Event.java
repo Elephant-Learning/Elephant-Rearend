@@ -31,9 +31,9 @@ public class Event {
     @JsonBackReference
     private Timeline timeline;
 
-    private LocalDateTime localDate;
+    private String startDate;
 
-    private LocalDateTime endDate;
+    private String endDate;
 
     private String name;
 
@@ -42,9 +42,9 @@ public class Event {
     @Enumerated(EnumType.STRING)
     private Importance importance;
 
-    public Event(Timeline timeline, LocalDateTime date, String name, String description, Importance importance, LocalDateTime endDate) {
+    public Event(Timeline timeline, String date, String name, String description, Importance importance, String endDate) {
         this.timeline = timeline;
-        this.localDate = date;
+        this.startDate = date;
         this.name = name;
         this.description = description;
         this.importance = importance;
