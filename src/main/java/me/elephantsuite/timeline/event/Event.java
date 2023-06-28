@@ -39,13 +39,17 @@ public class Event {
 
     private String description;
 
+    @Column(columnDefinition = "TEXT", nullable = true)
+    private String image;
+
     @Enumerated(EnumType.STRING)
     private Importance importance;
 
-    public Event(Timeline timeline, String date, String name, String description, Importance importance, String endDate) {
+    public Event(Timeline timeline, String date, String name, String description, Importance importance, String endDate, String image) {
         this.timeline = timeline;
         this.startDate = date;
         this.name = name;
+        this.image = image;
         this.description = description;
         this.importance = importance;
         this.endDate = endDate;

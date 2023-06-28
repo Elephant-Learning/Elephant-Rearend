@@ -164,10 +164,11 @@ public class TimelineService {
         String date = request.getDate();
         String endDate = request.getEndDate();
         Importance importance = request.getImportance();
+        String image = request.getImage();
 
         Timeline timeline = getTimelineById(timelineId);
 
-        Event event = new Event(timeline, date, name, description, importance, endDate);
+        Event event = new Event(timeline, date, name, description, importance, endDate, image);
 
         timeline.getEvents().add(event);
 
