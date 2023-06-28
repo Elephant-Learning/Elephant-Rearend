@@ -134,6 +134,8 @@ public class TimelineRequest {
         private final Importance importance;
 
         private final long timelineId;
+
+        private final String image;
     }
 
     @Getter
