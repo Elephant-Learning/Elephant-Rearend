@@ -1,7 +1,5 @@
 package me.elephantsuite.timeline.controller;
 
-import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.util.List;
 
 import lombok.AllArgsConstructor;
@@ -414,13 +412,16 @@ public class TimelineService {
             .build();
     }
 
-    public Response getAllTimelines(long userId) {
+    public Response searchTimelines(long userId, String query) {
         List<Timeline> timelines = timelineRepositoryService.getTimelines()
             .stream()
-            .filter(timeline -> timeline.getTimelineVisibility().equals(TimelineVisibility.SHARED) || timeline.getTimelineVisibility().equals(TimelineVisibility.PUBLIC))
             .filter(timeline -> {
                 if (timeline.getTimelineVisibility().equals(TimelineVisibility.SHARED)) {
-                    return timeline.getSharedUsers().contains(userId);
+                    return !timeline.getSharedUsers().contains(userId);
+                }
+
+                if (timeline.getTimelineVisibility().equals(TimelineVisibility.PRIVATE)) {
+                    return !timeline.getUser().getId().equals(userId);
                 }
 
                 return true;
@@ -431,6 +432,29 @@ public class TimelineService {
             .create()
             .addResponse(ResponseStatus.SUCCESS, "Retrieved Timelines!")
             .addObject("timelines", timelines)
+            .build();
+    }
+
+    public Response getTimelineById(long userId, long timelineId) {
+        Timeline timeline = getTimelineById(timelineId);
+        ElephantUser user = ResponseUtil.checkUserValid(userId, userService);
+
+        if (timeline.getTimelineVisibility() == TimelineVisibility.PRIVATE && !timeline.getUser().equals(user)) {
+           return ResponseBuilder
+               .create()
+               .addResponse(ResponseStatus.FAILURE, "Timeline was private and user was not the owner!")
+               .build();
+        } else if (timeline.getTimelineVisibility() == TimelineVisibility.SHARED && !timeline.getSharedUsers().contains(userId)) {
+            return ResponseBuilder
+                .create()
+                .addResponse(ResponseStatus.FAILURE, "Timeline was shared but user did not have the timeline shared with them!")
+                .build();
+        }
+
+        return ResponseBuilder
+            .create()
+            .addResponse(ResponseStatus.SUCCESS, "Retrieved Timeline!")
+            .addObject("timeline", timeline)
             .build();
     }
 }

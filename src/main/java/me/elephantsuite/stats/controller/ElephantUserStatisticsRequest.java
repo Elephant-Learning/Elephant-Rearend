@@ -29,6 +29,17 @@ public class ElephantUserStatisticsRequest {
 		private final long deckId;
 	}
 
+	@Getter
+	@AllArgsConstructor
+	@ToString
+	@EqualsAndHashCode
+	public static class UpdateRecentlyViewedTimelines {
+
+		private final long userId;
+
+		private final long timelineId;
+	}
+
 
 	@Getter
 	@AllArgsConstructor

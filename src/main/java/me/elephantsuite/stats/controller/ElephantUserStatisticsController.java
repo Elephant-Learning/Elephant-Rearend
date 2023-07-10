@@ -39,4 +39,9 @@ public class ElephantUserStatisticsController {
 	public Response updateRecentlyViewedDecks(@RequestBody ElephantUserStatisticsRequest.UpdateRecentlyViewedDecks request) {
 		return service.updateRecentlyViewedDecks(request);
 	}
+
+	@PostMapping(path = "recentlyViewedTimelines")
+	public Response updateRecentlyViewedTimeline(@RequestBody ElephantUserStatisticsRequest.UpdateRecentlyViewedTimelines request) {
+		return service.updateRecentlyViewedTimelines(request);
+	}
 }

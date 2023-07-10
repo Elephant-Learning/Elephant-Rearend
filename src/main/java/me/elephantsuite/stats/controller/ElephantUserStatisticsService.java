@@ -17,6 +17,8 @@ import me.elephantsuite.response.util.ResponseUtil;
 import me.elephantsuite.stats.ElephantUserStatisticsRepositoryService;
 import me.elephantsuite.stats.card.CardStatistics;
 import me.elephantsuite.stats.card.CardStatisticsService;
+import me.elephantsuite.timeline.Timeline;
+import me.elephantsuite.timeline.TimelineRepositoryService;
 import me.elephantsuite.user.ElephantUser;
 import me.elephantsuite.user.ElephantUserService;
 import org.springframework.stereotype.Service;
@@ -35,6 +37,8 @@ public class ElephantUserStatisticsService {
 
 	private final CardStatisticsService cardStatisticsService;
 	private DeckRepositoryService deckService;
+
+	private final TimelineRepositoryService timelineRepositoryService;
 
 	public Response modifyStatsOnLogin(long id) {
 		ElephantUser user = ResponseUtil.checkUserValid(id, userService);
@@ -159,5 +163,44 @@ public class ElephantUserStatisticsService {
 			.addResponse(ResponseStatus.SUCCESS, "Added Deck to Recently Viewed Decks!")
 			.addObject("user", user)
 			.build();
+	}
+
+	public Response updateRecentlyViewedTimelines(ElephantUserStatisticsRequest.UpdateRecentlyViewedTimelines request) {
+		long timelineId = request.getTimelineId();
+		long userId = request.getUserId();
+
+		ElephantUser user = ResponseUtil.checkUserValid(userId, userService);
+		Timeline deck = getTimelineById(timelineId);
+
+		user.getElephantUserStatistics().getRecentlyViewedTimelineIds().remove(timelineId);
+
+		user.getElephantUserStatistics().getRecentlyViewedTimelineIds().add(0, timelineId);
+
+		//at maxed size after adding one
+
+		PropertiesHandler handler = ElephantBackendApplication.ELEPHANT_CONFIG;
+
+		if (user.getElephantUserStatistics().getRecentlyViewedTimelineIds().size() == handler.getConfigOption("recentlyViewedDecksMax", Integer::parseInt) + 1) {
+			user.getElephantUserStatistics().getRecentlyViewedTimelineIds().remove(user.getElephantUserStatistics().getRecentlyViewedTimelineIds().size() - 1);
+		}
+
+		userStatisticsRepositoryService.save(user.getElephantUserStatistics());
+		user = userService.saveUser(user);
+
+		return ResponseBuilder
+			.create()
+			.addResponse(ResponseStatus.SUCCESS, "Added Timeline to Recently Viewed Timelines!")
+			.addObject("user", user)
+			.build();
+	}
+
+	public Timeline getTimelineById(long id) {
+		Timeline tl = timelineRepositoryService.getTimelineById(id);
+
+		if (tl == null) {
+			throw new InvalidIdException(id, InvalidIdType.TIMELINE);
+		}
+
+		return tl;
 	}
 }
