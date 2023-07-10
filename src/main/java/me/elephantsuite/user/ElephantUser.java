@@ -113,6 +113,10 @@ public class ElephantUser {
 	private List<Long> likedDecksIds = new ArrayList<>();
 
 	@ElementCollection(fetch = FetchType.EAGER)
+	@Fetch(FetchMode.SUBSELECT)
+	private List<Long> likedTimelineIds = new ArrayList<>();
+
+	@ElementCollection(fetch = FetchType.EAGER)
 	@JoinColumn(nullable = false, name = "elephant_user_id")
 	@Fetch(value = FetchMode.SUBSELECT)
 	private List<String> likedSongs = new ArrayList<>();

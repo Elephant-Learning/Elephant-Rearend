@@ -69,5 +69,13 @@ public class Timeline {
         this.authorPfpId = user.getPfpId();
     }
 
+    public void incrementLikes() {
+        this.likes++;
+    }
+
+    public void decrementLikes() {
+        this.likes--;
+    }
+
 
 }

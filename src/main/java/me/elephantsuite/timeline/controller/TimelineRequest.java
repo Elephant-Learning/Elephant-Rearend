@@ -149,4 +149,15 @@ public class TimelineRequest {
 
         private final long timelineId;
     }
+
+    @Getter
+    @AllArgsConstructor
+    @ToString
+    @EqualsAndHashCode
+    public static class LikeTimeline {
+
+        private final long timelineId;
+
+        private final long userId;
+    }
 }

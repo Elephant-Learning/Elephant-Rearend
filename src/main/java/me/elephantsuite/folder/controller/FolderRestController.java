@@ -33,6 +33,16 @@ public class FolderRestController {
 		return service.removeDeck(removeDeck);
 	}
 
+	@PutMapping("addTimeline")
+	public Response addTimeline(@RequestBody FolderRequest.AddTimeline request) {
+		return service.addTimeline(request);
+	}
+
+	@DeleteMapping("removeTimeline")
+	public Response removeTimeline(@RequestBody FolderRequest.AddTimeline request) {
+		return service.removeTimeline(request);
+	}
+
 	@PostMapping("setName")
 	public Response setFolderName(@RequestBody FolderRequest.SetName setName) {
 		return service.setFolderName(setName);

@@ -16,6 +16,8 @@ import me.elephantsuite.response.exception.InvalidIdType;
 import me.elephantsuite.response.exception.InvalidTagInputException;
 import me.elephantsuite.response.util.ResponseStatus;
 import me.elephantsuite.response.util.ResponseUtil;
+import me.elephantsuite.timeline.Timeline;
+import me.elephantsuite.timeline.TimelineRepositoryService;
 import me.elephantsuite.user.ElephantUser;
 import me.elephantsuite.user.ElephantUserService;
 import org.springframework.stereotype.Service;
@@ -31,6 +33,8 @@ public class FolderService {
 	private final ElephantUserService userService;
 
 	private final DeckRepositoryService deckService;
+
+	private final TimelineRepositoryService timelineRepositoryService;
 
 	public Response createFolder(FolderRequest.CreateFolder createFolder) {
 		long userId = createFolder.getUserId();
@@ -181,4 +185,56 @@ public class FolderService {
 				.addResponse(ResponseStatus.SUCCESS, "Deleted Folder!")
 				.build();
     }
+
+	public Response addTimeline(FolderRequest.AddTimeline request) {
+		long folderId = request.getFolderId();
+		long timelineId = request.getTimelineId();
+
+		Timeline timeline = timelineRepositoryService.getTimelineById(timelineId);
+		Folder folder = service.getFolderById(folderId);
+
+		if (timeline == null || folder == null) {
+			throw new InvalidIdException(request, InvalidIdType.TIMELINE, InvalidIdType.FOLDER);
+		}
+
+		if (folder.getTimelineIds().contains(timelineId)) {
+			return ResponseUtil.getFailureResponse("Timeline is already in that folder!", request);
+		}
+
+		folder.getTimelineIds().add(timelineId);
+
+		folder = service.save(folder);
+
+		return ResponseBuilder
+			.create()
+			.addResponse(ResponseStatus.SUCCESS, "Added Timeline to Folder!")
+			.addObject("folder", folder)
+			.build();
+	}
+
+	public Response removeTimeline(FolderRequest.AddTimeline request) {
+		long folderId = request.getFolderId();
+		long timelineId = request.getTimelineId();
+
+		Timeline timeline = timelineRepositoryService.getTimelineById(timelineId);
+		Folder folder = service.getFolderById(folderId);
+
+		if (timeline == null || folder == null) {
+			throw new InvalidIdException(request, InvalidIdType.TIMELINE, InvalidIdType.FOLDER);
+		}
+
+		if (!folder.getTimelineIds().contains(timelineId)) {
+			return ResponseUtil.getFailureResponse("Timeline is not in that folder!", request);
+		}
+
+		folder.getTimelineIds().remove(timelineId);
+
+		folder = service.save(folder);
+
+		return ResponseBuilder
+			.create()
+			.addResponse(ResponseStatus.SUCCESS, "Removed Timeline to Folder!")
+			.addObject("folder", folder)
+			.build();
+	}
 }
