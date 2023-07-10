@@ -12,6 +12,7 @@ import me.elephantsuite.response.util.ResponseUtil;
 import me.elephantsuite.stats.controller.ElephantUserStatisticsService;
 import me.elephantsuite.user.ElephantUser;
 import me.elephantsuite.user.ElephantUserService;
+import me.elephantsuite.user.ElephantUserType;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -58,6 +59,78 @@ public class ElephantLoginService {
 		return ResponseBuilder
 			.create()
 			.addResponse(ResponseStatus.SUCCESS, "User Info Authenticated and Retrieved!")
+			.addObject("user", user)
+			.build();
+	}
+
+	public Response loginStudent(LoginRequest request) {
+		String email = request.getEmail();
+		String password = request.getPassword();
+
+		if (!emailValidator.test(email)) {
+			return ResponseUtil.getFailureResponse("Email not in correct format!", request);
+		}
+
+		if (!elephantUserService.isUserAlreadyRegistered(email)) {
+			return ResponseUtil.getFailureResponse("Email was not registered to any user", request);
+		}
+
+		ElephantUser user = elephantUserService.getUserByEmail(email);
+
+		if (user == null) {
+			// keep default msg cuz not user id
+			return ResponseUtil.getFailureResponse("Email was not registered to any user!", request);
+		}
+
+		if (!bCryptPasswordEncoder.matches(password, user.getPassword())) {
+			return ResponseUtil.getFailureResponse("Invalid password!", request);
+		}
+
+		if (!user.getType().equals(ElephantUserType.STUDENT)) {
+			return ResponseUtil.getFailureResponse("Tried to login to student login but account did not have STUDENT type!", request);
+		}
+
+		elephantUserStatisticsService.modifyStatsOnLogin(user.getId());
+
+		return ResponseBuilder
+			.create()
+			.addResponse(ResponseStatus.SUCCESS, "Student Info Authenticated and Retrieved!")
+			.addObject("user", user)
+			.build();
+	}
+
+	public Response loginTeacher(LoginRequest request) {
+		String email = request.getEmail();
+		String password = request.getPassword();
+
+		if (!emailValidator.test(email)) {
+			return ResponseUtil.getFailureResponse("Email not in correct format!", request);
+		}
+
+		if (!elephantUserService.isUserAlreadyRegistered(email)) {
+			return ResponseUtil.getFailureResponse("Email was not registered to any user", request);
+		}
+
+		ElephantUser user = elephantUserService.getUserByEmail(email);
+
+		if (user == null) {
+			// keep default msg cuz not user id
+			return ResponseUtil.getFailureResponse("Email was not registered to any user!", request);
+		}
+
+		if (!bCryptPasswordEncoder.matches(password, user.getPassword())) {
+			return ResponseUtil.getFailureResponse("Invalid password!", request);
+		}
+
+		if (!user.getType().equals(ElephantUserType.TEACHER)) {
+			return ResponseUtil.getFailureResponse("Tried to login to teacher login but account did not have TEACHER type!", request);
+		}
+
+		elephantUserStatisticsService.modifyStatsOnLogin(user.getId());
+
+		return ResponseBuilder
+			.create()
+			.addResponse(ResponseStatus.SUCCESS, "Teacher Info Authenticated and Retrieved!")
 			.addObject("user", user)
 			.build();
 	}
@@ -128,4 +201,6 @@ public class ElephantLoginService {
 				.addObject("users", filteredUsers)
 				.build();
 	}
+
+
 }

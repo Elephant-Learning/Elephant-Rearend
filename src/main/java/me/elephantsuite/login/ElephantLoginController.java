@@ -19,6 +19,16 @@ public class ElephantLoginController {
 	public Response login(@RequestBody LoginRequest request) {
 		return elephantLoginService.login(request, true);
 	}
+
+	@PostMapping("student")
+	public Response loginStudent(@RequestBody LoginRequest request) {
+		return elephantLoginService.loginStudent(request);
+	}
+
+	@PostMapping("teacher")
+	public Response loginTeacher(@RequestBody LoginRequest request) {
+		return elephantLoginService.loginTeacher(request);
+	}
 	// same as login but does not run login stuff
 	@PostMapping("verifyUser")
 	public Response verifyUser(@RequestBody LoginRequest request) {

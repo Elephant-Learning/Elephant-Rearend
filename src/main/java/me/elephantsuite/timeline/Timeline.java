@@ -38,6 +38,11 @@ public class Timeline {
 
     private String description;
 
+    private long authorId;
+
+    private int authorPfpId;
+
+
     @ManyToOne(cascade = {CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REFRESH})
     @JsonBackReference
     @JoinColumn(name = "elephant_user_id", foreignKey = @ForeignKey(name = "elephant_user_id"))
@@ -60,6 +65,8 @@ public class Timeline {
         this.name = name;
         this.timelineVisibility = visibility;
         this.description = description;
+        this.authorId = user.getId();
+        this.authorPfpId = user.getPfpId();
     }
 
 
