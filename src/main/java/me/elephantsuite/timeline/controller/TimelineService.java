@@ -457,4 +457,44 @@ public class TimelineService {
             .addObject("timeline", timeline)
             .build();
     }
+
+    public Response likeTimeline(TimelineRequest.LikeTimeline request) {
+        long userId = request.getUserId();
+        long timelineId = request.getTimelineId();
+
+        ElephantUser user = ResponseUtil.checkUserValid(userId, userService);
+        Timeline timeline = getTimelineById(timelineId);
+
+        timeline.incrementLikes();
+        user.getLikedTimelineIds().add(timelineId);
+
+        user = userService.saveUser(user);
+        timeline = timelineRepositoryService.save(timeline);
+
+        return ResponseBuilder
+            .create()
+            .addResponse(ResponseStatus.SUCCESS, "Liked Timeline!")
+            .addObject("timeline", timeline)
+            .build();
+    }
+
+    public Response unlikeTimeline(TimelineRequest.LikeTimeline request) {
+        long userId = request.getUserId();
+        long timelineId = request.getTimelineId();
+
+        ElephantUser user = ResponseUtil.checkUserValid(userId, userService);
+        Timeline timeline = getTimelineById(timelineId);
+
+        timeline.decrementLikes();
+        user.getLikedTimelineIds().remove(timelineId);
+
+        user = userService.saveUser(user);
+        timeline = timelineRepositoryService.save(timeline);
+
+        return ResponseBuilder
+            .create()
+            .addResponse(ResponseStatus.SUCCESS, "Liked Timeline!")
+            .addObject("timeline", timeline)
+            .build();
+    }
 }

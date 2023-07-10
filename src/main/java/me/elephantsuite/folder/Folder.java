@@ -41,6 +41,10 @@ public class Folder {
 	@Fetch(FetchMode.SUBSELECT)
 	private List<Long> deckIds = new ArrayList<>();
 
+	@ElementCollection(fetch = FetchType.EAGER)
+	@Fetch(FetchMode.SUBSELECT)
+	private List<Long> timelineIds = new ArrayList<>();
+
 	public Folder(List<Long> deckIds, ElephantUser user, String name) {
 		this.deckIds = deckIds;
 		this.user = user;

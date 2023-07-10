@@ -116,5 +116,15 @@ public class TimelineController {
         return service.getTimelineById(userId, timelineId);
     }
 
+    @PostMapping("like")
+    public Response likeTimeline(@RequestBody TimelineRequest.LikeTimeline request) {
+        return service.likeTimeline(request);
+    }
+
+    @PostMapping("unlike")
+    public Response unlikeTimeline(@RequestBody TimelineRequest.LikeTimeline request) {
+        return service.unlikeTimeline(request);
+    }
+
 
 }
