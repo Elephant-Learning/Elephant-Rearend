@@ -101,13 +101,20 @@ public class TimelineController {
         return service.getNumberOfTimelines();
     }
 
-    @GetMapping("all")
-    public Response getAllTimelines(@RequestParam("userId") long userId) {
-        return service.getAllTimelines(userId);
+    @GetMapping("search")
+    public Response searchTimelines(@RequestParam("userId") long userId, @RequestParam String query) {
+        return service.searchTimelines(userId, query);
     }
 
     @PostMapping("share")
     public Response shareTimeline(@RequestBody TimelineRequest.ShareTimeline request) {
         return service.shareTimeline(request);
     }
+
+    @GetMapping("get")
+    public Response getTimelineById(@RequestParam long userId, @RequestParam long timelineId) {
+        return service.getTimelineById(userId, timelineId);
+    }
+
+
 }

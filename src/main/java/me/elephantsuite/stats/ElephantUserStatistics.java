@@ -54,6 +54,10 @@ public class ElephantUserStatistics {
 	@Fetch(FetchMode.SUBSELECT)
 	private List<Long> recentlyViewedDeckIds = new ArrayList<>();
 
+	@ElementCollection(fetch = FetchType.EAGER)
+	@Fetch(FetchMode.SUBSELECT)
+	private List<Long> recentlyViewedTimelineIds = new ArrayList<>();
+
 	@OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
 	@JoinTable(name = "elephant_user_statistics_card_statistics_mapping", joinColumns = {@JoinColumn(name = "elephant_user_statistics_id", referencedColumnName = "id")}, inverseJoinColumns = {@JoinColumn(name = "card_statistics_id")})
 	@MapKeyJoinColumn(name = "card_id")
