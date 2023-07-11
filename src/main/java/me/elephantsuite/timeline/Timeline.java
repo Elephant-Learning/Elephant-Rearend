@@ -42,6 +42,8 @@ public class Timeline {
 
     private int authorPfpId;
 
+    private String authorName;
+
 
     @ManyToOne(cascade = {CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REFRESH})
     @JsonBackReference
@@ -67,6 +69,7 @@ public class Timeline {
         this.description = description;
         this.authorId = user.getId();
         this.authorPfpId = user.getPfpId();
+        this.authorName = user.getFullName();
     }
 
     public void incrementLikes() {
