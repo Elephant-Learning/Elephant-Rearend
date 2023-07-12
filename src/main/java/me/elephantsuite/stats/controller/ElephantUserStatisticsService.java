@@ -17,6 +17,7 @@ import me.elephantsuite.response.util.ResponseUtil;
 import me.elephantsuite.stats.ElephantUserStatisticsRepositoryService;
 import me.elephantsuite.stats.card.CardStatistics;
 import me.elephantsuite.stats.card.CardStatisticsService;
+import me.elephantsuite.stats.medal.MedalService;
 import me.elephantsuite.timeline.Timeline;
 import me.elephantsuite.timeline.TimelineRepositoryService;
 import me.elephantsuite.user.ElephantUser;
@@ -40,10 +41,12 @@ public class ElephantUserStatisticsService {
 
 	private final TimelineRepositoryService timelineRepositoryService;
 
+	private final MedalService medalService;
+
 	public Response modifyStatsOnLogin(long id) {
 		ElephantUser user = ResponseUtil.checkUserValid(id, userService);
 
-		user.getElephantUserStatistics().incrementDaysStreak();
+		user.getElephantUserStatistics().incrementDaysStreak(medalService);
 		user.getElephantUserStatistics().resetLoginDate();
 
 		userStatisticsRepositoryService.save(user.getElephantUserStatistics());

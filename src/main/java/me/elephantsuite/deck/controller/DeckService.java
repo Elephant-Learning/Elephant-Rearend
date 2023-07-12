@@ -21,6 +21,8 @@ import me.elephantsuite.response.exception.InvalidTagInputException;
 import me.elephantsuite.response.exception.UserNotEnabledException;
 import me.elephantsuite.response.util.ResponseStatus;
 import me.elephantsuite.response.util.ResponseUtil;
+import me.elephantsuite.stats.medal.MedalService;
+import me.elephantsuite.stats.medal.MedalType;
 import me.elephantsuite.user.ElephantUser;
 import me.elephantsuite.user.ElephantUserService;
 import org.apache.commons.lang3.StringUtils;
@@ -37,6 +39,8 @@ public class DeckService {
 	private final DeckRepositoryService service;
 
 	private final CardService cardService;
+
+	private final MedalService medalService;
 
 	public Response createDeck(DeckRequest.CreateDeck request) {
 		Map<String, List<String>> terms = request.getTerms();
@@ -68,6 +72,8 @@ public class DeckService {
 		deck = service.saveDeck(deck);
 
 		user = userService.saveUser(user);
+
+		medalService.updateEntityMedals(user.getDecks(), user.getElephantUserStatistics(), MedalType.FLIP_MASTER, new int[]{2, 8, 16, 64});
 
 		return ResponseBuilder
 			.create()
