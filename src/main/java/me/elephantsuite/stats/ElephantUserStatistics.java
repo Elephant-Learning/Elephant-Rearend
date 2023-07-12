@@ -60,7 +60,7 @@ public class ElephantUserStatistics {
 	@Fetch(FetchMode.SUBSELECT)
 	private List<Long> recentlyViewedTimelineIds = new ArrayList<>();
 
-	@OneToMany(mappedBy = "timeline", fetch = FetchType.EAGER, cascade = CascadeType.ALL, orphanRemoval = true)
+	@OneToMany(mappedBy = "userStatistics", fetch = FetchType.EAGER, cascade = CascadeType.ALL, orphanRemoval = true)
 	@Fetch(FetchMode.SUBSELECT)
 	private List<Medal> medals = new ArrayList<>();
 
