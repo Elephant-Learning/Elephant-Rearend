@@ -1,5 +1,7 @@
 package me.elephantsuite.timeline.event;
 
+import java.util.List;
+
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -24,4 +26,8 @@ public class EventRepositoryService {
     public void delete(Event event) {
         repository.delete(event);
     }
+
+	public void deleteAll(List<Event> events) {
+        repository.deleteAll(events);
+	}
 }

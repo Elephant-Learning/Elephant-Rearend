@@ -1,5 +1,6 @@
 package me.elephantsuite.timeline.controller;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import lombok.AllArgsConstructor;
@@ -10,6 +11,7 @@ import me.elephantsuite.response.exception.InvalidIdType;
 import me.elephantsuite.response.util.ResponseStatus;
 import me.elephantsuite.response.util.ResponseUtil;
 import me.elephantsuite.timeline.Timeline;
+import me.elephantsuite.timeline.TimelineRepository;
 import me.elephantsuite.timeline.TimelineRepositoryService;
 import me.elephantsuite.timeline.TimelineVisibility;
 import me.elephantsuite.timeline.event.Event;
@@ -34,6 +36,8 @@ public class TimelineService {
     private final EventRepositoryService eventRepositoryService;
 
     private final MarkerRepositoryService markerRepositoryService;
+
+    private final TimelineRepository timelineRepository;
 
     public Response createTimeline(TimelineRequest.CreateTimeline request) {
         long userId = request.getUserId();
@@ -64,7 +68,25 @@ public class TimelineService {
             throw new InvalidIdException(id, InvalidIdType.TIMELINE);
         }
 
-        timelineRepositoryService.deleteTimeline(timeline);
+        timeline.getMarkers().forEach(markerRepositoryService::delete);
+        timeline.getEvents().forEach(eventRepositoryService::delete);
+
+        timeline.getMarkers().clear();
+        timeline.getEvents().clear();
+
+        timelineRepositoryService.save(timeline);
+
+        timelineRepository.deleteLikedTimelineIds(id);
+        timelineRepository.deleteSharedTimelineIds(id);
+        timelineRepository.deleteFolderTimelineIds(id);
+        timelineRepository.deleteRecentlyViewedTimelineIds(id);
+
+      //  timeline.setEvents(new ArrayList<>());
+      //  timeline.setMarkers(new ArrayList<>());
+
+        timelineRepository.deleteById(id);
+
+
 
         return ResponseBuilder
                 .create()

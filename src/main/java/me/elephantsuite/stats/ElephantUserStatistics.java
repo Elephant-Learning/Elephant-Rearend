@@ -76,6 +76,8 @@ public class ElephantUserStatistics {
 	public void incrementDaysStreak() {
 		if ((this.lastLoggedIn.getDayOfYear() + 1 == LocalDateTime.now().getDayOfYear()) && this.lastLoggedIn.getYear() == LocalDateTime.now().getYear()) {
 			daysStreak += 1;
+		} else {
+			daysStreak = 0;
 		}
 	}
 
