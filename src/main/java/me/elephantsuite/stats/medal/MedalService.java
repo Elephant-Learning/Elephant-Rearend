@@ -161,6 +161,9 @@ public class MedalService {
 	}
 
 	public void deleteMedal(long id) {
-		medalRepository.deleteById(id);
+		Medal medal = medalRepository.getReferenceById(id);
+		medal.getUserStatistics().getMedals().remove(medal);
+		medal.setUserStatistics(null);
+		medalRepository.delete(medal);
 	}
 }
