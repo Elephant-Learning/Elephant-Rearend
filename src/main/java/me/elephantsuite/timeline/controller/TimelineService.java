@@ -10,6 +10,8 @@ import me.elephantsuite.response.exception.InvalidIdException;
 import me.elephantsuite.response.exception.InvalidIdType;
 import me.elephantsuite.response.util.ResponseStatus;
 import me.elephantsuite.response.util.ResponseUtil;
+import me.elephantsuite.stats.medal.MedalService;
+import me.elephantsuite.stats.medal.MedalType;
 import me.elephantsuite.timeline.Timeline;
 import me.elephantsuite.timeline.TimelineRepository;
 import me.elephantsuite.timeline.TimelineRepositoryService;
@@ -39,6 +41,8 @@ public class TimelineService {
 
     private final TimelineRepository timelineRepository;
 
+    private final MedalService medalService;
+
     public Response createTimeline(TimelineRequest.CreateTimeline request) {
         long userId = request.getUserId();
         String name = request.getName();
@@ -53,6 +57,8 @@ public class TimelineService {
         timeline = timelineRepositoryService.save(timeline);
 
         user = userService.saveUser(user);
+
+        medalService.updateEntityMedals(user.getTimelines(), user.getElephantUserStatistics(), MedalType.TIME_MASTER, new int[]{2, 8, 16, 64});
 
         return ResponseBuilder
                 .create()

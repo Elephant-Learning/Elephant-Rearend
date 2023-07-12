@@ -26,6 +26,16 @@ public class ElephantExceptionHandler {
                 .build();
     }
 
+    @ExceptionHandler(value = IllegalArgumentException.class)
+    public Response handleIllegalArgumentException(IllegalArgumentException e) {
+        ElephantBackendApplication.LOGGER.error("Illegal Argument Exception while processing request!", e);
+        return ResponseBuilder
+            .create()
+            .addResponse(ResponseStatus.FAILURE, "Illegal Argument Exception while processing request!")
+            .addException(e)
+            .build();
+    }
+
     @ExceptionHandler(value = InvalidIdException.class)
     public Response handleInvalidIdException(InvalidIdException e) {
         return e.toResponse();

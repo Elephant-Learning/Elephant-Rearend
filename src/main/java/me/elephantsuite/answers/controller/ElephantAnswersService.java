@@ -21,6 +21,8 @@ import me.elephantsuite.response.exception.InvalidIdType;
 import me.elephantsuite.response.exception.InvalidTagInputException;
 import me.elephantsuite.response.util.ResponseStatus;
 import me.elephantsuite.response.util.ResponseUtil;
+import me.elephantsuite.stats.medal.MedalService;
+import me.elephantsuite.stats.medal.MedalType;
 import me.elephantsuite.user.ElephantUser;
 import me.elephantsuite.user.ElephantUserService;
 import org.apache.commons.lang3.StringUtils;
@@ -37,6 +39,8 @@ public class ElephantAnswersService {
 	private final CommentRepositoryService commentService;
 
 	private final ReplyRepositoryService replyService;
+
+	private final MedalService medalService;
 
 	public Response createAnswer(ElephantAnswersRequest.CreateAnswer request) {
 		String description = request.getDescription();
@@ -56,6 +60,8 @@ public class ElephantAnswersService {
 		answer = service.save(answer);
 
 		user = userService.saveUser(user);
+
+		medalService.updateEntityMedals(user.getAnswers(), user.getElephantUserStatistics(), MedalType.GALAXY_BRAIN, new int[]{2, 8, 16, 64});
 
 		return ResponseBuilder
 			.create()
