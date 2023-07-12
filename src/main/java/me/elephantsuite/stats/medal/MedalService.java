@@ -159,4 +159,8 @@ public class MedalService {
 
 		elephantUserStatisticsRepositoryService.save(statistics);
 	}
+
+	public void deleteMedal(long id) {
+		medalRepository.deleteById(id);
+	}
 }
