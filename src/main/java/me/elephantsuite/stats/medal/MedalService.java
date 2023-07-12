@@ -1,6 +1,7 @@
 package me.elephantsuite.stats.medal;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
@@ -59,13 +60,19 @@ public class MedalService {
 	}
 
 	private void updateEarnedTimes(Medal medal) {
-		if (medal.getEarnedTimes().get(medal.getLevel()) != null) {
 
-			for (int i = medal.getLevel(); i >= 0; i--) {
-				if (medal.getEarnedTimes().get(i) == null) {
-					medal.getEarnedTimes().set(i, LocalDateTime.now());
-				}
+		if (medal.getEarnedTimes().size() != 5) {
+			medal.setEarnedTimes(new ArrayList<>(5));
+		}
+
+		for (int i = medal.getLevel(); i >= 0; i--) {
+			if (medal.getEarnedTimes().get(i) == null) {
+				medal.getEarnedTimes().set(i, LocalDateTime.now());
 			}
+		}
+
+		if (medal.getEarnedTimes().get(medal.getLevel()) == null) {
+
 
 			medal.getEarnedTimes().set(medal.getLevel(), LocalDateTime.now());
 		}
