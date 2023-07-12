@@ -1,6 +1,7 @@
 package me.elephantsuite.stats.medal;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
@@ -49,7 +50,7 @@ public class Medal {
 
 	@ElementCollection(fetch = FetchType.EAGER)
 	@Fetch(FetchMode.SUBSELECT)
-	private List<LocalDateTime> earnedTimes;
+	private List<LocalDateTime> earnedTimes = new ArrayList<>();
 
 	@ManyToOne(cascade = {CascadeType.PERSIST, CascadeType.REFRESH, CascadeType.MERGE})
 	@JsonBackReference
