@@ -6,9 +6,11 @@ import java.util.List;
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.CascadeType;
+import jakarta.persistence.ElementCollection;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
+import jakarta.persistence.FetchType;
 import jakarta.persistence.ForeignKey;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -23,6 +25,8 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
 import me.elephantsuite.stats.ElephantUserStatistics;
+import org.hibernate.annotations.Fetch;
+import org.hibernate.annotations.FetchMode;
 
 @Getter
 @Setter
@@ -43,7 +47,9 @@ public class Medal {
 
 	private int level;
 
-	private LocalDateTime earned;
+	@ElementCollection(fetch = FetchType.EAGER)
+	@Fetch(FetchMode.SUBSELECT)
+	private List<LocalDateTime> earnedTimes;
 
 	@ManyToOne(cascade = {CascadeType.PERSIST, CascadeType.REFRESH, CascadeType.MERGE})
 	@JsonBackReference
@@ -54,6 +60,8 @@ public class Medal {
 		this.userStatistics = userStatistics;
 		this.level = 0;
 	}
+
+
 
 	public Medal copy() {
 		Medal medal = new Medal(type, userStatistics);

@@ -1,5 +1,6 @@
 package me.elephantsuite.stats.medal;
 
+import java.time.LocalDateTime;
 import java.util.Arrays;
 import java.util.List;
 
@@ -46,6 +47,8 @@ public class MedalService {
 			medal.setLevel(4);
 		}
 
+		updateEarnedTimes(medal);
+
 		statistics.getMedals().add(medal);
 
 		medalRepository.save(medal);
@@ -53,6 +56,14 @@ public class MedalService {
 		elephantUserStatisticsRepositoryService.save(statistics);
 
 		updateMedalMedals(statistics);
+	}
+
+	private void updateEarnedTimes(Medal medal) {
+		if (medal.getEarnedTimes().get(medal.getLevel()) != null) {
+			medal.getEarnedTimes().set(medal.getLevel(), LocalDateTime.now());
+		}
+
+
 	}
 
 	// should only be one medal of each type in user stats list
@@ -88,6 +99,8 @@ public class MedalService {
 			medal.setLevel(4);
 		}
 
+		updateEarnedTimes(medal);
+
 
 		statistics.getMedals().add(medal);
 
@@ -110,14 +123,18 @@ public class MedalService {
 
 		List<Medal> medals = statistics.getMedals();
 
-		Integer[] levels = medals
-			.stream()
-			.map(Medal::getLevel)
-			.toArray(Integer[]::new);
+		if (medals.size() == 5) {
+			Integer[] levels = medals
+				.stream()
+				.map(Medal::getLevel)
+				.toArray(Integer[]::new);
 
-		Arrays.sort(levels);
+			Arrays.sort(levels);
 
-		medal.setLevel(levels[0]);
+			medal.setLevel(levels[0]);
+		}
+
+		updateEarnedTimes(medal);
 
 		statistics.getMedals().add(medal);
 
