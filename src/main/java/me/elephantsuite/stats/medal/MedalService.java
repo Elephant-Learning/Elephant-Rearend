@@ -62,7 +62,10 @@ public class MedalService {
 	private void updateEarnedTimes(Medal medal) {
 
 		if (medal.getEarnedTimes().size() != 5) {
-			medal.setEarnedTimes(new ArrayList<>(5));
+			medal.setEarnedTimes(new ArrayList<>());
+			for (int i = 0; i < 5; i++) {
+				medal.getEarnedTimes().add(null);
+			}
 		}
 
 		for (int i = medal.getLevel(); i >= 0; i--) {
