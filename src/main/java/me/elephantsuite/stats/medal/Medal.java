@@ -50,7 +50,7 @@ public class Medal {
 
 	@ElementCollection(fetch = FetchType.EAGER)
 	@Fetch(FetchMode.SUBSELECT)
-	private List<LocalDateTime> earnedTimes = new ArrayList<>();
+	private List<LocalDateTime> earnedTimes = new ArrayList<>(5);
 
 	@ManyToOne(cascade = {CascadeType.PERSIST, CascadeType.REFRESH, CascadeType.MERGE})
 	@JsonBackReference
