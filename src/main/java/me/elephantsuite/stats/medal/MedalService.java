@@ -60,6 +60,13 @@ public class MedalService {
 
 	private void updateEarnedTimes(Medal medal) {
 		if (medal.getEarnedTimes().get(medal.getLevel()) != null) {
+
+			for (int i = medal.getLevel(); i >= 0; i--) {
+				if (medal.getEarnedTimes().get(i) == null) {
+					medal.getEarnedTimes().set(i, LocalDateTime.now());
+				}
+			}
+
 			medal.getEarnedTimes().set(medal.getLevel(), LocalDateTime.now());
 		}
 
