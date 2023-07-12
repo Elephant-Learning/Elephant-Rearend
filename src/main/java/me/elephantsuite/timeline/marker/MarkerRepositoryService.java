@@ -1,5 +1,7 @@
 package me.elephantsuite.timeline.marker;
 
+import java.util.List;
+
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -23,5 +25,9 @@ public class MarkerRepositoryService {
 
 	public void delete(Marker marker) {
 		repository.delete(marker);
+	}
+
+	public void deleteAll(List<Marker> markers) {
+		repository.deleteAll(markers);
 	}
 }
