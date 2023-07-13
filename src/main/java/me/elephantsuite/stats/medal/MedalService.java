@@ -29,22 +29,30 @@ public class MedalService {
 
 		if (medal == null) {
 			medal = new Medal(type, statistics);
+
+			entityLogic(decks, statistics, tiers, medal);
 		} else {
-			medal = medal.copy();
-			statistics.getMedals().remove(medal);
+			entityLogic(decks, statistics, tiers, medal);
 		}
 
 		if (tiers.length != 4) {
 			throw new IllegalArgumentException("Medal Tier System did not have 4 tiers present!");
 		}
 
+
+	}
+
+	private <T> void entityLogic(List<T> decks, ElephantUserStatistics statistics, int[] tiers, Medal medal) {
 		if (decks.size() >= tiers[0]) {
 			medal.setLevel(1);
-		} if (decks.size() >= tiers[1]) {
+		}
+		if (decks.size() >= tiers[1]) {
 			medal.setLevel(2);
-		} if (decks.size() >= tiers[2]) {
+		}
+		if (decks.size() >= tiers[2]) {
 			medal.setLevel(3);
-		} if (decks.size() >= tiers[3]) {
+		}
+		if (decks.size() >= tiers[3]) {
 			medal.setLevel(4);
 		}
 
@@ -99,20 +107,28 @@ public class MedalService {
 
 		if (medal == null) {
 			medal = new Medal(MedalType.MASTER_STREAKER, statistics);
+
+			loginMedalLogic(statistics, medal);
 		} else {
-			medal = medal.copy();
-			statistics.getMedals().remove(medal);
+			loginMedalLogic(statistics, medal);
 		}
 
+
+	}
+
+	private void loginMedalLogic(ElephantUserStatistics statistics, Medal medal) {
 		int streak = statistics.getDaysStreak();
 
 		if (streak >= 7) {
 			medal.setLevel(1);
-		} if (streak >= 14) {
+		}
+		if (streak >= 14) {
 			medal.setLevel(2);
-		} if (streak >= 31) {
+		}
+		if (streak >= 31) {
 			medal.setLevel(3);
-		} if (streak >= 62) {
+		}
+		if (streak >= 62) {
 			medal.setLevel(4);
 		}
 
@@ -128,16 +144,33 @@ public class MedalService {
 		updateMedalMedals(statistics);
 	}
 
+	public boolean containsBadgeMaster(ElephantUserStatistics statistics) {
+		for (Medal medal : statistics.getMedals()) {
+			if (medal.getType().equals(MedalType.BADGE_MASTER)) {
+				return true;
+			}
+		}
+
+		return false;
+	}
+
 	public void updateMedalMedals(ElephantUserStatistics statistics) {
+
+
 		Medal medal = getMedal(statistics.getMedals(), MedalType.BADGE_MASTER);
 
 		if (medal == null) {
 			medal = new Medal(MedalType.BADGE_MASTER, statistics);
+
+			masterBadgeLogic(statistics, medal);
 		} else {
-			medal = medal.copy();
-			statistics.getMedals().remove(medal);
+			masterBadgeLogic(statistics, medal);
 		}
 
+
+	}
+
+	private void masterBadgeLogic(ElephantUserStatistics statistics, Medal medal) {
 		List<Medal> medals = statistics.getMedals();
 
 		if (medals.size() == 5) {
