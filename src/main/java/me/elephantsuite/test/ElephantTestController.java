@@ -5,6 +5,7 @@ import me.elephantsuite.deck.DeckRepositoryService;
 import me.elephantsuite.response.api.Response;
 import me.elephantsuite.response.api.ResponseBuilder;
 import me.elephantsuite.response.util.ResponseStatus;
+import me.elephantsuite.response.util.ResponseUtil;
 import me.elephantsuite.stats.medal.MedalService;
 import me.elephantsuite.user.ElephantUserService;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -51,6 +52,16 @@ public class ElephantTestController {
 		return ResponseBuilder
 			.create()
 			.addResponse(ResponseStatus.SUCCESS, "Deleted Medal!")
+			.build();
+	}
+
+	@PostMapping(path = "refreshMedals")
+	public Response refreshMedals(@RequestParam("id") long id) {
+		medalService.updateLoginMedal(ResponseUtil.checkUserValid(id, service).getElephantUserStatistics());
+
+		return ResponseBuilder
+			.create()
+			.addResponse(ResponseStatus.SUCCESS, "Did something")
 			.build();
 	}
 }
