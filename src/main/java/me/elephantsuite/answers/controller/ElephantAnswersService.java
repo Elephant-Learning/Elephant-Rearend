@@ -5,6 +5,7 @@ import java.util.LinkedHashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 
 import lombok.AllArgsConstructor;
 import me.elephantsuite.answers.ElephantAnswer;
@@ -61,7 +62,7 @@ public class ElephantAnswersService {
 
 		user = userService.saveUser(user);
 
-		medalService.updateEntityMedals(user.getAnswers(), user.getElephantUserStatistics(), MedalType.GALAXY_BRAIN, new int[]{2, 8, 16, 64});
+		//medalService.updateEntityMedals(user.getAnswers(), user.getElephantUserStatistics(), MedalType.GALAXY_BRAIN, new int[]{3, 12, 24, 96});
 
 		return ResponseBuilder
 			.create()
@@ -119,6 +120,15 @@ public class ElephantAnswersService {
 		answer.updateLastUpdatedTime();
 
 		answer = service.save(answer);
+
+		Comment finalComment = comment;
+
+		medalService.updateEntityMedals(commentService
+			.getAll()
+			.stream()
+			.filter(comment1 -> Objects.equals(comment1.getCommenterId(), finalComment.getCommenterId()))
+			.toList(), userService.getUserById(comment.getCommenterId()).getElephantUserStatistics(), MedalType.GALAXY_BRAIN, new int[]{2, 8, 16, 64});
+
 
 		return ResponseBuilder
 			.create()
