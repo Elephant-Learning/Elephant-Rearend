@@ -1,5 +1,7 @@
 package me.elephantsuite.answers.comment;
 
+import java.util.List;
+
 import lombok.AllArgsConstructor;
 import me.elephantsuite.answers.ElephantAnswer;
 import org.springframework.stereotype.Service;
@@ -20,6 +22,10 @@ public class CommentRepositoryService {
 		}
 
 		return null;
+	}
+
+	public List<Comment> getAll() {
+		return commentRepository.findAll();
 	}
 
 	public void delete(Comment comment) {
