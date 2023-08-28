@@ -10,6 +10,8 @@ import me.elephantsuite.response.exception.InvalidIdType;
 import me.elephantsuite.response.exception.UserNotEnabledException;
 import me.elephantsuite.response.util.ResponseStatus;
 import me.elephantsuite.response.util.ResponseUtil;
+import me.elephantsuite.stats.medal.MedalService;
+import me.elephantsuite.stats.medal.MedalType;
 import me.elephantsuite.user.ElephantUser;
 import me.elephantsuite.user.ElephantUserService;
 import org.springframework.stereotype.Service;
@@ -21,6 +23,8 @@ import org.springframework.transaction.annotation.Transactional;
 public class ElephantFriendService {
 
 	private final ElephantUserService userService;
+
+	private final MedalService medalService;
 
 	public Response addFriend(FriendRequest request) {
 
@@ -48,6 +52,8 @@ public class ElephantFriendService {
 		user = this.userService.saveUser(user);
 
 		friend = this.userService.saveUser(friend);
+
+		medalService.updateEntityMedals(user.getFriendIds(), user.getElephantUserStatistics(), MedalType.FRIEND_MASTER, new int[]{2, 8, 16, 32});
 
 		return ResponseBuilder
 			.create()

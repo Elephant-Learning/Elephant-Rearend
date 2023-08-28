@@ -21,6 +21,8 @@ import lombok.ToString;
 import me.elephantsuite.deck.card.Card;
 import me.elephantsuite.quiz.card.QuizCard;
 import me.elephantsuite.stats.card.CardStatistics;
+import me.elephantsuite.stats.medal.Medal;
+import me.elephantsuite.stats.medal.MedalService;
 import me.elephantsuite.stats.quiz_card.QuizCardStatistics;
 import me.elephantsuite.user.ElephantUser;
 import org.hibernate.annotations.Fetch;
@@ -54,6 +56,15 @@ public class ElephantUserStatistics {
 	@Fetch(FetchMode.SUBSELECT)
 	private List<Long> recentlyViewedDeckIds = new ArrayList<>();
 
+	@ElementCollection(fetch = FetchType.EAGER)
+	@Fetch(FetchMode.SUBSELECT)
+	private List<Long> recentlyViewedTimelineIds = new ArrayList<>();
+
+	@OneToMany(mappedBy = "userStatistics", fetch = FetchType.EAGER, cascade = CascadeType.ALL, orphanRemoval = true)
+	@Fetch(FetchMode.SUBSELECT)
+	private List<Medal> medals = new ArrayList<>();
+
+
 	@OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
 	@JoinTable(name = "elephant_user_statistics_card_statistics_mapping", joinColumns = {@JoinColumn(name = "elephant_user_statistics_id", referencedColumnName = "id")}, inverseJoinColumns = {@JoinColumn(name = "card_statistics_id")})
 	@MapKeyJoinColumn(name = "card_id")
@@ -69,9 +80,17 @@ public class ElephantUserStatistics {
 		this.user = user;
 	}
 
-	public void incrementDaysStreak() {
+	public void incrementDaysStreak(MedalService medalService) {
+		if (this.lastLoggedIn.getDayOfYear() == LocalDateTime.now().getDayOfYear()) {
+			return;
+		}
+
+
 		if ((this.lastLoggedIn.getDayOfYear() + 1 == LocalDateTime.now().getDayOfYear()) && this.lastLoggedIn.getYear() == LocalDateTime.now().getYear()) {
 			daysStreak += 1;
+			medalService.updateLoginMedal(this);
+		} else {
+			daysStreak = 0;
 		}
 	}
 

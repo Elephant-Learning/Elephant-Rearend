@@ -95,6 +95,10 @@ public class ElephantUser {
 	@Fetch(value = FetchMode.SUBSELECT)
 	private List<Long> friendIds = new ArrayList<>();
 
+	@ElementCollection
+	@Fetch(FetchMode.SUBSELECT)
+	private List<Long> sharedTimelineIds = new ArrayList<>();
+
 	@OneToMany(mappedBy = "recipient",  cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.EAGER)
 	@Fetch(value = FetchMode.SUBSELECT)
 	private List<Notification> notifications = new ArrayList<>();
@@ -107,6 +111,10 @@ public class ElephantUser {
 	@JoinColumn(nullable = false, name = "elephant_user_id")
 	@Fetch(value = FetchMode.SUBSELECT)
 	private List<Long> likedDecksIds = new ArrayList<>();
+
+	@ElementCollection(fetch = FetchType.EAGER)
+	@Fetch(FetchMode.SUBSELECT)
+	private List<Long> likedTimelineIds = new ArrayList<>();
 
 	@ElementCollection(fetch = FetchType.EAGER)
 	@JoinColumn(nullable = false, name = "elephant_user_id")

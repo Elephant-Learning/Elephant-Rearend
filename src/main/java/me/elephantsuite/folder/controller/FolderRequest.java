@@ -45,6 +45,16 @@ public class FolderRequest {
 	@AllArgsConstructor
 	@EqualsAndHashCode
 	@ToString
+	public static class AddTimeline {
+		private final long folderId;
+
+		private final long timelineId;
+	}
+
+	@Getter
+	@AllArgsConstructor
+	@EqualsAndHashCode
+	@ToString
 	public static class SetName {
 		private final long folderId;
 

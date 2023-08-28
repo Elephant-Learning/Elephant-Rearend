@@ -26,9 +26,15 @@ public class Marker {
 
     private String name;
 
-    private LocalDateTime date;
+    private String date;
 
     @ManyToOne(cascade = {CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REFRESH})
     @JsonBackReference
     private Timeline timeline;
+
+    public Marker(Timeline timeline, String name, String date) {
+        this.timeline = timeline;
+        this.name = name;
+        this.date = date;
+    }
 }

@@ -38,6 +38,13 @@ public class Timeline {
 
     private String description;
 
+    private long authorId;
+
+    private int authorPfpId;
+
+    private String authorName;
+
+
     @ManyToOne(cascade = {CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REFRESH})
     @JsonBackReference
     @JoinColumn(name = "elephant_user_id", foreignKey = @ForeignKey(name = "elephant_user_id"))
@@ -51,11 +58,26 @@ public class Timeline {
     @Fetch(FetchMode.SUBSELECT)
     private List<Marker> markers = new ArrayList<>();
 
+    @ElementCollection
+    @Fetch(FetchMode.SUBSELECT)
+    private List<Long> sharedUsers = new ArrayList<>();
+
     public Timeline(ElephantUser user, String name, TimelineVisibility visibility, String description) {
         this.user = user;
         this.name = name;
         this.timelineVisibility = visibility;
         this.description = description;
+        this.authorId = user.getId();
+        this.authorPfpId = user.getPfpId();
+        this.authorName = user.getFullName();
+    }
+
+    public void incrementLikes() {
+        this.likes++;
+    }
+
+    public void decrementLikes() {
+        this.likes--;
     }
 
 
