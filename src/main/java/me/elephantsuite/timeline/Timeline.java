@@ -13,6 +13,7 @@ import me.elephantsuite.user.ElephantUser;
 import org.hibernate.annotations.Fetch;
 import org.hibernate.annotations.FetchMode;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -44,6 +45,9 @@ public class Timeline {
 
     private String authorName;
 
+    private LocalDateTime created = LocalDateTime.now();
+
+    private LocalDateTime lastUpdated = LocalDateTime.now();
 
     @ManyToOne(cascade = {CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REFRESH})
     @JsonBackReference
@@ -78,6 +82,10 @@ public class Timeline {
 
     public void decrementLikes() {
         this.likes--;
+    }
+
+    public void updateLastUpdated() {
+        this.lastUpdated = LocalDateTime.now();
     }
 
 

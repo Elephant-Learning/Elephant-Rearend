@@ -37,6 +37,20 @@ public class RegistrationRequest {
 	@AllArgsConstructor
 	@EqualsAndHashCode
 	@ToString
+	public static class SetAccountDetails {
+		private long userId;
+
+		private final String firstName;
+
+		private final String lastName;
+
+		private final Integer phoneNumber;
+	}
+
+	@Getter
+	@AllArgsConstructor
+	@EqualsAndHashCode
+	@ToString
 	public static class DeleteAccount {
 		private final long id;
 

@@ -89,6 +89,8 @@ public class ElephantUserStatistics {
 		if ((this.lastLoggedIn.getDayOfYear() + 1 == LocalDateTime.now().getDayOfYear()) && this.lastLoggedIn.getYear() == LocalDateTime.now().getYear()) {
 			daysStreak += 1;
 			medalService.updateLoginMedal(this);
+		} else if (this.lastLoggedIn.getDayOfYear() == LocalDateTime.now().getDayOfYear()) {
+			return;
 		} else {
 			daysStreak = 0;
 		}
