@@ -28,6 +28,11 @@ public class ElephantUserRegistrationController {
 		return registrationService.confirmToken(token);
 	}
 
+	@PostMapping(path = "setUserDetails")
+	public Response setUserDetails(@RequestBody RegistrationRequest.SetAccountDetails request) {
+		return registrationService.setUserDetails(request);
+	}
+
 	@DeleteMapping("delete")
 	public Response delete(@RequestBody RegistrationRequest.DeleteAccount request) {
 		return registrationService.deleteUser(request);

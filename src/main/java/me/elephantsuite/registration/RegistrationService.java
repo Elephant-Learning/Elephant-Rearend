@@ -182,4 +182,20 @@ public class RegistrationService {
 	public static boolean isInvalidName(String str) {
 		return HTML_PATTERN.matcher(str).matches();
 	}
+
+	public Response setUserDetails(RegistrationRequest.SetAccountDetails request) {
+		ElephantUser user = ResponseUtil.checkUserValid(request.getUserId(), elephantUserService);
+
+		user.setFirstName(request.getFirstName());
+		user.setLastName(request.getLastName());
+		user.setPhoneNumber(request.getPhoneNumber());
+
+		user = elephantUserService.saveUser(user);
+
+		return ResponseBuilder
+			.create()
+			.addResponse(ResponseStatus.SUCCESS, "Set User Details!")
+			.addObject("user", user)
+			.build();
+	}
 }

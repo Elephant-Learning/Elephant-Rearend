@@ -23,6 +23,7 @@ import me.elephantsuite.timeline.marker.Marker;
 import me.elephantsuite.timeline.marker.MarkerRepositoryService;
 import me.elephantsuite.user.ElephantUser;
 import me.elephantsuite.user.ElephantUserService;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -111,8 +112,9 @@ public class TimelineService {
         }
 
         timeline.setName(name);
-
+        timeline.updateLastUpdated();
         timeline = timelineRepositoryService.save(timeline);
+
 
         return ResponseBuilder
             .create()
@@ -128,7 +130,7 @@ public class TimelineService {
         Timeline timeline = getTimelineById(tlId);
 
         timeline.setTimelineVisibility(visibility);
-
+        timeline.updateLastUpdated();
         timeline = timelineRepositoryService.save(timeline);
 
         return ResponseBuilder
@@ -156,7 +158,7 @@ public class TimelineService {
         Timeline timeline = getTimelineById(tlId);
 
         timeline.setLikes(likes);
-
+        timeline.updateLastUpdated();
         timeline = timelineRepositoryService.save(timeline);
 
         return ResponseBuilder
@@ -173,7 +175,7 @@ public class TimelineService {
         Timeline timeline = getTimelineById(tlId);
 
         timeline.setDescription(str);
-
+        timeline.updateLastUpdated();
         timeline = timelineRepositoryService.save(timeline);
 
         return ResponseBuilder
@@ -197,7 +199,7 @@ public class TimelineService {
         Event event = new Event(timeline, date, name, description, importance, endDate, image);
 
         timeline.getEvents().add(event);
-
+        timeline.updateLastUpdated();
         event = eventRepositoryService.save(event);
 
         timeline = timelineRepositoryService.save(timeline);
@@ -310,7 +312,7 @@ public class TimelineService {
         String date = request.getDate();
 
         Timeline timeline = getTimelineById(timelineId);
-
+        timeline.updateLastUpdated();
         Marker marker = new Marker(timeline, name, date);
 
         marker = markerRepositoryService.save(marker);
@@ -416,7 +418,7 @@ public class TimelineService {
         long timelineId = request.getTimelineId();
 
         Timeline timeline = getTimelineById(timelineId);
-
+        timeline.updateLastUpdated();
         ElephantUser user = ResponseUtil.checkUserValid(userId, userService);
 
         if (!timeline.getTimelineVisibility().equals(TimelineVisibility.SHARED)) {
@@ -454,6 +456,7 @@ public class TimelineService {
 
                 return true;
             })
+            .filter(timeline -> StringUtils.containsIgnoreCase(timeline.getName(), query))
             .toList();
 
         return ResponseBuilder
@@ -495,7 +498,7 @@ public class TimelineService {
 
         timeline.incrementLikes();
         user.getLikedTimelineIds().add(timelineId);
-
+        timeline.updateLastUpdated();
         user = userService.saveUser(user);
         timeline = timelineRepositoryService.save(timeline);
 
@@ -515,7 +518,7 @@ public class TimelineService {
 
         timeline.decrementLikes();
         user.getLikedTimelineIds().remove(timelineId);
-
+        timeline.updateLastUpdated();
         user = userService.saveUser(user);
         timeline = timelineRepositoryService.save(timeline);
 

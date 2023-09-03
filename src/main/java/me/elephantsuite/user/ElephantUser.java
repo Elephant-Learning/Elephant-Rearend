@@ -76,6 +76,8 @@ public class ElephantUser {
 
 	private int countryCode;
 
+	private Integer phoneNumber;
+
 	private Integer elephantAnswersScore = 0;
 
 	@ElementCollection
