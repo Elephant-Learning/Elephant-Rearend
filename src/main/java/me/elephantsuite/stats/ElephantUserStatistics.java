@@ -81,18 +81,39 @@ public class ElephantUserStatistics {
 	}
 
 	public void incrementDaysStreak(MedalService medalService) {
-		if (this.lastLoggedIn.getDayOfYear() == LocalDateTime.now().getDayOfYear()) {
+		LocalDateTime now = LocalDateTime.now();
+		int lastLoggedInDayOfYear = this.lastLoggedIn.getDayOfYear();
+		int nowLoggedInDayOfYear = now.getDayOfYear();
+
+		int lastLoggedInYear = this.lastLoggedIn.getYear();
+		int nowLoggedInYear = now.getYear();
+
+		if (this.daysStreak == 0) {
+			this.daysStreak += 1;
+			medalService.updateLoginMedal(this);
 			return;
 		}
 
-
-		if ((this.lastLoggedIn.getDayOfYear() + 1 == LocalDateTime.now().getDayOfYear()) && this.lastLoggedIn.getYear() == LocalDateTime.now().getYear()) {
-			daysStreak += 1;
-			medalService.updateLoginMedal(this);
-		} else if (this.lastLoggedIn.getDayOfYear() == LocalDateTime.now().getDayOfYear()) {
+		if (nowLoggedInDayOfYear == lastLoggedInDayOfYear) {
 			return;
+		}
+
+		if (lastLoggedInYear == nowLoggedInYear) {
+			if (lastLoggedInDayOfYear + 1 == nowLoggedInDayOfYear) {
+				this.daysStreak += 1;
+				medalService.updateLoginMedal(this);
+			} else {
+				this.daysStreak = 0;
+			}
+		} else if (lastLoggedInYear + 1 == nowLoggedInYear) {
+			if ((lastLoggedInDayOfYear == 365 || lastLoggedInDayOfYear == 366) && nowLoggedInDayOfYear == 1) {
+				this.daysStreak += 1;
+				medalService.updateLoginMedal(this);
+			} else {
+				this.daysStreak = 0;
+			}
 		} else {
-			daysStreak = 0;
+			this.daysStreak = 0;
 		}
 	}
 
