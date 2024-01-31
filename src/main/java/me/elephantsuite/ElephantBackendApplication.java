@@ -41,7 +41,12 @@ public class ElephantBackendApplication {
 		.addConfigOption("forgotPasswordEmailHtmlFile", "ForgotPasswordEmail.html")
 		.addConfigOption("friendEmailHtmlFile", "FriendEmailHtmlFile.html")
 		.addConfigOption("inviteEmailHtmlFile", "InviteEmailHtmlFile.html")
+		.build();
+
+	public static final PropertiesHandler AI_INTEGRATION = PropertiesHandler
+		.builder()
 		.addConfigOption("chatGptApiKey", "")
+		.setFileName("ai-integration.properties")
 		.build();
 
 	public static void main(String[] args) {
