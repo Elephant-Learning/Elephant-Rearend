@@ -1,11 +1,24 @@
 package me.elephantsuite;
 
+import java.lang.annotation.Annotation;
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+import java.util.Set;
+import java.util.regex.Pattern;
+
 import me.elephantsuite.config.PropertiesHandler;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.springframework.beans.factory.config.BeanDefinition;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.ClassPathScanningCandidateComponentProvider;
+import org.springframework.core.type.filter.RegexPatternTypeFilter;
+import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.config.annotation.CorsRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
@@ -28,6 +41,7 @@ public class ElephantBackendApplication {
 		.addConfigOption("forgotPasswordEmailHtmlFile", "ForgotPasswordEmail.html")
 		.addConfigOption("friendEmailHtmlFile", "FriendEmailHtmlFile.html")
 		.addConfigOption("inviteEmailHtmlFile", "InviteEmailHtmlFile.html")
+		.addConfigOption("chatGptApiKey", "")
 		.build();
 
 	public static void main(String[] args) {
