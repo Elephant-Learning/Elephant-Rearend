@@ -39,7 +39,7 @@ public class ChatGPTService {
 		ElephantBackendApplication.LOGGER.info("Key: " + API_KEY);
 
 		if (API_KEY == null) {
-			API_KEY = System.getenv("CHATGPT_API_KEY");
+			API_KEY = System.getProperty("CHATGPT_API_KEY");
 		}
 
 		ElephantBackendApplication.LOGGER.info("New Key: " + API_KEY);
