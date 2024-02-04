@@ -17,6 +17,8 @@ bin/
 !**/src/main/**/bin/
 !**/src/test/**/bin/
 
+src/main/resources/Elephant Backend Config/ai-integration.properties
+
 target
 
 ### IntelliJ IDEA ###

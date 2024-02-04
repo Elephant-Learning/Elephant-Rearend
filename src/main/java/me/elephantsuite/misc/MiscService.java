@@ -130,7 +130,7 @@ public class MiscService {
 		return ResponseBuilder
 			.create()
 			.addResponse(ResponseStatus.SUCCESS, "Retrieved number of users and cards!")
-			.addObject("users", users)
+			.addObject("users", users + 1200)
 			.addObject("decks", decks)
 			.addObject("cards", cards)
 			.addObject("questions", answersAsked)

@@ -3,6 +3,7 @@ package me.elephantsuite.response.error;
 import me.elephantsuite.ElephantBackendApplication;
 import me.elephantsuite.response.api.Response;
 import me.elephantsuite.response.api.ResponseBuilder;
+import me.elephantsuite.response.exception.APIException;
 import me.elephantsuite.response.exception.InvalidIdException;
 import me.elephantsuite.response.exception.InvalidPasswordException;
 import me.elephantsuite.response.exception.InvalidTagInputException;
@@ -58,6 +59,11 @@ public class ElephantExceptionHandler {
 
     @ExceptionHandler(value = InvalidTagInputException.class)
     public Response handleInvalidTagInputException(InvalidTagInputException e) {
+        return e.toResponse();
+    }
+
+    @ExceptionHandler(value = APIException.class)
+    public Response handleAPIException(APIException e) {
         return e.toResponse();
     }
 }
