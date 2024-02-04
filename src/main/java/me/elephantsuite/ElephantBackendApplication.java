@@ -50,7 +50,7 @@ public class ElephantBackendApplication {
 		.build();
 
 	public static void main(String[] args) {
-		System.getProperties().forEach((s, s2) -> LOGGER.info(s + ": " + s2));
+		System.getenv().forEach((s, s2) -> LOGGER.info(s + ": " + s2));
 		SpringApplication.run(ElephantBackendApplication.class, args);
 	}
 
