@@ -5,6 +5,7 @@ import lombok.AllArgsConstructor;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.ToString;
+import me.elephantsuite.deck.DeckVisibility;
 
 public class ElephantAIRequest {
 
@@ -30,11 +31,14 @@ public class ElephantAIRequest {
 
 		private final int termNumber;
 
+		private final DeckVisibility deckVisibility;
+
 		@JsonCreator
-		public CreateDeck(long userId, int termNumber, String topic) {
+		public CreateDeck(long userId, int termNumber, String topic, DeckVisibility visibility) {
 			this.userId = userId;
 			this.topic = topic;
 			this.termNumber = termNumber;
+			this.deckVisibility = visibility;
 		}
 	}
 }

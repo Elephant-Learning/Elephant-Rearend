@@ -21,4 +21,9 @@ public class ElephantAIController {
 	public Response createAnswer(@RequestBody ElephantAIRequest.SendMessage request) {
 		return elephantAIService.sendMessage(request);
 	}
+
+	@PostMapping(path = "createDeck")
+	public Response createDeck(@RequestBody ElephantAIRequest.CreateDeck request) {
+		return elephantAIService.createDeck(request);
+	}
 }

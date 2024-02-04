@@ -22,7 +22,7 @@ public class ChatGPTService {
 
 	private static final String API_URL = "https://api.openai.com/v1/chat/completions";
 
-	private static final String API_KEY = ElephantBackendApplication.ELEPHANT_CONFIG.getConfigOption("chatGptApiKey");
+	private static final String API_KEY = ElephantBackendApplication.AI_INTEGRATION.getConfigOption("chatGptApiKey");
 
 	private static final Gson GSON = new GsonBuilder()
 		.serializeNulls()
