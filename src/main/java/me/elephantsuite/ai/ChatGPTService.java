@@ -36,6 +36,7 @@ public class ChatGPTService {
 		.create();
 
 	public static JsonElement sendMessage(String prompt) throws IOException, InterruptedException {
+		ElephantBackendApplication.LOGGER.info("Key: " + API_KEY);
 		JsonObject object = new JsonObject();
 		object.addProperty("model", "gpt-3.5-turbo");
 		JsonArray messages = new JsonArray();
