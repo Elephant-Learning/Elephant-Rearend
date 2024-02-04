@@ -36,7 +36,7 @@ import org.springframework.stereotype.Service;
 @AllArgsConstructor
 public class ElephantAIService {
 
-	private final String deckPromptString = "write an unordered list (without a dash preceding) of [NUMBER] terms and extremely concise definitions regarding [TOPIC] where each term can have multiple incredibly concise definitions if necessary. Write only the terms and definitions in the form outlined below:\n\nterm -  definition, definition #2 (optional), ...\n Please prefix each term with a \"-\".";
+	private final String deckPromptString = "write an unordered list (without a dash preceding) of [NUMBER] terms and extremely concise definitions regarding [TOPIC] where each term can have multiple incredibly concise definitions if necessary. Write only the terms and definitions in the form outlined below:\n\nterm -  definition, definition #2 (optional), ...\n Please prefix each term with a \"-\". Please make sure that each term and definition are seperated by a \"-\", not a colon";
 
 	private DeckRepositoryService service;
 
@@ -78,6 +78,7 @@ public class ElephantAIService {
 			.stream()
 			.map(String::trim)
 			.map(s -> s.substring(s.indexOf(" ") + 1))
+			.map(String::trim)
 			.toList();
 
 		ElephantBackendApplication.LOGGER.info("Terms After: " + terms);
