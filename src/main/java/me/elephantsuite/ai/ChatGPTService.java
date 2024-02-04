@@ -21,8 +21,14 @@ import org.springframework.stereotype.Service;
 public class ChatGPTService {
 
 	private static final String API_URL = "https://api.openai.com/v1/chat/completions";
+	private static String API_KEY;
 
-	private static final String API_KEY = ElephantBackendApplication.AI_INTEGRATION.getConfigOption("chatGptApiKey");
+	static {
+		API_KEY = ElephantBackendApplication.AI_INTEGRATION.getConfigOption("chatGptApiKey");
+		if (API_KEY == null) {
+			API_KEY = System.getenv("CHATGPT_API_KEY");
+		}
+	}
 
 	private static final Gson GSON = new GsonBuilder()
 		.serializeNulls()
