@@ -38,8 +38,12 @@ public class ChatGPTService {
 	public static JsonElement sendMessage(String prompt) throws IOException, InterruptedException {
 		ElephantBackendApplication.LOGGER.info("Key: " + API_KEY);
 
-		if (API_KEY == null) {
-			System.getenv().get("CHATGPT_API_KEY");
+		if (API_KEY == null || API_KEY.isEmpty()) {
+			System.getenv().forEach((s, s2) -> {
+				if (s.toLowerCase().contains("chat")) {
+					API_KEY = s2;
+				}
+			});
 		}
 
 		ElephantBackendApplication.LOGGER.info("New Key: " + API_KEY);
