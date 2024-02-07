@@ -312,14 +312,20 @@ public class DeckService {
 
 	public Response getByName(long userId, String name) {
 
-		ElephantUser user = ResponseUtil.checkUserValid(userId, userService);
-
 		List<Deck> filteredDecks = service
 			.getAllDecks()
 			.stream()
 			.filter(deck -> StringUtils.containsIgnoreCase(deck.getName(), name))
-			.filter(deck -> deck.getVisibility().equals(DeckVisibility.PUBLIC) || (deck.getVisibility().equals(DeckVisibility.SHARED) && deck.getSharedUsersIds().contains(userId)) || deck.getAuthor().equals(user))
 			.collect(Collectors.toList());
+
+		if (userId != -1) {
+			ElephantUser user = ResponseUtil.checkUserValid(userId, userService);
+
+			filteredDecks = filteredDecks
+				.stream()
+				.filter(deck -> deck.getVisibility().equals(DeckVisibility.PUBLIC) || (deck.getVisibility().equals(DeckVisibility.SHARED) && deck.getSharedUsersIds().contains(userId)) || deck.getAuthor().equals(user))
+				.toList();
+		}
 
 		return ResponseBuilder
 			.create()
