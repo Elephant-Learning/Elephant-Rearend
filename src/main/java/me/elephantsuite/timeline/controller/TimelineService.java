@@ -446,6 +446,10 @@ public class TimelineService {
         List<Timeline> timelines = timelineRepositoryService.getTimelines()
             .stream()
             .filter(timeline -> {
+                if (userId == -1) {
+                    return false;
+                }
+
                 if (timeline.getTimelineVisibility().equals(TimelineVisibility.SHARED)) {
                     return !timeline.getSharedUsers().contains(userId);
                 }

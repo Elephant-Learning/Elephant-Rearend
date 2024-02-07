@@ -158,16 +158,21 @@ public class ElephantLoginService {
 	}
 
 	public Response getUserByName(String name, long userId) {
-
-		ElephantUser user = ResponseUtil.checkUserValid(userId, elephantUserService);
-
 		List<ElephantUser> filteredUsers = elephantUserService
-				.getAllUsers()
+			.getAllUsers()
+			.stream()
+			.filter(elephantUser -> StringUtils.containsIgnoreCase(elephantUser.getFullName(), name))
+			.collect(Collectors.toList());
+
+		if (userId != -1) {
+			ElephantUser user = ResponseUtil.checkUserValid(userId, elephantUserService);
+
+			filteredUsers = filteredUsers
 				.stream()
-				.filter(elephantUser -> StringUtils.containsIgnoreCase(elephantUser.getFullName(), name))
 				.filter(user1 -> !user1.equals(user))
 				.sorted((o1, o2) -> compareCountries(o1, o2, user))
 				.collect(Collectors.toList());
+		}
 
 		return ResponseBuilder
 			.create()
