@@ -443,25 +443,34 @@ public class TimelineService {
     }
 
     public Response searchTimelines(long userId, String query) {
-        List<Timeline> timelines = timelineRepositoryService.getTimelines()
-            .stream()
-            .filter(timeline -> {
-                if (userId == -1) {
-                    return false;
-                }
 
-                if (timeline.getTimelineVisibility().equals(TimelineVisibility.SHARED)) {
-                    return !timeline.getSharedUsers().contains(userId);
-                }
 
-                if (timeline.getTimelineVisibility().equals(TimelineVisibility.PRIVATE)) {
-                    return !timeline.getUser().getId().equals(userId);
-                }
 
-                return true;
-            })
-            .filter(timeline -> StringUtils.containsIgnoreCase(timeline.getName(), query))
-            .toList();
+        List<Timeline> timelines;
+
+        if (userId != -1) {
+            timelines = timelineRepositoryService.getTimelines()
+                .stream()
+                .filter(timeline -> {
+                    if (timeline.getTimelineVisibility().equals(TimelineVisibility.SHARED)) {
+                        return !timeline.getSharedUsers().contains(userId);
+                    }
+
+                    if (timeline.getTimelineVisibility().equals(TimelineVisibility.PRIVATE)) {
+                        return !timeline.getUser().getId().equals(userId);
+                    }
+
+                    return true;
+                })
+                .filter(timeline -> StringUtils.containsIgnoreCase(timeline.getName(), query))
+                .toList();
+        } else {
+            timelines = timelineRepositoryService.getTimelines()
+                .stream()
+                .filter(timeline -> timeline.getTimelineVisibility().equals(TimelineVisibility.PUBLIC))
+                .filter(timeline -> StringUtils.containsIgnoreCase(timeline.getName(), query))
+                .toList();
+        }
 
         return ResponseBuilder
             .create()
